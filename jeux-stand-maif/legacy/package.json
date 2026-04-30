@@ -1,0 +1,19 @@
+{
+  "name": "jeu-sortez-couvert",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "simulate": "tsx src/core/infini/simulate.ts"
+  },
+  "dependencies": {
+    "phaser": "^3.87.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.1.0"
+  }
+}

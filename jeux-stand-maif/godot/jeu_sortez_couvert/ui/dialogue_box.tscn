@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://jeu_sortez_couvert/ui/dialogue_box.gd" id="1_db"]
+
+[node name="DialogueBox" type="PanelContainer"]
+custom_minimum_size = Vector2(700, 120)
+script = ExtResource("1_db")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="TextLabel" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 70)
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+text = ""
+
+[node name="ContinueLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 2
+text = "▶ Continuer"
+theme_override_font_sizes/font_size = 13
+visible = false

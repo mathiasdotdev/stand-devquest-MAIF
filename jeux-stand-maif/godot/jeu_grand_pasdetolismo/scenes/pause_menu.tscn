@@ -1,0 +1,81 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://jeu_grand_pasdetolismo/scripts/pause_menu.gd" id="1_pm"]
+
+[node name="PauseRoot" type="CanvasLayer"]
+layer = 10
+process_mode = 3
+script = ExtResource("1_pm")
+
+[node name="Container" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+visible = false
+
+[node name="Dim" type="ColorRect" parent="Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0.02, 0.1, 0.72)
+
+[node name="Center" type="CenterContainer" parent="Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="Container/Center"]
+layout_mode = 2
+custom_minimum_size = Vector2(360, 0)
+theme_override_constants/separation = 18
+
+[node name="Title" type="Label" parent="Container/Center/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "PAUSE"
+theme_override_font_sizes/font_size = 52
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+
+[node name="Subtitle" type="Label" parent="Container/Center/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "Grand Pasdetolismo"
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.53, 0.73, 1, 1)
+
+[node name="Spacer1" type="Control" parent="Container/Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 12)
+
+[node name="BtnReprendre" type="Button" parent="Container/Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 62)
+text = "Reprendre"
+theme_override_font_sizes/font_size = 22
+
+[node name="BtnRecommencer" type="Button" parent="Container/Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 62)
+text = "Recommencer la course"
+theme_override_font_sizes/font_size = 20
+
+[node name="Spacer2" type="Control" parent="Container/Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 8)
+
+[node name="BtnMenu" type="Button" parent="Container/Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 50)
+text = "Menu principal"
+theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+
+[node name="Note" type="Label" parent="Container/Center/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "(la course ne sera pas enregistree)"
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.5, 0.5, 0.5, 1)
