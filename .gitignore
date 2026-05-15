@@ -1,0 +1,21 @@
+# Pack source Kenney (les GLB utiles ont été copiés dans jeux-stand-maif/godot/jeu_grand_pasdetolismo/models/kenney/)
+kenney_racing-kit/
+
+# Godot
+.godot/
+.import/
+
+# Godot exports
+*.translation
+export.cfg
+export_presets.cfg
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+.vscode/
+.idea/

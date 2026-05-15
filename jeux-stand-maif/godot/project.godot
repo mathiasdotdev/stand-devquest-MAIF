@@ -28,6 +28,9 @@ Disasters="*res://shared/data/disasters.gd"
 Chapitres="*res://shared/data/chapitres.gd"
 Leaderboard="*res://shared/persistence/leaderboard.gd"
 StoryEngine="*res://jeu_sortez_couvert/scripts/story_engine.gd"
+InsuranceContracts="*res://jeu_grand_pasdetolismo/scripts/insurance_contracts.gd"
+GameBalance="*res://jeu_grand_pasdetolismo/scripts/game_balance.gd"
+RaceSession="*res://jeu_grand_pasdetolismo/scripts/race_session.gd"
 
 [display]
 

@@ -38,8 +38,12 @@ theme_override_colors/font_color = Color(0.27, 0.67, 1, 1)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Histoire" type="VBoxContainer" parent="VBox/Tabs"]
+[node name="Histoire" type="MarginContainer" parent="VBox/Tabs"]
 layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 16
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBox/Tabs/Histoire"]
 layout_mode = 2
@@ -48,10 +52,14 @@ size_flags_vertical = 3
 [node name="EntryList" type="VBoxContainer" parent="VBox/Tabs/Histoire/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 12
+theme_override_constants/separation = 8
 
-[node name="Pasdetolismo" type="VBoxContainer" parent="VBox/Tabs"]
+[node name="Pasdetolismo" type="MarginContainer" parent="VBox/Tabs"]
 layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 16
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBox/Tabs/Pasdetolismo"]
 layout_mode = 2
@@ -60,7 +68,7 @@ size_flags_vertical = 3
 [node name="EntryList" type="VBoxContainer" parent="VBox/Tabs/Pasdetolismo/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 12
+theme_override_constants/separation = 8
 
 [node name="BtnRetour" type="Button" parent="VBox"]
 layout_mode = 2

@@ -54,7 +54,6 @@ layout_mode = 2
 size_flags_vertical = 3
 custom_minimum_size = Vector2(0, 140)
 
-[node name="DialogueArea" type="Control" parent="MarginContainer/VBoxContainer"]
+[node name="DialogueArea" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 3
 custom_minimum_size = Vector2(0, 130)

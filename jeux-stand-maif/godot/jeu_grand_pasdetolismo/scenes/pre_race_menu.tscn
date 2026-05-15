@@ -1,0 +1,183 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://jeu_grand_pasdetolismo/scripts/pre_race_menu.gd" id="1_prm"]
+
+[node name="PreRaceMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_prm")
+
+[node name="Bg" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.04, 0.07, 0.14, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+layout_mode = 2
+custom_minimum_size = Vector2(960, 0)
+
+[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 24
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "GRAND PASDETOLISMO"
+theme_override_font_sizes/font_size = 40
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+
+[node name="Subtitle" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "Configure ta course et choisis tes assurances"
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.62, 0.78, 1, 1)
+
+[node name="Sep1" type="HSeparator" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="ModeRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 12
+
+[node name="BtnSolo" type="Button" parent="Center/Panel/Margin/VBox/ModeRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(220, 56)
+toggle_mode = true
+text = "🚗 SOLO"
+theme_override_font_sizes/font_size = 22
+
+[node name="BtnMulti" type="Button" parent="Center/Panel/Margin/VBox/ModeRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(220, 56)
+toggle_mode = true
+text = "🚗🚗 MULTI (2 joueurs)"
+theme_override_font_sizes/font_size = 22
+
+[node name="MultiHint" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "En multi : Joueur 1 = clavier, Joueur 2 = manette"
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.7, 0.7, 0.78, 1)
+
+[node name="Sep2" type="HSeparator" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="PlayersRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="Player1" type="VBoxContainer" parent="Center/Panel/Margin/VBox/PlayersRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Center/Panel/Margin/VBox/PlayersRow/Player1"]
+layout_mode = 2
+text = "Joueur 1"
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+
+[node name="ColorRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/PlayersRow/Player1"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="GoldLabel" type="Label" parent="Center/Panel/Margin/VBox/PlayersRow/Player1"]
+layout_mode = 2
+text = "Or de depart : 100"
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.98, 0.82, 0.18, 1)
+
+[node name="ContractsLabel" type="Label" parent="Center/Panel/Margin/VBox/PlayersRow/Player1"]
+layout_mode = 2
+text = "Contrats d'assurance :"
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.75, 0.85, 1, 1)
+
+[node name="ContractsBox" type="VBoxContainer" parent="Center/Panel/Margin/VBox/PlayersRow/Player1"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Player2" type="VBoxContainer" parent="Center/Panel/Margin/VBox/PlayersRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Center/Panel/Margin/VBox/PlayersRow/Player2"]
+layout_mode = 2
+text = "Joueur 2"
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+
+[node name="ColorRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/PlayersRow/Player2"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="GoldLabel" type="Label" parent="Center/Panel/Margin/VBox/PlayersRow/Player2"]
+layout_mode = 2
+text = "Or de depart : 100"
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.98, 0.82, 0.18, 1)
+
+[node name="ContractsLabel" type="Label" parent="Center/Panel/Margin/VBox/PlayersRow/Player2"]
+layout_mode = 2
+text = "Contrats d'assurance :"
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.75, 0.85, 1, 1)
+
+[node name="ContractsBox" type="VBoxContainer" parent="Center/Panel/Margin/VBox/PlayersRow/Player2"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Sep3" type="HSeparator" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="Footer" type="VBoxContainer" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Hint" type="Label" parent="Center/Panel/Margin/VBox/Footer"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "Choisis une couleur pour chaque joueur."
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.9, 0.65, 0.45, 1)
+
+[node name="ButtonsRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/Footer"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 16
+
+[node name="BtnBack" type="Button" parent="Center/Panel/Margin/VBox/Footer/ButtonsRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(200, 50)
+text = "← Menu"
+theme_override_font_sizes/font_size = 18
+
+[node name="BtnStart" type="Button" parent="Center/Panel/Margin/VBox/Footer/ButtonsRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(300, 56)
+text = "🏁 DÉMARRER LA COURSE"
+disabled = true
+theme_override_font_sizes/font_size = 22
