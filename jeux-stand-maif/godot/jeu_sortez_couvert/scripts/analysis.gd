@@ -39,6 +39,8 @@ func _ready() -> void:
 	_btn_save.pressed.connect(_on_save_score)
 	_menu_btn.pressed.connect(_on_menu)
 
+	if StoryEngine.player_name != "":
+		_name_input.text = StoryEngine.player_name
 	var score: int = _analysis["total_score"]
 	if not Leaderboard.is_top_ten("story", score):
 		_btn_save.disabled = true

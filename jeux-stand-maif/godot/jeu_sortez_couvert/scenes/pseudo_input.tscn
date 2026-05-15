@@ -1,0 +1,84 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://jeu_sortez_couvert/scripts/pseudo_input.gd" id="1_pi"]
+
+[node name="PseudoInput" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_pi")
+
+[node name="Bg" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0.04, 0.13, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+layout_mode = 2
+custom_minimum_size = Vector2(640, 0)
+
+[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 28
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "Sortez Couvert"
+theme_override_font_sizes/font_size = 36
+theme_override_colors/font_color = Color(0.27, 0.67, 1, 1)
+
+[node name="Subtitle" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "Quel est ton prénom ?"
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.75, 0.85, 1, 1)
+
+[node name="NameInput" type="LineEdit" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+placeholder_text = "Ton pseudo"
+max_length = 16
+alignment = 1
+theme_override_font_sizes/font_size = 22
+
+[node name="Hint" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "(servira pour le classement à la fin)"
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.55, 0.65, 0.78, 1)
+
+[node name="Footer" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 16
+
+[node name="BtnBack" type="Button" parent="Center/Panel/Margin/VBox/Footer"]
+layout_mode = 2
+custom_minimum_size = Vector2(180, 48)
+text = "← Menu"
+theme_override_font_sizes/font_size = 17
+
+[node name="BtnStart" type="Button" parent="Center/Panel/Margin/VBox/Footer"]
+layout_mode = 2
+custom_minimum_size = Vector2(240, 48)
+text = "▶ Commencer"
+theme_override_font_sizes/font_size = 18

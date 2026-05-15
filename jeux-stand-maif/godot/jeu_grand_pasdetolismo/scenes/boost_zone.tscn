@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://jeu_grand_pasdetolismo/scripts/boost_zone.gd" id="1_bz"]
+[ext_resource type="PackedScene" path="res://jeu_grand_pasdetolismo/models/kenney/roadStraightArrow.glb" id="2_arrow"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bz"]
+size = Vector3(3.5, 0.5, 5.0)
+
+[node name="BoostZone" type="Node3D"]
+script = ExtResource("1_bz")
+
+[node name="ArrowVisual" parent="." instance=ExtResource("2_arrow")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
+
+[node name="Area" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape" type="CollisionShape3D" parent="Area"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+shape = SubResource("BoxShape3D_bz")

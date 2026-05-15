@@ -8,6 +8,7 @@ var answers: Array = []
 var hints_used_this_chapitre: int = 0
 var selected_contracts: Array = []
 var is_complete: bool = false
+var player_name: String = ""
 
 # ─── Reset ────────────────────────────────────────────────────────────────────
 
@@ -40,19 +41,19 @@ func use_hint() -> int:
 		hints_used_this_chapitre += 1
 	return hints_used_this_chapitre
 
-## Retourne le texte de l'indice courant (à appeler après use_hint()).
+## Retourne tous les indices déjà débloqués (cumulés, séparés par retour ligne).
 func get_hint_text() -> String:
 	var chapitre: Dictionary = Chapitres.get_chapitre(current_chapitre)
-	var level: int = hints_used_this_chapitre
+	var lines: Array = []
 
-	if level == 1:
+	if hints_used_this_chapitre >= 1:
 		var names: Array = []
 		for d: Dictionary in chapitre["disasters"]:
 			var dis: Dictionary = Disasters.get_disaster(d["type"])
 			names.append(dis["icon"] + " " + dis["label"])
-		return "Risques de ce chapitre : " + ", ".join(names)
+		lines.append("Risques de ce chapitre : " + ", ".join(names))
 
-	if level >= 2:
+	if hints_used_this_chapitre >= 2:
 		var contract_set: Dictionary = {}
 		for d: Dictionary in chapitre["disasters"]:
 			var dis: Dictionary = Disasters.get_disaster(d["type"])
@@ -62,9 +63,9 @@ func get_hint_text() -> String:
 		for ct: String in contract_set.keys():
 			var c: Dictionary = Contracts.get_by_type(ct)
 			labels.append(c["icon"] + " " + c["label"])
-		return "Contrats utiles : " + ", ".join(labels)
+		lines.append("Contrats utiles : " + ", ".join(labels))
 
-	return ""
+	return "\n".join(lines)
 
 # ─── Résolution du chapitre ───────────────────────────────────────────────────
 

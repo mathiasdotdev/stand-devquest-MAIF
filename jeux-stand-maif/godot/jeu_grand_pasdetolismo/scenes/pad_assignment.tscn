@@ -1,0 +1,82 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://jeu_grand_pasdetolismo/scripts/pad_assignment.gd" id="1_pa"]
+
+[node name="PadAssignment" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_pa")
+
+[node name="Bg" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.04, 0.07, 0.14, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="Center"]
+layout_mode = 2
+custom_minimum_size = Vector2(700, 0)
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="Title" type="Label" parent="Center/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "Joueur 1"
+theme_override_font_sizes/font_size = 42
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+
+[node name="ColorDot" type="ColorRect" parent="Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(120, 28)
+size_flags_horizontal = 4
+color = Color(0.98, 0.82, 0.18, 1)
+
+[node name="Prompt" type="Label" parent="Center/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "Appuie sur A sur ta manette"
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(1, 0.85, 0.35, 1)
+
+[node name="Progress" type="Label" parent="Center/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "Manette 1 / 2"
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.62, 0.78, 1, 1)
+
+[node name="Hint" type="Label" parent="Center/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+text = ""
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.9, 0.65, 0.45, 1)
+
+[node name="Footer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -120.0
+offset_top = -72.0
+offset_right = 120.0
+offset_bottom = -24.0
+alignment = 1
+
+[node name="BtnBack" type="Button" parent="Footer"]
+layout_mode = 2
+custom_minimum_size = Vector2(220, 44)
+text = "← Annuler"
+theme_override_font_sizes/font_size = 18

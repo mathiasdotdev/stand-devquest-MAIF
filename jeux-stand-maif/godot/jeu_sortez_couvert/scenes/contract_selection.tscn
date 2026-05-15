@@ -51,32 +51,34 @@ theme_override_constants/separation = 14
 
 [node name="ButtonsRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+alignment = 1
 theme_override_constants/separation = 12
 
 [node name="BtnIndice1" type="Button" parent="MarginContainer/VBoxContainer/ButtonsRow"]
 layout_mode = 2
-custom_minimum_size = Vector2(120, 40)
+custom_minimum_size = Vector2(130, 44)
 text = "Indice 1"
 theme_override_font_sizes/font_size = 15
 
 [node name="BtnIndice2" type="Button" parent="MarginContainer/VBoxContainer/ButtonsRow"]
 layout_mode = 2
-custom_minimum_size = Vector2(120, 40)
+custom_minimum_size = Vector2(130, 44)
 text = "Indice 2"
 theme_override_font_sizes/font_size = 15
 
 [node name="RowSpacer" type="Control" parent="MarginContainer/VBoxContainer/ButtonsRow"]
 layout_mode = 2
-size_flags_horizontal = 3
+custom_minimum_size = Vector2(60, 0)
 
 [node name="BtnConfirmer" type="Button" parent="MarginContainer/VBoxContainer/ButtonsRow"]
 layout_mode = 2
-custom_minimum_size = Vector2(160, 44)
+custom_minimum_size = Vector2(180, 48)
 text = "Confirmer"
 theme_override_font_sizes/font_size = 17
 
 [node name="HintLabel" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+horizontal_alignment = 1
 autowrap_mode = 3
 text = ""
 theme_override_font_sizes/font_size = 14
