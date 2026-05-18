@@ -1,85 +1,88 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://w0obhnvh7i0r"]
 
-[ext_resource type="Script" path="res://jeu_sortez_couvert/scripts/contract_selection.gd" id="1_cs"]
+[ext_resource type="Script" uid="uid://bkpwi6fmdr545" path="res://jeu_sortez_couvert/scripts/contract_selection.gd" id="1_cs"]
+[ext_resource type="Texture2D" uid="uid://koo5uuuuycsq" path="res://jeu_sortez_couvert/ui/assets/decor.png" id="2_eoymw"]
+[ext_resource type="PackedScene" path="res://jeu_sortez_couvert/ui/overlay.tscn" id="3_overlay"]
 
-[node name="ContractSelection" type="Control"]
+[node name="ContractSelection" type="Control" unique_id=550192341]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_cs")
 
-[node name="Background" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-color = Color(0, 0.04, 0.13, 1)
+[node name="Background" type="Sprite2D" parent="." unique_id=1626200708]
+texture = ExtResource("2_eoymw")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="Overlay" parent="." instance=ExtResource("3_overlay")]
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1538005600]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/margin_left = 60
-theme_override_constants/margin_right = 60
 theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 60
 theme_override_constants/margin_bottom = 30
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=118193240]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="TitreLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="TitreLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=947784232]
 layout_mode = 2
-horizontal_alignment = 1
-text = "Chapitre 1"
-theme_override_font_sizes/font_size = 24
 theme_override_colors/font_color = Color(0.27, 0.67, 1, 1)
-
-[node name="InstructionsLabel" type="Label" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Chapitre 1"
 horizontal_alignment = 1
-text = "Quels contrats choisissez-vous ? (selectionnez 0 a 5)"
-theme_override_font_sizes/font_size = 16
+
+[node name="InstructionsLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1169182201]
+layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.87, 0.95, 1)
+theme_override_font_sizes/font_size = 16
+text = "Quels contrats choisissez-vous ? (selectionnez 0 a 5)"
+horizontal_alignment = 1
 
-[node name="CardsContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="CardsContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=653121011]
 layout_mode = 2
-alignment = 1
 theme_override_constants/separation = 14
-
-[node name="ButtonsRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
 alignment = 1
+
+[node name="ButtonsRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=749561101]
+layout_mode = 2
 theme_override_constants/separation = 12
+alignment = 1
 
-[node name="BtnIndice1" type="Button" parent="MarginContainer/VBoxContainer/ButtonsRow"]
-layout_mode = 2
+[node name="BtnIndice1" type="Button" parent="MarginContainer/VBoxContainer/ButtonsRow" unique_id=1491811821]
 custom_minimum_size = Vector2(130, 44)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
 text = "Indice 1"
-theme_override_font_sizes/font_size = 15
 
-[node name="BtnIndice2" type="Button" parent="MarginContainer/VBoxContainer/ButtonsRow"]
-layout_mode = 2
+[node name="BtnIndice2" type="Button" parent="MarginContainer/VBoxContainer/ButtonsRow" unique_id=37410252]
 custom_minimum_size = Vector2(130, 44)
-text = "Indice 2"
+layout_mode = 2
 theme_override_font_sizes/font_size = 15
+text = "Indice 2"
 
-[node name="RowSpacer" type="Control" parent="MarginContainer/VBoxContainer/ButtonsRow"]
-layout_mode = 2
+[node name="RowSpacer" type="Control" parent="MarginContainer/VBoxContainer/ButtonsRow" unique_id=1039380320]
 custom_minimum_size = Vector2(60, 0)
-
-[node name="BtnConfirmer" type="Button" parent="MarginContainer/VBoxContainer/ButtonsRow"]
 layout_mode = 2
+
+[node name="BtnConfirmer" type="Button" parent="MarginContainer/VBoxContainer/ButtonsRow" unique_id=2101374763]
 custom_minimum_size = Vector2(180, 48)
-text = "Confirmer"
-theme_override_font_sizes/font_size = 17
-
-[node name="HintLabel" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "Confirmer"
+
+[node name="HintLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=784222021]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 14
 horizontal_alignment = 1
 autowrap_mode = 3
-text = ""
-theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)

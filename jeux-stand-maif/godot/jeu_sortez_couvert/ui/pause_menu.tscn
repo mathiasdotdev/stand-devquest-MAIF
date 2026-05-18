@@ -1,0 +1,56 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://jeu_sortez_couvert/ui/pause_menu.gd" id="1_pm"]
+
+[node name="PauseMenu" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_pm")
+
+[node name="Container" type="Control" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+visible = false
+
+[node name="Dim" type="ColorRect" parent="Container"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0.02, 0.1, 0.72)
+
+[node name="Center" type="CenterContainer" parent="Container"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="Container/Center"]
+custom_minimum_size = Vector2(360, 0)
+theme_override_constants/separation = 18
+
+[node name="Title" type="Label" parent="Container/Center/VBox"]
+horizontal_alignment = 1
+text = "PAUSE"
+theme_override_font_sizes/font_size = 52
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+
+[node name="Warning" type="Label" parent="Container/Center/VBox"]
+horizontal_alignment = 1
+text = "Attention : si vous quittez, votre score ne sera pas enregistré dans le leaderboard."
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(1, 0.7, 0.2, 1)
+
+[node name="BtnResume" type="Button" parent="Container/Center/VBox"]
+custom_minimum_size = Vector2(0, 62)
+text = "Reprendre"
+theme_override_font_sizes/font_size = 22
+
+[node name="BtnRestart" type="Button" parent="Container/Center/VBox"]
+custom_minimum_size = Vector2(0, 50)
+text = "Revenir au début"
+theme_override_font_sizes/font_size = 17
+
+[node name="BtnQuit" type="Button" parent="Container/Center/VBox"]
+custom_minimum_size = Vector2(0, 50)
+text = "Quitter le mode histoire"
+theme_override_font_sizes/font_size = 17
+

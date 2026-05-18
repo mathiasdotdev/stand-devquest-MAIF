@@ -1,8 +1,13 @@
 extends Control
 
+# Feature flipping pour le bouton Pasdetolismo
+const PASDETOLISMO_ENABLED := false
+
 func _ready() -> void:
 	$CenterContainer/VBoxContainer/BtnSortezCouvert.pressed.connect(_on_sortez_couvert)
-	$CenterContainer/VBoxContainer/BtnPasdetolismo.pressed.connect(_on_pasdetolismo)
+	$CenterContainer/VBoxContainer/BtnPasdetolismo.visible = PASDETOLISMO_ENABLED
+	if PASDETOLISMO_ENABLED:
+		$CenterContainer/VBoxContainer/BtnPasdetolismo.pressed.connect(_on_pasdetolismo)
 	$CenterContainer/VBoxContainer/BtnClassement.pressed.connect(_on_classement)
 	$CenterContainer/VBoxContainer/BtnQuitter.pressed.connect(_on_quitter)
 
