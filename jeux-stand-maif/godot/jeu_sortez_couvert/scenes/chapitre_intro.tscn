@@ -1,59 +1,49 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://cc46sm1y2lngk"]
 
-[ext_resource type="Script" path="res://jeu_sortez_couvert/scripts/chapitre_intro.gd" id="1_ci"]
+[ext_resource type="Script" uid="uid://dex45y81f7c6f" path="res://jeu_sortez_couvert/scripts/chapitre_intro.gd" id="1_ci"]
+[ext_resource type="Texture2D" uid="uid://koo5uuuuycsq" path="res://jeu_sortez_couvert/ui/assets/decor.png" id="4"]
+[ext_resource type="PackedScene" path="res://jeu_sortez_couvert/ui/overlay.tscn" id="3_overlay"]
 
-[node name="ChapitreIntro" type="Control"]
+[node name="ChapitreIntro" type="Control" unique_id=897435605]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_ci")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="Sprite2D" parent="." unique_id=1429050922]
+texture = ExtResource("4")
+
+[node name="Overlay" parent="." instance=ExtResource("3_overlay")]
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=852539402]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0, 0.04, 0.13, 1)
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-theme_override_constants/margin_left = 60
-theme_override_constants/margin_right = 60
-theme_override_constants/margin_top = 24
-theme_override_constants/margin_bottom = 24
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1336739923]
 layout_mode = 2
-theme_override_constants/separation = 10
 
-[node name="ChapitreNumLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="ChapitreNumLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=413137966]
 layout_mode = 2
 text = "Chapitre 1 / 6"
-theme_override_font_sizes/font_size = 13
-theme_override_colors/font_color = Color(0.5, 0.65, 0.85, 1)
 
-[node name="TitreLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="TitreLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=104845183]
 layout_mode = 2
 text = "..."
-theme_override_font_sizes/font_size = 30
-theme_override_colors/font_color = Color(0.27, 0.67, 1, 1)
 
-[node name="ContexteLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="ContexteLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1855768721]
 layout_mode = 2
+text = "..."
 autowrap_mode = 3
-text = "..."
-theme_override_font_sizes/font_size = 15
-theme_override_colors/font_color = Color(0.75, 0.82, 0.92, 1)
 
-[node name="ConseillerArea" type="CenterContainer" parent="MarginContainer/VBoxContainer"]
+[node name="ConseillerArea" type="CenterContainer" parent="MarginContainer/VBoxContainer" unique_id=1167862863]
 layout_mode = 2
-size_flags_vertical = 3
-custom_minimum_size = Vector2(0, 140)
 
-[node name="DialogueArea" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+[node name="DialogueArea" type="MarginContainer" parent="MarginContainer/VBoxContainer" unique_id=27831128]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 130)

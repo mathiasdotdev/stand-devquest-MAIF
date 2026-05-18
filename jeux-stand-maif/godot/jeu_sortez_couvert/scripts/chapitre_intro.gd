@@ -1,13 +1,14 @@
-extends Control
+extends "res://jeu_sortez_couvert/scripts/pause_layout.gd"
 
-const ConseillerScene = preload("res://jeu_sortez_couvert/ui/conseiller.tscn")
-const DialogueBoxScene = preload("res://jeu_sortez_couvert/ui/dialogue_box.tscn")
+const CONSEILLER_SCENE: PackedScene = preload("res://jeu_sortez_couvert/ui/conseiller.tscn")
+const DIALOGUE_BOX_SCENE: PackedScene = preload("res://jeu_sortez_couvert/ui/dialogue_box.tscn")
 
 @onready var _chapitre_num_label: Label = $MarginContainer/VBoxContainer/ChapitreNumLabel
 @onready var _titre_label: Label = $MarginContainer/VBoxContainer/TitreLabel
 @onready var _contexte_label: Label = $MarginContainer/VBoxContainer/ContexteLabel
 @onready var _conseiller_area: Control = $MarginContainer/VBoxContainer/ConseillerArea
 @onready var _dialogue_area: Control = $MarginContainer/VBoxContainer/DialogueArea
+@onready var _background: Sprite2D = $Background
 
 var _conseiller: Node
 var _dialogue_box: Node
@@ -15,15 +16,30 @@ var _chapitre: Dictionary
 var _line_idx: int = 0
 
 func _ready() -> void:
-	_chapitre = Chapitres.get_chapitre(StoryEngine.current_chapitre)
-	_chapitre_num_label.text = "Chapitre " + str(StoryEngine.current_chapitre + 1) + " / " + str(Chapitres.count())
+	super._ready() # necessaire pour le pause_layout
+	# Ajuste le fond pour qu'il couvre tout l'écran (effet cover)
+	if _background.texture:
+		var screen_size: Vector2 = get_viewport_rect().size
+		var tex_size: Vector2 = Vector2(_background.texture.get_width(), _background.texture.get_height())
+		var scale_factor: float = max(screen_size.x / tex_size.x, screen_size.y / tex_size.y)
+		_background.scale = Vector2(scale_factor, scale_factor)
+		_background.position = get_viewport_rect().size / 2
+		_background.centered = true
+
+	StorySceneLayout.apply(self)
+
+	var story_engine: Node = get_node("/root/StoryEngine")
+	var chapitres: Node = get_node("/root/Chapitres")
+	
+	_chapitre = chapitres.get_chapitre(story_engine.current_chapitre)
+	_chapitre_num_label.text = "Chapitre " + str(story_engine.current_chapitre + 1) + " / " + str(chapitres.count())
 	_titre_label.text = _chapitre["emoji"] + "  " + _chapitre["titre"]
 	_contexte_label.text = _chapitre["contexte"]
 
-	_conseiller = ConseillerScene.instantiate()
+	_conseiller = CONSEILLER_SCENE.instantiate()
 	_conseiller_area.add_child(_conseiller)
 
-	_dialogue_box = DialogueBoxScene.instantiate()
+	_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	_dialogue_area.add_child(_dialogue_box)
 	_dialogue_box.advance.connect(_on_advance)
 

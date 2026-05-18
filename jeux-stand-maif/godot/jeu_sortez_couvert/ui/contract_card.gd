@@ -7,6 +7,7 @@ var _selected: bool = false
 
 @onready var icon_label: Label = $MarginContainer/VBoxContainer/IconLabel
 @onready var name_label: Label = $MarginContainer/VBoxContainer/NameLabel
+@onready var panel: PanelContainer = self
 
 func setup(contract: Dictionary) -> void:
 	contract_type = contract["type"]
@@ -22,10 +23,15 @@ func is_card_selected() -> bool:
 	return _selected
 
 func _apply_style() -> void:
+	var style: StyleBoxFlat = StyleBoxFlat.new()
 	if _selected:
-		self_modulate = Color(0.6, 1.0, 0.6, 1.0)
+		style.bg_color = Color(0.27, 0.67, 1, 0.18) # Bleu clair très visible, alpha pour garder l'icône visible
+		style.set_border_width_all(3)
+		style.border_color = Color(0.27, 0.67, 1, 1)
 	else:
-		self_modulate = Color(1.0, 1.0, 1.0, 1.0)
+		style.bg_color = Color(0.09, 0.11, 0.16, 1) # Fond sombre par défaut
+		style.set_border_width_all(0)
+	panel.add_theme_stylebox_override("panel", style)
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
