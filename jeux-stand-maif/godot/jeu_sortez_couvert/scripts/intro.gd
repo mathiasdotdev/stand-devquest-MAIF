@@ -28,8 +28,6 @@ func _ready() -> void:
 	_intro_lines = INTRO_LINES.duplicate(true)
 	_conseiller = CONSEILLER_SCENE.instantiate()
 	_conseiller_area.add_child(_conseiller)
-	# Descend le perso pour qu'il repose sur la grass devant la longhouse au centre.
-	_conseiller.get_node("AnimatedSprite2D").position.y += 60
 
 	_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	_dialogue_area.add_child(_dialogue_box)
