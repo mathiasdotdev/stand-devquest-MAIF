@@ -7,20 +7,12 @@ extends Control
 @onready var _background: Sprite2D = $Background
 
 func _ready() -> void:
-	# Ajuste le fond pour qu'il couvre tout l'écran (effet cover)
-	if _background.texture:
-		var screen_size: Vector2 = get_viewport_rect().size
-		var tex_size: Vector2 = Vector2(_background.texture.get_width(), _background.texture.get_height())
-		var scale_factor: float = max(screen_size.x / tex_size.x, screen_size.y / tex_size.y)
-		_background.scale = Vector2(scale_factor, scale_factor)
-		_background.position = get_viewport_rect().size / 2
-		_background.centered = true
-	
-	var story_engine: Node = get_node("/root/StoryEngine")
-	if story_engine.player_name != "":
-		name_input.text = story_engine.player_name
-	if story_engine.player_email != "":
-		email_input.text = story_engine.player_email
+	StorySceneLayout.cover_viewport(_background)
+
+	if Globals.story_engine.player_name != "":
+		name_input.text = Globals.story_engine.player_name
+	if Globals.story_engine.player_email != "":
+		email_input.text = Globals.story_engine.player_email
 
 	name_input.text_submitted.connect(func(_t): _on_start())
 	name_input.text_changed.connect(_on_text_changed)
@@ -34,7 +26,6 @@ func _ready() -> void:
 	_on_email_changed(email_input.text)
 
 func _on_start() -> void:
-	var story_engine: Node = get_node("/root/StoryEngine")
 	var player_name: String = name_input.text.strip_edges()
 	var player_email: String = email_input.text.strip_edges()
 	if player_name.is_empty():
@@ -46,11 +37,9 @@ func _on_start() -> void:
 		email_input.add_theme_color_override("font_color", Color(1, 0.4, 0.4))
 		email_input.grab_focus()
 		return
-	story_engine.player_name = player_name
-	story_engine.player_email = player_email
-	story_engine.reset()
-	story_engine.player_name = player_name
-	story_engine.player_email = player_email
+	Globals.story_engine.reset()
+	Globals.story_engine.player_name = player_name
+	Globals.story_engine.player_email = player_email
 	get_tree().change_scene_to_file("res://jeu_sortez_couvert/scenes/intro.tscn")
 
 func _on_text_changed(new_text: String) -> void:

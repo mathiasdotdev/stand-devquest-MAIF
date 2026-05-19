@@ -1,7 +1,7 @@
 extends "res://jeu_sortez_couvert/scripts/pause_layout.gd"
 
-const ConseillerScene: PackedScene = preload("res://jeu_sortez_couvert/ui/conseiller.tscn")
-const DialogueBoxScene: PackedScene = preload("res://jeu_sortez_couvert/ui/dialogue_box.tscn")
+const CONSEILLER_SCENE: PackedScene = preload("res://jeu_sortez_couvert/ui/conseiller.tscn")
+const DIALOGUE_BOX_SCENE: PackedScene = preload("res://jeu_sortez_couvert/ui/dialogue_box.tscn")
 
 const INTRO_LINES: Array = [
 	{"text": "Bienvenue chez MAIF ! Je suis Assurix le Barbu, votre conseiller, ici pour vous guider.", "expression": "souriant"},
@@ -22,28 +22,19 @@ var _intro_lines: Array = []
 
 func _ready() -> void:
 	super._ready() # necessaire pour le pause_layout
-	if _background.texture:
-		var screen_size: Vector2 = get_viewport_rect().size
-		var tex_size: Vector2 = Vector2(_background.texture.get_width(), _background.texture.get_height())
-		var scale_factor: float = max(screen_size.x / tex_size.x, screen_size.y / tex_size.y)
-		_background.scale = Vector2(scale_factor, scale_factor)
-		_background.position = get_viewport_rect().size / 2
-		_background.centered = true
-
+	StorySceneLayout.cover_viewport(_background)
 	StorySceneLayout.apply(self)
 
-	var story_engine: Node = get_node("/root/StoryEngine")
-
 	_intro_lines = INTRO_LINES.duplicate(true)
-	_conseiller = ConseillerScene.instantiate()
+	_conseiller = CONSEILLER_SCENE.instantiate()
 	_conseiller_area.add_child(_conseiller)
 
-	_dialogue_box = DialogueBoxScene.instantiate()
+	_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	_dialogue_area.add_child(_dialogue_box)
 	_dialogue_box.advance.connect(_on_advance)
 
-	if story_engine.player_name.strip_edges() != "":
-		_intro_lines[0]["text"] = "Bienvenue chez MAIF, " + story_engine.player_name + " ! Je suis Assurix le Barbu, votre conseiller, ici pour vous guider."
+	if Globals.story_engine.player_name.strip_edges() != "":
+		_intro_lines[0]["text"] = "Bienvenue chez MAIF, " + Globals.story_engine.player_name + " ! Je suis Assurix le Barbu, votre conseiller, ici pour vous guider."
 
 	_show_line(0)
 

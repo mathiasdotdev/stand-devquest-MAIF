@@ -16,8 +16,7 @@ var _view_idx: int = 0
 func _ready() -> void:
 	StorySceneLayout.apply(self)
 
-	var story_engine: Node = get_node("/root/StoryEngine")
-	_analysis = story_engine.get_analysis()
+	_analysis = Globals.story_engine.get_analysis()
 
 	_total_score_label.text = "Score total : " + str(_analysis["total_score"]) + " / " + str(_analysis["max_score"])
 	_label_label.text = _analysis["label"]
@@ -44,8 +43,6 @@ func _ready() -> void:
 	_update_prize_section()
 
 func _show_chapter_view(idx: int) -> void:
-	var chapitres: Node = get_node("/root/Chapitres")
-	var contrats: Node = get_node("/root/Contracts")
 	var answers: Array = _analysis["answers"]
 	if answers.is_empty():
 		_chapter_info.text = "Aucune donnee"
@@ -53,16 +50,16 @@ func _show_chapter_view(idx: int) -> void:
 
 	_view_idx = clamp(idx, 0, answers.size() - 1)
 	var a: Dictionary = answers[_view_idx]
-	var chapitre: Dictionary = chapitres.get_chapitre(a["chapitre_id"])
+	var chapitre: Dictionary = Globals.chapitres.get_chapitre(a["chapitre_id"])
 
 	var chosen_labels: Array = []
 	for ct: String in a["chosen_contracts"]:
-		var c: Dictionary = contrats.get_by_type(ct)
+		var c: Dictionary = Globals.contracts.get_by_type(ct)
 		chosen_labels.append(c.get("label", ct))
 
 	var recommended_labels: Array = []
 	for ct: String in a["correct_contracts"]:
-		var c: Dictionary = contrats.get_by_type(ct)
+		var c: Dictionary = Globals.contracts.get_by_type(ct)
 		recommended_labels.append(c.get("label", ct))
 
 	var verdict: String
@@ -92,15 +89,13 @@ func _on_next_chap() -> void:
 	_show_chapter_view(_view_idx + 1)
 
 
-func save_score_if_top_ten():
-	var leaderboard: Node = get_node("/root/Leaderboard")
-	var story_engine: Node = get_node("/root/StoryEngine")
+func save_score_if_top_ten() -> void:
 	var score: int = _analysis["total_score"]
 	var hints_used: int = _total_hints_used()
-	if leaderboard.is_top_ten("story", score, hints_used):
-		if story_engine.player_name.is_empty():
-			story_engine.player_name = "Anonyme"
-		leaderboard.add_entry("story", story_engine.player_name, score, story_engine.player_email, hints_used)
+	if Globals.leaderboard.is_top_ten("story", score, hints_used):
+		if Globals.story_engine.player_name.is_empty():
+			Globals.story_engine.player_name = "Anonyme"
+		Globals.leaderboard.add_entry("story", Globals.story_engine.player_name, score, Globals.story_engine.player_email, hints_used)
 
 func _total_hints_used() -> int:
 	var total_hints := 0
@@ -109,8 +104,7 @@ func _total_hints_used() -> int:
 	return total_hints
 
 func _update_prize_section() -> void:
-	var leaderboard: Node = get_node("/root/Leaderboard")
-	var best_entry: Dictionary = leaderboard.get_best_entry("story")
+	var best_entry: Dictionary = Globals.leaderboard.get_best_entry("story")
 	if best_entry.is_empty():
 		_prize_label.text = "🎁 Cadeau meilleur score : aucun score enregistré pour l'instant."
 		return

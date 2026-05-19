@@ -1,4 +1,5 @@
 extends Node
+class_name LeaderboardStore
 
 const SAVE_PATH := "user://leaderboard.cfg"
 const MAX_ENTRIES := 10

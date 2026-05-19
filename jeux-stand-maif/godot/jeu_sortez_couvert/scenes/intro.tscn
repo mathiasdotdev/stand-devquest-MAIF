@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://byrj13pgt0fel"]
 
 [ext_resource type="Script" uid="uid://6s8fqwkabxp8" path="res://jeu_sortez_couvert/scripts/intro.gd" id="1_intro"]
-[ext_resource type="Texture2D" uid="uid://koo5uuuuycsq" path="res://jeu_sortez_couvert/ui/assets/decor.png" id="2_8nfw1"]
+[ext_resource type="Texture2D" uid="uid://cmia0wg836u6g" path="res://jeu_sortez_couvert/ui/assets/background-image.png" id="2_8nfw1"]
 [ext_resource type="PackedScene" path="res://jeu_sortez_couvert/ui/overlay.tscn" id="3_overlay"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_fa5c8"]

@@ -30,15 +30,11 @@ func _refresh_tabs() -> void:
 	_populate_tab("story", $VBox/Tabs/Histoire/ScrollContainer/EntryList)
 	_populate_tab("racing", $VBox/Tabs/Pasdetolismo/ScrollContainer/EntryList)
 
-func _leaderboard() -> Node:
-	return get_node("/root/Leaderboard")
-
 func _populate_tab(mode: String, container: VBoxContainer) -> void:
 	for child in container.get_children():
 		child.queue_free()
-	
-	var leaderboard: Node = get_node("/root/Leaderboard")
-	var entries: Array = leaderboard.get_entries(mode)
+
+	var entries: Array = Globals.leaderboard.get_entries(mode)
 	if entries.is_empty():
 		var lbl := Label.new()
 		lbl.text = "Aucun score enregistré"
@@ -119,8 +115,7 @@ func _build_entry_row(mode: String, idx: int, entry: Dictionary) -> Control:
 		delete_btn.tooltip_text = "Supprimer l'entrée #%d" % (idx + 1)
 		delete_btn.custom_minimum_size = Vector2(78, 0)
 		delete_btn.pressed.connect(func() -> void:
-			var leaderboard: Node = _leaderboard()
-			leaderboard.remove_entry(mode, idx)
+			Globals.leaderboard.remove_entry(mode, idx)
 			_refresh_tabs()
 			_update_admin_controls()
 		)
@@ -181,7 +176,6 @@ func _create_admin_dialog() -> void:
 	_show_emails_check.toggled.connect(_on_toggle_email_visibility)
 	_inline_delete_check.toggled.connect(_on_toggle_inline_delete)
 	_admin_dialog.custom_action.connect(_on_admin_custom_action)
-	_admin_dialog.visibility_changed.connect(_on_admin_dialog_visibility_changed)
 
 	_update_admin_controls()
 
@@ -197,10 +191,9 @@ func _selected_mode() -> String:
 
 func _update_admin_controls() -> void:
 	var mode := _selected_mode()
-	var leaderboard: Node = _leaderboard()
-	var count: int = leaderboard.get_entries(mode).size()
+	var count: int = Globals.leaderboard.get_entries(mode).size()
 	_btn_clear_mode.disabled = count == 0
-	_btn_clear_all.disabled = leaderboard.get_entries("story").is_empty() and leaderboard.get_entries("racing").is_empty()
+	_btn_clear_all.disabled = Globals.leaderboard.get_entries("story").is_empty() and Globals.leaderboard.get_entries("racing").is_empty()
 
 func _on_toggle_email_visibility(show_emails: bool) -> void:
 	_admin_reveal_emails = show_emails
@@ -210,17 +203,13 @@ func _on_toggle_inline_delete(enabled: bool) -> void:
 	_admin_inline_delete = enabled
 	_refresh_tabs()
 
-func _on_admin_dialog_visibility_changed() -> void:
-	pass # Ne rien faire ici pour laisser persister la suppression directe
-
 func _on_admin_custom_action(action: StringName) -> void:
 	var mode := _selected_mode()
-	var leaderboard: Node = _leaderboard()
 	match String(action):
 		"clear_mode":
-			leaderboard.clear_mode(mode)
+			Globals.leaderboard.clear_mode(mode)
 		"clear_all":
-			leaderboard.clear_all()
+			Globals.leaderboard.clear_all()
 		_:
 			return
 	_refresh_tabs()
