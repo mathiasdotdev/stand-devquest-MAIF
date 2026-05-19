@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://jeqm1f042wql"]
 
 [ext_resource type="Script" uid="uid://fq46sin8xg34" path="res://jeu_sortez_couvert/scripts/pseudo_input.gd" id="1_pi"]
-[ext_resource type="Texture2D" uid="uid://koo5uuuuycsq" path="res://jeu_sortez_couvert/ui/assets/decor.png" id="2_ohhd0"]
+[ext_resource type="Texture2D" uid="uid://cmia0wg836u6g" path="res://jeu_sortez_couvert/ui/assets/background-image.png" id="2_ohhd0"]
 [ext_resource type="PackedScene" path="res://jeu_sortez_couvert/ui/overlay.tscn" id="3_overlay"]
 
 [node name="PseudoInput" type="Control" unique_id=649820104]

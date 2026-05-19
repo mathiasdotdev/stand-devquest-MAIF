@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://063tmkgca0yi"]
 
-[ext_resource type="Script" uid="uid://cxtqp8wa6e84a" path="res://jeu_sortez_couvert/scripts/chapitre_result_simple.gd" id="1"]
+[ext_resource type="Script" uid="uid://cxtqp8wa6e84a" path="res://jeu_sortez_couvert/scripts/chapitre_result.gd" id="1"]
 [ext_resource type="PackedScene" path="res://jeu_sortez_couvert/ui/conseiller.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://jeu_sortez_couvert/ui/dialogue_box.tscn" id="3"]
-[ext_resource type="Texture2D" uid="uid://koo5uuuuycsq" path="res://jeu_sortez_couvert/ui/assets/decor.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://cmia0wg836u6g" path="res://jeu_sortez_couvert/ui/assets/background-image.png" id="4"]
 [ext_resource type="PackedScene" path="res://jeu_sortez_couvert/ui/overlay.tscn" id="3_overlay"]
 
-[node name="ChapitreResultSimple" type="Control" unique_id=238234437]
+[node name="ChapitreResult" type="Control" unique_id=238234437]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

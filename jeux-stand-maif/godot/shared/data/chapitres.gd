@@ -1,4 +1,5 @@
 extends Node
+class_name ChapitresDB
 
 const CHAPITRES: Array = [
 	# --- Chapitre 0 : Premier vehicule ---

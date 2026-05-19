@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cc46sm1y2lngk"]
 
 [ext_resource type="Script" uid="uid://dex45y81f7c6f" path="res://jeu_sortez_couvert/scripts/chapitre_intro.gd" id="1_ci"]
-[ext_resource type="Texture2D" uid="uid://koo5uuuuycsq" path="res://jeu_sortez_couvert/ui/assets/decor.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://cmia0wg836u6g" path="res://jeu_sortez_couvert/ui/assets/background-image.png" id="4"]
 [ext_resource type="PackedScene" path="res://jeu_sortez_couvert/ui/overlay.tscn" id="3_overlay"]
 
 [node name="ChapitreIntro" type="Control" unique_id=897435605]

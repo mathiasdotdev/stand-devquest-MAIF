@@ -1,4 +1,11 @@
 extends Node
+class_name StoryEngineCore
+
+# Cache des autoloads (StoryEngine est lui-même un autoload, donc il ne peut
+# pas passer par Globals — il faut un cache local pour éviter les get_node répétés).
+@onready var _chapitres: ChapitresDB = get_node("/root/Chapitres")
+@onready var _disasters: DisastersDB = get_node("/root/Disasters")
+@onready var _contracts: ContractsDB = get_node("/root/Contracts")
 
 # ─── State ────────────────────────────────────────────────────────────────────
 
@@ -44,29 +51,25 @@ func use_hint() -> int:
 
 ## Retourne tous les indices déjà débloqués (cumulés, séparés par retour ligne).
 func get_hint_text() -> String:
-	var chapitres: Node = get_node("/root/Chapitres")
-	var chapitre: Dictionary = chapitres.get_chapitre(current_chapitre)
+	var chapitre: Dictionary = _chapitres.get_chapitre(current_chapitre)
 	var lines: Array = []
 
 	if hints_used_this_chapitre >= 1:
 		var names: Array = []
 		for d: Dictionary in chapitre["disasters"]:
-			var disasters: Node = get_node("/root/Disasters")
-			var dis: Dictionary = disasters.get_disaster(d["type"])
+			var dis: Dictionary = _disasters.get_disaster(d["type"])
 			names.append(dis["icon"] + " " + dis["label"])
 		lines.append("Risques de ce chapitre : " + ", ".join(names))
 
 	if hints_used_this_chapitre >= 2:
 		var contract_set: Dictionary = {}
 		for d: Dictionary in chapitre["disasters"]:
-			var disasters: Node = get_node("/root/Disasters")
-			var dis: Dictionary = disasters.get_disaster(d["type"])
+			var dis: Dictionary = _disasters.get_disaster(d["type"])
 			for ct: String in dis["covering_contracts"]:
 				contract_set[ct] = true
 		var labels: Array = []
 		for ct: String in contract_set.keys():
-			var contracts: Node = get_node("/root/Contracts")
-			var c: Dictionary = contracts.get_by_type(ct)
+			var c: Dictionary = _contracts.get_by_type(ct)
 			labels.append(c["icon"] + " " + c["label"])
 		lines.append("Contrats utiles : " + ", ".join(labels))
 
@@ -78,8 +81,7 @@ func get_hint_text() -> String:
 ## Formule : baseScore = max(0, round(correctCount * 3 / totalNeeded) - wrongCount)
 ##           scoreEarned = max(0, baseScore - hintsUsed)
 func resolve_current_chapitre() -> Dictionary:
-	var chapitres: Node = get_node("/root/Chapitres")
-	var chapitre: Dictionary = chapitres.get_chapitre(current_chapitre)
+	var chapitre: Dictionary = _chapitres.get_chapitre(current_chapitre)
 	var chosen: Array = selected_contracts.duplicate()
 	var correct_contracts: Array = chapitre["recommended_contracts"]
 	var total_needed: int = correct_contracts.size()
@@ -102,8 +104,7 @@ func resolve_current_chapitre() -> Dictionary:
 	for chap_disaster: Dictionary in chapitre["disasters"]:
 		if randf() > chap_disaster["probability"]:
 			continue
-		var disasters: Node = get_node("/root/Disasters")
-		var dis: Dictionary = disasters.get_disaster(chap_disaster["type"])
+		var dis: Dictionary = _disasters.get_disaster(chap_disaster["type"])
 		var was_covered: bool = false
 		for ct: String in chosen:
 			if dis["covering_contracts"].has(ct):
@@ -133,8 +134,7 @@ func resolve_current_chapitre() -> Dictionary:
 
 func next_chapitre() -> bool:
 	var next_id: int = current_chapitre + 1
-	var chapitres: Node = get_node("/root/Chapitres")
-	if next_id >= chapitres.count():
+	if next_id >= _chapitres.count():
 		is_complete = true
 		return false
 	current_chapitre = next_id
@@ -147,8 +147,7 @@ func next_chapitre() -> bool:
 ## Port direct de StoryEngine.ts:getAnalysis()
 ## Seuils : ≥85% Expert MAIF, ≥65% Bon élève, ≥40% À améliorer, <40% Débutant
 func get_analysis() -> Dictionary:
-	var chapitres: Node = get_node("/root/Chapitres")
-	var max_score: int = chapitres.count() * 3
+	var max_score: int = _chapitres.count() * 3
 	var pct: float = float(total_score) / float(max_score)
 
 	var label: String
@@ -172,9 +171,8 @@ func get_analysis() -> Dictionary:
 	var best_choice: String
 	if not best_answer.is_empty():
 		var labels: Array = []
-		var contracts: Node = get_node("/root/Contracts")
 		for ct: String in best_answer["chosen_contracts"]:
-			var c: Dictionary = contracts.get_by_type(ct)
+			var c: Dictionary = _contracts.get_by_type(ct)
 			labels.append(c.get("label", ct))
 		best_choice = "Ch. " + str(best_answer["chapitre_id"] + 1) + " — " + ", ".join(labels)
 	else:
@@ -182,9 +180,8 @@ func get_analysis() -> Dictionary:
 
 	var worst_choice: String
 	if not worst_answer.is_empty():
-		var contracts: Node = get_node("/root/Contracts")
 		var ct: String = worst_answer["correct_contracts"][0]
-		var c: Dictionary = contracts.get_by_type(ct)
+		var c: Dictionary = _contracts.get_by_type(ct)
 		worst_choice = "Ch. " + str(worst_answer["chapitre_id"] + 1) + " — le bon contrat etait " + c.get("label", ct)
 	else:
 		worst_choice = "Aucune erreur ! Gestion parfaite."
