@@ -3,13 +3,18 @@ extends Control
 # Feature flipping pour le bouton Pasdetolismo
 const PASDETOLISMO_ENABLED := false
 
+@onready var btn_sortez_couvert: Button = $CenterContainer/MenuPanel/Margin/VBoxContainer/BtnSortezCouvert
+@onready var btn_pasdetolismo: Button = $CenterContainer/MenuPanel/Margin/VBoxContainer/BtnPasdetolismo
+@onready var btn_classement: Button = $CenterContainer/MenuPanel/Margin/VBoxContainer/BtnClassement
+@onready var btn_quitter: Button = $CenterContainer/MenuPanel/Margin/VBoxContainer/BtnQuitter
+
 func _ready() -> void:
-	$CenterContainer/VBoxContainer/BtnSortezCouvert.pressed.connect(_on_sortez_couvert)
-	$CenterContainer/VBoxContainer/BtnPasdetolismo.visible = PASDETOLISMO_ENABLED
+	btn_sortez_couvert.pressed.connect(_on_sortez_couvert)
+	btn_pasdetolismo.visible = PASDETOLISMO_ENABLED
 	if PASDETOLISMO_ENABLED:
-		$CenterContainer/VBoxContainer/BtnPasdetolismo.pressed.connect(_on_pasdetolismo)
-	$CenterContainer/VBoxContainer/BtnClassement.pressed.connect(_on_classement)
-	$CenterContainer/VBoxContainer/BtnQuitter.pressed.connect(_on_quitter)
+		btn_pasdetolismo.pressed.connect(_on_pasdetolismo)
+	btn_classement.pressed.connect(_on_classement)
+	btn_quitter.pressed.connect(_on_quitter)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:

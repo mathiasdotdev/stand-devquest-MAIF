@@ -13,7 +13,6 @@ const INTRO_LINES: Array = [
 
 @onready var _conseiller_area: Control = $MarginContainer/VBoxContainer/ConseillerArea
 @onready var _dialogue_area: Control = $MarginContainer/VBoxContainer/DialogueArea
-@onready var _background: Sprite2D = $Background
 
 var _conseiller: Node
 var _dialogue_box: Node
@@ -22,13 +21,8 @@ var _intro_lines: Array = []
 
 func _ready() -> void:
 	super._ready() # necessaire pour le pause_layout
-	if _background.texture:
-		var screen_size: Vector2 = get_viewport_rect().size
-		var tex_size: Vector2 = Vector2(_background.texture.get_width(), _background.texture.get_height())
-		var scale_factor: float = max(screen_size.x / tex_size.x, screen_size.y / tex_size.y)
-		_background.scale = Vector2(scale_factor, scale_factor)
-		_background.position = get_viewport_rect().size / 2
-		_background.centered = true
+	# Le background est maintenant un TextureRect avec stretch_mode = keep_aspect_covered,
+	# pas besoin de scaling manuel.
 
 	StorySceneLayout.apply(self)
 
@@ -41,6 +35,8 @@ func _ready() -> void:
 	_dialogue_box = DialogueBoxScene.instantiate()
 	_dialogue_area.add_child(_dialogue_box)
 	_dialogue_box.advance.connect(_on_advance)
+	# Titre persistant dans la bulle (ex-SubtitleLabel qui était en haut de l'écran)
+	_dialogue_box.set_title("Apprenez à vous protéger avec les assurances MAIF")
 
 	if story_engine.player_name.strip_edges() != "":
 		_intro_lines[0]["text"] = "Bienvenue chez MAIF, " + story_engine.player_name + " ! Je suis Assurix le Barbu, votre conseiller, ici pour vous guider."
