@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://jeu_sortez_couvert/ui/pause_menu.gd" id="1_pm"]
+[ext_resource type="Theme" path="res://jeu_sortez_couvert/ui/theme/fantasy_theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/theme/divider.png" id="3_divider"]
+[ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/theme/panel_border_overlay.png" id="4_border_overlay"]
+[ext_resource type="FontFile" path="res://jeu_sortez_couvert/ui/theme/fonts/Nordvik.ttf" id="5_font_title"]
 
 [node name="PauseMenu" type="CanvasLayer"]
 process_mode = 3
@@ -8,50 +12,87 @@ layer = 10
 script = ExtResource("1_pm")
 
 [node name="Container" type="Control" parent="."]
+process_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 visible = false
+theme = ExtResource("2_theme")
 
 [node name="Dim" type="ColorRect" parent="Container"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0, 0.02, 0.1, 0.72)
+color = Color(0.03, 0.05, 0.11, 0.35)
 
-[node name="Center" type="CenterContainer" parent="Container"]
+[node name="CenterContainer" type="CenterContainer" parent="Container"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="VBox" type="VBoxContainer" parent="Container/Center"]
-custom_minimum_size = Vector2(360, 0)
-theme_override_constants/separation = 18
+[node name="MenuPanel" type="PanelContainer" parent="Container/CenterContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(640, 0)
 
-[node name="Title" type="Label" parent="Container/Center/VBox"]
+[node name="Margin" type="MarginContainer" parent="Container/CenterContainer/MenuPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="Container/CenterContainer/MenuPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+layout_mode = 2
+text = "Pause"
 horizontal_alignment = 1
-text = "PAUSE"
-theme_override_font_sizes/font_size = 52
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("5_font_title")
+theme_override_font_sizes/font_size = 64
+theme_override_colors/font_color = Color(1, 0.92, 0.55, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 4
 
-[node name="Warning" type="Label" parent="Container/Center/VBox"]
+[node name="Divider" type="TextureRect" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("3_divider")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Warning" type="Label" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+layout_mode = 2
+text = "Attention : si vous quittez, votre score ne sera pas enregistré dans le classement."
 horizontal_alignment = 1
-text = "Attention : si vous quittez, votre score ne sera pas enregistré dans le leaderboard."
-theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(1, 0.7, 0.2, 1)
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(1, 0.78, 0.35, 1)
 
-[node name="BtnResume" type="Button" parent="Container/Center/VBox"]
-custom_minimum_size = Vector2(0, 62)
+[node name="Spacer1" type="Control" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="BtnResume" type="Button" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
 text = "Reprendre"
-theme_override_font_sizes/font_size = 22
 
-[node name="BtnRestart" type="Button" parent="Container/Center/VBox"]
-custom_minimum_size = Vector2(0, 50)
-text = "Revenir au début"
-theme_override_font_sizes/font_size = 17
-
-[node name="BtnQuit" type="Button" parent="Container/Center/VBox"]
-custom_minimum_size = Vector2(0, 50)
+[node name="BtnQuit" type="Button" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
 text = "Quitter le mode histoire"
-theme_override_font_sizes/font_size = 17
 
+[node name="BorderOverlay" type="NinePatchRect" parent="Container/CenterContainer/MenuPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("4_border_overlay")
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 16

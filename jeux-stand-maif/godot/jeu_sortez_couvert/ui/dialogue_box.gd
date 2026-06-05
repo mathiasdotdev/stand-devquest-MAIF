@@ -2,7 +2,7 @@ extends PanelContainer
 
 signal advance
 
-const CHARS_PER_SEC := 45.0
+const CHARS_PER_SEC := 60.0
 
 @onready var title_label: Label = $MarginContainer/VBoxContainer/TitleLabel
 @onready var text_label: RichTextLabel = $MarginContainer/VBoxContainer/TextLabel
@@ -68,6 +68,7 @@ func _input(event: InputEvent) -> void:
 		text_label.visible_ratio = 1.0
 		_on_typewriter_done()
 	else:
+		Sfx.play("selection")
 		advance.emit()
 	if is_inside_tree():
 		get_viewport().set_input_as_handled()

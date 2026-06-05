@@ -38,6 +38,7 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F10:
+		Sfx.play("switch")
 		_toggle_admin_dialog()
 		get_viewport().set_input_as_handled()
 
@@ -273,15 +274,13 @@ func _selected_mode() -> String:
 	return "story" # Mode par défaut, car il n'y a plus de sélecteur
 
 func _update_admin_controls() -> void:
-	var leaderboard: Node = _leaderboard()
-	_btn_clear_all.disabled = leaderboard.get_entries("story").is_empty() and leaderboard.get_entries("racing").is_empty()
+	_btn_clear_all.disabled = Globals.leaderboard.get_entries("story").is_empty() and Globals.leaderboard.get_entries("racing").is_empty()
 
 func _on_toggle_inline_delete(enabled: bool) -> void:
 	_admin_inline_delete = enabled
 	_refresh_tabs()
 
 func _on_admin_custom_action(action: StringName) -> void:
-	var leaderboard: Node = _leaderboard()
 	match String(action):
 		"clear_all":
 			Globals.leaderboard.clear_all()

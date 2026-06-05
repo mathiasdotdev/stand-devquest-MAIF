@@ -8,17 +8,12 @@ class_name LeaderboardStore
 # l'historique complet, accessible à des fins de stats/admin/export.
 # L'UI continue d'afficher seulement les `DISPLAY_TOP_N` meilleures via
 # `get_entries(mode, DISPLAY_TOP_N)`.
-#
-# Migration auto : si l'ancien fichier `.cfg` existe et que le `.json` n'existe
-# pas encore, on le lit, on convertit, puis on écrit en JSON. L'ancien .cfg
-# est conservé pour rollback éventuel.
 # ---------------------------------------------------------------------------
 
 # En éditeur : sauvegarde dans le projet (pratique pour debug + versioning)
 # En build exporté : sauvegarde dans user:// (res:// est read-only une fois packé)
 const PROJECT_SAVE_PATH := "res://shared/persistence/leaderboard.json"
 const USER_SAVE_PATH := "user://leaderboard.json"
-const LEGACY_SAVE_PATH := "user://leaderboard.cfg"
 
 # Nombre d'entrées affichées par défaut dans l'UI / utilisé pour `is_top_ten`.
 const DISPLAY_TOP_N := 10
@@ -152,11 +147,6 @@ func _load() -> void:
 		_load_json(USER_SAVE_PATH)
 		_save()
 		print("[Leaderboard] Import depuis user://leaderboard.json vers res://shared/persistence/leaderboard.json")
-	elif FileAccess.file_exists(LEGACY_SAVE_PATH):
-		# Migration unique depuis l'ancien format .cfg → .json
-		_load_legacy_cfg()
-		_save()
-		print("[Leaderboard] Migration .cfg → .json effectuée (%d story / %d racing entrées)." % [_data["story"].size(), _data["racing"].size()])
 
 func _load_json(path: String) -> void:
 	var file := FileAccess.open(path, FileAccess.READ)
@@ -179,30 +169,6 @@ func _load_json(path: String) -> void:
 		for raw_entry in arr:
 			if raw_entry is Dictionary:
 				_data[mode].append(_normalize_entry(raw_entry))
-		_data[mode].sort_custom(_compare_entries)
-
-func _load_legacy_cfg() -> void:
-	var cfg := ConfigFile.new()
-	if cfg.load(LEGACY_SAVE_PATH) != OK:
-		return
-	for mode in ["story", "racing"]:
-		var count: int = cfg.get_value(mode, "count", 0)
-		_data[mode] = []
-		for i in count:
-			var score: int = int(cfg.get_value(mode, str(i) + "_score", 0))
-			var hints_used: int = int(cfg.get_value(mode, str(i) + "_hints_used", 0))
-			var effective_key := str(i) + "_effective_score"
-			var effective_value: float = _effective_score(score, hints_used)
-			if cfg.has_section_key(mode, effective_key):
-				effective_value = float(cfg.get_value(mode, effective_key, effective_value))
-			_data[mode].append(_normalize_entry({
-				"name": cfg.get_value(mode, str(i) + "_name", "???"),
-				"email": cfg.get_value(mode, str(i) + "_email", ""),
-				"score": score,
-				"hints_used": hints_used,
-				"effective_score": effective_value,
-				"timestamp": cfg.get_value(mode, str(i) + "_timestamp", 0),
-			}))
 		_data[mode].sort_custom(_compare_entries)
 
 func _normalize_entry(raw: Dictionary) -> Dictionary:

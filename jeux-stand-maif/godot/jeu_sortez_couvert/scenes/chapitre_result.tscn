@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" path="res://jeu_sortez_couvert/ui/dialogue_box.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://cmia0wg836u6g" path="res://jeu_sortez_couvert/ui/assets/background-image.png" id="4"]
 [ext_resource type="PackedScene" path="res://jeu_sortez_couvert/ui/overlay.tscn" id="3_overlay"]
+[ext_resource type="Theme" path="res://jeu_sortez_couvert/ui/theme/fantasy_theme.tres" id="6_theme"]
 
 [node name="ChapitreResult" type="Control" unique_id=238234437]
 layout_mode = 3
@@ -13,10 +14,17 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("6_theme")
 script = ExtResource("1")
 
-[node name="Background" type="Sprite2D" parent="." unique_id=312091849]
+[node name="Background" type="TextureRect" parent="." unique_id=312091849]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 texture = ExtResource("4")
+expand_mode = 1
+stretch_mode = 6
 
 [node name="Overlay" parent="." instance=ExtResource("3_overlay")]
 

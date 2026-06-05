@@ -1,49 +1,11 @@
-[gd_scene format=3 uid="uid://cc46sm1y2lngk"]
+[gd_scene load_steps=3 format=3 uid="uid://cc46sm1y2lngk"]
 
-[ext_resource type="Script" uid="uid://dex45y81f7c6f" path="res://jeu_sortez_couvert/scripts/chapitre_intro.gd" id="1_ci"]
-[ext_resource type="Texture2D" uid="uid://cmia0wg836u6g" path="res://jeu_sortez_couvert/ui/assets/background-image.png" id="4"]
-[ext_resource type="PackedScene" path="res://jeu_sortez_couvert/ui/overlay.tscn" id="3_overlay"]
+[ext_resource type="PackedScene" path="res://jeu_sortez_couvert/scenes/story_base.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://dex45y81f7c6f" path="res://jeu_sortez_couvert/scripts/chapitre_intro.gd" id="2_ci"]
 
-[node name="ChapitreIntro" type="Control" unique_id=897435605]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("1_ci")
+[node name="ChapitreIntro" instance=ExtResource("1_base")]
+script = ExtResource("2_ci")
 
-[node name="Background" type="Sprite2D" parent="." unique_id=1429050922]
-texture = ExtResource("4")
-
-[node name="Overlay" parent="." instance=ExtResource("3_overlay")]
-
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=852539402]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1336739923]
-layout_mode = 2
-
-[node name="ChapitreNumLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=413137966]
-layout_mode = 2
-text = "Chapitre 1 / 6"
-
-[node name="TitreLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=104845183]
-layout_mode = 2
-text = "..."
-
-[node name="ContexteLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1855768721]
-layout_mode = 2
-text = "..."
-autowrap_mode = 3
-
-[node name="ConseillerArea" type="CenterContainer" parent="MarginContainer/VBoxContainer" unique_id=1167862863]
-layout_mode = 2
-
-[node name="DialogueArea" type="MarginContainer" parent="MarginContainer/VBoxContainer" unique_id=27831128]
-layout_mode = 2
+[node name="HeaderLabel" parent="."]
+visible = true
+text = "Sortez Couvert"

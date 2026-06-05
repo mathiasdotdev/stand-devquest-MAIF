@@ -3,7 +3,8 @@
 [ext_resource type="Script" path="res://jeu_sortez_couvert/ui/contract_card.gd" id="1_cc"]
 
 [node name="ContractCard" type="PanelContainer"]
-custom_minimum_size = Vector2(155, 110)
+custom_minimum_size = Vector2(170, 130)
+size_flags_vertical = 4
 mouse_filter = 0
 script = ExtResource("1_cc")
 
@@ -17,19 +18,20 @@ mouse_filter = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 6
 mouse_filter = 2
 
 [node name="IconLabel" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 40
 text = "?"
 mouse_filter = 2
 
 [node name="NameLabel" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 14
 autowrap_mode = 3
 text = "Contrat"
 mouse_filter = 2

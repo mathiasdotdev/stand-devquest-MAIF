@@ -6,14 +6,12 @@ extends "res://jeu_sortez_couvert/scripts/pause_layout.gd"
 @onready var _score_label: Label = $MarginContainer/VBoxContainer/TopHBox/ScoreLabel
 @onready var _titre_label: Label = $MarginContainer/VBoxContainer/TopHBox/TitreLabel
 @onready var _contexte_label: Label = $MarginContainer/VBoxContainer/ContexteLabel
-@onready var _background: Sprite2D = $Background
 
 var _lines: Array = []
 var _line_idx: int = 0
 
 func _ready() -> void:
 	super._ready()
-	StorySceneLayout.cover_viewport(_background)
 	StorySceneLayout.apply(self, "intro")
 
 	var answer: Dictionary = Globals.story_engine.answers.back()
@@ -43,6 +41,11 @@ func _ready() -> void:
 
 	_build_lines(answer)
 	_show_line(0)
+
+	if int(answer.get("score_earned", 0)) >= 2:
+		Sfx.play("win")
+	elif uncovered_count >= int(ceil(float(max(total_count, 1)) / 2.0)):
+		Sfx.play("fail")
 
 func _build_lines(answer: Dictionary) -> void:
 	_lines = []

@@ -3,25 +3,25 @@ extends "res://jeu_sortez_couvert/scripts/pause_layout.gd"
 const CONTRACT_CARD_SCENE: PackedScene = preload("res://jeu_sortez_couvert/ui/contract_card.tscn")
 
 @onready var _titre_label: Label = $MarginContainer/VBoxContainer/TitreLabel
+@onready var _context_label: Label = $MarginContainer/VBoxContainer/ContextBubble/Margin/VBox/ContextLabel
 @onready var _cards_container: HBoxContainer = $MarginContainer/VBoxContainer/CardsContainer
 @onready var _hint_btn1: Button = $MarginContainer/VBoxContainer/ButtonsRow/BtnIndice1
 @onready var _hint_btn2: Button = $MarginContainer/VBoxContainer/ButtonsRow/BtnIndice2
 @onready var _confirm_btn: Button = $MarginContainer/VBoxContainer/ButtonsRow/BtnConfirmer
-@onready var _hint_label: Label = $MarginContainer/VBoxContainer/HintLabel
-@onready var _background: Sprite2D = $Background
+@onready var _hint_label: Label = $MarginContainer/VBoxContainer/ContextBubble/Margin/VBox/HintLabel
 
 var _cards: Array = []
 var _chapitre: Dictionary
 
 func _ready() -> void:
 	super._ready() # necessaire pour le pause_layout
-	StorySceneLayout.cover_viewport(_background)
 
 	_chapitre = Globals.chapitres.get_chapitre(Globals.story_engine.current_chapitre)
 	_titre_label.text = (
 		_chapitre["emoji"] + "  Chapitre " + str(Globals.story_engine.current_chapitre + 1)
 		+ " — " + _chapitre["titre"]
 	)
+	_context_label.text = String(_chapitre.get("contexte", ""))
 
 	_hint_btn1.pressed.connect(_on_hint_pressed)
 	_hint_btn2.pressed.connect(_on_hint_pressed)
