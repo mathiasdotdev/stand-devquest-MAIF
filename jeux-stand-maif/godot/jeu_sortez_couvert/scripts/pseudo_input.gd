@@ -24,7 +24,6 @@ func _ready() -> void:
 	_on_email_changed(email_input.text)
 
 func _on_start() -> void:
-	var story_engine: Node = get_node("/root/StoryEngine")
 	var player_name: String = name_input.text.strip_edges()
 	var player_email: String = email_input.text.strip_edges()
 	if player_name.is_empty():
@@ -35,11 +34,9 @@ func _on_start() -> void:
 		email_input.add_theme_color_override("font_color", Color(1, 0.4, 0.4, 1))
 		email_input.grab_focus()
 		return
-	story_engine.player_name = player_name
-	story_engine.player_email = player_email
-	story_engine.reset()
-	story_engine.player_name = player_name
-	story_engine.player_email = player_email
+	Globals.story_engine.reset()
+	Globals.story_engine.player_name = player_name
+	Globals.story_engine.player_email = player_email
 	get_tree().change_scene_to_file("res://jeu_sortez_couvert/scenes/intro.tscn")
 
 func _on_text_changed(new_text: String) -> void:

@@ -1,4 +1,5 @@
 extends Node
+class_name LeaderboardStore
 
 # ---------------------------------------------------------------------------
 # Persistence du classement.

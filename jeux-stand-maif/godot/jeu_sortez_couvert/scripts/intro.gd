@@ -1,7 +1,7 @@
 extends "res://jeu_sortez_couvert/scripts/pause_layout.gd"
 
-const ConseillerScene: PackedScene = preload("res://jeu_sortez_couvert/ui/conseiller.tscn")
-const DialogueBoxScene: PackedScene = preload("res://jeu_sortez_couvert/ui/dialogue_box.tscn")
+const CONSEILLER_SCENE: PackedScene = preload("res://jeu_sortez_couvert/ui/conseiller.tscn")
+const DIALOGUE_BOX_SCENE: PackedScene = preload("res://jeu_sortez_couvert/ui/dialogue_box.tscn")
 
 const INTRO_LINES: Array = [
 	{"text": "Bienvenue chez MAIF ! Je suis Assurix le Barbu, votre conseiller, ici pour vous guider.", "expression": "souriant"},
@@ -26,20 +26,18 @@ func _ready() -> void:
 
 	StorySceneLayout.apply(self)
 
-	var story_engine: Node = get_node("/root/StoryEngine")
-
 	_intro_lines = INTRO_LINES.duplicate(true)
-	_conseiller = ConseillerScene.instantiate()
+	_conseiller = CONSEILLER_SCENE.instantiate()
 	_conseiller_area.add_child(_conseiller)
 
-	_dialogue_box = DialogueBoxScene.instantiate()
+	_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	_dialogue_area.add_child(_dialogue_box)
 	_dialogue_box.advance.connect(_on_advance)
 	# Titre persistant dans la bulle (ex-SubtitleLabel qui était en haut de l'écran)
 	_dialogue_box.set_title("Apprenez à vous protéger avec les assurances MAIF")
 
-	if story_engine.player_name.strip_edges() != "":
-		_intro_lines[0]["text"] = "Bienvenue chez MAIF, " + story_engine.player_name + " ! Je suis Assurix le Barbu, votre conseiller, ici pour vous guider."
+	if Globals.story_engine.player_name.strip_edges() != "":
+		_intro_lines[0]["text"] = "Bienvenue chez MAIF, " + Globals.story_engine.player_name + " ! Je suis Assurix le Barbu, votre conseiller, ici pour vous guider."
 
 	_show_line(0)
 

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://w0obhnvh7i0r"]
 
 [ext_resource type="Script" uid="uid://bkpwi6fmdr545" path="res://jeu_sortez_couvert/scripts/contract_selection.gd" id="1_cs"]
-[ext_resource type="Texture2D" uid="uid://koo5uuuuycsq" path="res://jeu_sortez_couvert/ui/assets/decor.png" id="2_eoymw"]
+[ext_resource type="Texture2D" uid="uid://cmia0wg836u6g" path="res://jeu_sortez_couvert/ui/assets/background-image.png" id="2_eoymw"]
 [ext_resource type="PackedScene" path="res://jeu_sortez_couvert/ui/overlay.tscn" id="3_overlay"]
 
 [node name="ContractSelection" type="Control" unique_id=550192341]

@@ -18,20 +18,20 @@ func _ready() -> void:
 	_confirm_dialog.ok_button_text = "Oui, recommencer"
 	_confirm_dialog.cancel_button_text = "Annuler"
 	_confirm_dialog.visible = false
-	_confirm_dialog.connect("confirmed", _on_restart)
+	_confirm_dialog.confirmed.connect(_on_restart)
 	add_child(_confirm_dialog)
 
-func show_pause():
+func show_pause() -> void:
 	get_tree().paused = true
 	$Container.visible = true
 
-func hide_pause():
+func hide_pause() -> void:
 	get_tree().paused = false
 	$Container.visible = false
 
 func _on_resume() -> void:
 	hide_pause()
-	emit_signal("resume_requested")
+	resume_requested.emit()
 
 func _on_restart_confirm() -> void:
 	_confirm_dialog.popup_centered()
@@ -40,8 +40,8 @@ func _on_restart_confirm() -> void:
 func _on_restart() -> void:
 	_confirm_dialog.visible = false
 	hide_pause()
-	emit_signal("restart_requested")
+	restart_requested.emit()
 
 func _on_quit() -> void:
 	hide_pause()
-	emit_signal("quit_requested")
+	quit_requested.emit()

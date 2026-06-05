@@ -12,22 +12,12 @@ var _lines: Array = []
 var _line_idx: int = 0
 
 func _ready() -> void:
-	super._ready() # necessaire pour le pause_layout
+	super._ready()
+	StorySceneLayout.cover_viewport(_background)
 	StorySceneLayout.apply(self, "intro")
-	
-	# Ajuste le fond pour qu'il couvre tout l'écran (effet cover)
-	if _background.texture:
-		var screen_size: Vector2 = get_viewport_rect().size
-		var tex_size: Vector2 = Vector2(_background.texture.get_width(), _background.texture.get_height())
-		var scale_factor: float = max(screen_size.x / tex_size.x, screen_size.y / tex_size.y)
-		_background.scale = Vector2(scale_factor, scale_factor)
-		_background.position = get_viewport_rect().size / 2
-		_background.centered = true
 
-	var story_engine: Node = get_node("/root/StoryEngine")
-	var chapitres: Node = get_node("/root/Chapitres")
-	var answer = story_engine.answers.back()
-	var chapitre = chapitres.get_chapitre(story_engine.current_chapitre)
+	var answer: Dictionary = Globals.story_engine.answers.back()
+	var chapitre: Dictionary = Globals.chapitres.get_chapitre(Globals.story_engine.current_chapitre)
 	var disasters: Array = answer.get("disaster_hits", [])
 	var total_count: int = max(disasters.size(), 1)
 	var uncovered_count: int = 0
@@ -37,7 +27,7 @@ func _ready() -> void:
 	var covered_count: int = total_count - uncovered_count
 	var net_score: int = covered_count - uncovered_count
 
-	_chapitre_num_label.text = "Chapitre " + str(story_engine.current_chapitre + 1) + " / " + str(chapitres.count())
+	_chapitre_num_label.text = "Chapitre " + str(Globals.story_engine.current_chapitre + 1) + " / " + str(Globals.chapitres.count())
 	_score_label.text = "Score : " + str(net_score) + " / " + str(total_count)
 	_titre_label.text = chapitre["emoji"] + "  " + chapitre["titre"]
 	_contexte_label.text = str(chapitre.get("contexte", ""))
@@ -87,23 +77,24 @@ func _build_lines(answer: Dictionary) -> void:
 		})
 
 	var chosen_contracts: Array = answer.get("chosen_contracts", [])
-	var disasters_singleton: Node = get_node("/root/Disasters")
-	var contracts_singleton: Node = get_node("/root/Contracts")
 	for hit: Dictionary in disasters:
 		var narrative: String = str(hit.get("narrative", ""))
 		var disaster_type: String = hit.get("type", "")
 		var was_covered: bool = bool(hit.get("was_covered", false))
-		var dis: Dictionary = disasters_singleton.get_disaster(disaster_type)
+		var dis: Dictionary = Globals.disasters.get_disaster(disaster_type)
 		var covering_contracts: Array = dis.get("covering_contracts", [])
+		var covering_set: Dictionary = {}
+		for ct in covering_contracts:
+			covering_set[ct] = true
 		var contract_labels: Array = []
 		for ct in covering_contracts:
-			var c = contracts_singleton.get_by_type(ct)
+			var c: Dictionary = Globals.contracts.get_by_type(ct)
 			contract_labels.append(c.get("icon", "") + " " + c.get("label", ct))
 		if was_covered:
 			var player_contracts: Array[Variant] = []
 			for ct in chosen_contracts:
-				if covering_contracts.has(ct):
-					var c = contracts_singleton.get_by_type(ct)
+				if covering_set.has(ct):
+					var c: Dictionary = Globals.contracts.get_by_type(ct)
 					player_contracts.append(c.get("icon", "") + " " + c.get("label", ct))
 			var contract_str: String = ", ".join(player_contracts) if player_contracts.size() > 0 else "?"
 			_lines.append({
@@ -124,8 +115,6 @@ func _show_line(idx: int) -> void:
 	_dialogue_box.show_text(str(line.get("text", "...")))
 	if _conseiller:
 		_conseiller.set_expression(str(line.get("expression", "explain")))
-	else:
-		print("[ERREUR] Le noeud Conseiller est null !")
 
 func _on_advance() -> void:
 	_line_idx += 1
@@ -133,8 +122,7 @@ func _on_advance() -> void:
 		_show_line(_line_idx)
 		return
 
-	var story_engine: Node = get_node("/root/StoryEngine")
-	var has_next: bool = story_engine.next_chapitre()
+	var has_next: bool = Globals.story_engine.next_chapitre()
 	if has_next:
 		get_tree().change_scene_to_file("res://jeu_sortez_couvert/scenes/chapitre_intro.tscn")
 	else:

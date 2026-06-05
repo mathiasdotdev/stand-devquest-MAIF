@@ -45,9 +45,6 @@ func _refresh_tabs() -> void:
 	_populate_tab("story", history_list)
 	_populate_tab("racing", racing_list)
 
-func _leaderboard() -> Node:
-	return get_node("/root/Leaderboard")
-
 func _populate_tab(mode: String, container: VBoxContainer) -> void:
 	for child in container.get_children():
 		child.queue_free()
@@ -159,8 +156,7 @@ func _build_entry_row(mode: String, idx: int, entry: Dictionary) -> Control:
 		delete_btn.add_theme_color_override("font_color", Color(0.96, 0.96, 0.98, 1))
 		delete_btn.add_theme_color_override("font_hover_color", Color(1, 0.5, 0.5, 1))
 		delete_btn.pressed.connect(func() -> void:
-			var leaderboard: Node = _leaderboard()
-			leaderboard.remove_entry(mode, idx)
+			Globals.leaderboard.remove_entry(mode, idx)
 			_refresh_tabs()
 			_update_admin_controls()
 		)
@@ -264,7 +260,6 @@ func _create_admin_dialog() -> void:
 
 	_inline_delete_check.toggled.connect(_on_toggle_inline_delete)
 	_admin_dialog.custom_action.connect(_on_admin_custom_action)
-	_admin_dialog.visibility_changed.connect(_on_admin_dialog_visibility_changed)
 
 	_update_admin_controls()
 
@@ -285,14 +280,11 @@ func _on_toggle_inline_delete(enabled: bool) -> void:
 	_admin_inline_delete = enabled
 	_refresh_tabs()
 
-func _on_admin_dialog_visibility_changed() -> void:
-	pass # Ne rien faire ici pour laisser persister la suppression directe
-
 func _on_admin_custom_action(action: StringName) -> void:
 	var leaderboard: Node = _leaderboard()
 	match String(action):
 		"clear_all":
-			leaderboard.clear_all()
+			Globals.leaderboard.clear_all()
 		_:
 			return
 	_refresh_tabs()

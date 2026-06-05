@@ -1,4 +1,5 @@
 extends Node
+class_name DisastersDB
 
 const DISASTERS: Dictionary = {
 	"accident_voiture": {

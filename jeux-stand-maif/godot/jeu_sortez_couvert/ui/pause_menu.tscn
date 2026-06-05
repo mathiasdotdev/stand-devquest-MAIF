@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://jeu_sortez_couvert/ui/pause_menu.gd" id="1_pm"]
 
 [node name="PauseMenu" type="CanvasLayer"]
+process_mode = 3
 layer = 10
 script = ExtResource("1_pm")
 
