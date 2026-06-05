@@ -1,18 +1,16 @@
 extends Control
 
-@onready var name_input: LineEdit = $Center/Panel/Margin/VBox/NameInput
-@onready var email_input: LineEdit = $Center/Panel/Margin/VBox/EmailInput
-@onready var btn_start: Button = $Center/Panel/Margin/VBox/Footer/BtnStart
-@onready var btn_back: Button = $Center/Panel/Margin/VBox/Footer/BtnBack
-@onready var _background: Sprite2D = $Background
+@onready var name_input: LineEdit = $CenterContainer/MenuPanel/Margin/VBox/NameInput
+@onready var email_input: LineEdit = $CenterContainer/MenuPanel/Margin/VBox/EmailInput
+@onready var btn_start: Button = $CenterContainer/MenuPanel/Margin/VBox/Footer/BtnStart
+@onready var btn_back: Button = $CenterContainer/MenuPanel/Margin/VBox/Footer/BtnBack
 
 func _ready() -> void:
-	StorySceneLayout.cover_viewport(_background)
-
-	if Globals.story_engine.player_name != "":
-		name_input.text = Globals.story_engine.player_name
-	if Globals.story_engine.player_email != "":
-		email_input.text = Globals.story_engine.player_email
+	var story_engine: Node = get_node("/root/StoryEngine")
+	if story_engine.player_name != "":
+		name_input.text = story_engine.player_name
+	if story_engine.player_email != "":
+		email_input.text = story_engine.player_email
 
 	name_input.text_submitted.connect(func(_t): _on_start())
 	name_input.text_changed.connect(_on_text_changed)
@@ -30,11 +28,10 @@ func _on_start() -> void:
 	var player_email: String = email_input.text.strip_edges()
 	if player_name.is_empty():
 		# Donne un feedback rapide si le pseudo est vide.
-		name_input.add_theme_color_override("border_color", Color(1,0.3,0.3))
-		name_input.add_theme_constant_override("border_width", 2)
+		name_input.add_theme_color_override("font_color", Color(1, 0.4, 0.4, 1))
 		return
 	if not _is_email_valid(player_email):
-		email_input.add_theme_color_override("font_color", Color(1, 0.4, 0.4))
+		email_input.add_theme_color_override("font_color", Color(1, 0.4, 0.4, 1))
 		email_input.grab_focus()
 		return
 	Globals.story_engine.reset()
@@ -46,8 +43,7 @@ func _on_text_changed(new_text: String) -> void:
 	var is_valid: bool = not new_text.strip_edges().is_empty()
 	btn_start.disabled = not is_valid
 	if is_valid:
-		name_input.remove_theme_color_override("border_color")
-		name_input.remove_theme_constant_override("border_width")
+		name_input.remove_theme_color_override("font_color")
 
 func _on_email_changed(new_text: String) -> void:
 	if _is_email_valid(new_text.strip_edges()):

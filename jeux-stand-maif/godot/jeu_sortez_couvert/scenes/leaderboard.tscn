@@ -1,77 +1,126 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://jeu_sortez_couvert/scripts/leaderboard.gd" id="1_lb"]
+[ext_resource type="Theme" path="res://jeu_sortez_couvert/ui/theme/fantasy_theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/assets/decor.png" id="3_decor"]
+[ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/theme/divider.png" id="4_divider"]
+[ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/theme/panel_border_overlay.png" id="5_border_overlay"]
+[ext_resource type="FontFile" path="res://jeu_sortez_couvert/ui/theme/fonts/Nordvik.ttf" id="6_font_title"]
 
 [node name="Leaderboard" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource("2_theme")
 script = ExtResource("1_lb")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0, 0.04, 0.13, 1)
+texture = ExtResource("3_decor")
+expand_mode = 1
+stretch_mode = 6
 
-[node name="VBox" type="VBoxContainer" parent="."]
+[node name="DarkOverlay" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 60.0
-offset_top = 40.0
-offset_right = -60.0
-offset_bottom = -40.0
-theme_override_constants/separation = 20
+color = Color(0.03, 0.05, 0.11, 0.65)
 
-[node name="Title" type="Label" parent="VBox"]
+[node name="MenuPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = 30.0
+offset_right = -40.0
+offset_bottom = -30.0
+
+[node name="Margin" type="MarginContainer" parent="MenuPanel"]
 layout_mode = 2
-horizontal_alignment = 1
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="VBox" type="VBoxContainer" parent="MenuPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="MenuPanel/Margin/VBox"]
+layout_mode = 2
 text = "Classement"
-theme_override_font_sizes/font_size = 42
-theme_override_colors/font_color = Color(0.27, 0.67, 1, 1)
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("6_font_title")
+theme_override_font_sizes/font_size = 64
+theme_override_colors/font_color = Color(1, 0.92, 0.55, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 4
 
-[node name="Tabs" type="TabContainer" parent="VBox"]
+[node name="Divider" type="TextureRect" parent="MenuPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("4_divider")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Tabs" type="TabContainer" parent="MenuPanel/Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+tabs_visible = false
+
+[node name="Histoire" type="MarginContainer" parent="MenuPanel/Margin/VBox/Tabs"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MenuPanel/Margin/VBox/Tabs/Histoire"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Histoire" type="MarginContainer" parent="VBox/Tabs"]
-layout_mode = 2
-theme_override_constants/margin_left = 24
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 24
-theme_override_constants/margin_bottom = 16
-
-[node name="ScrollContainer" type="ScrollContainer" parent="VBox/Tabs/Histoire"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="EntryList" type="VBoxContainer" parent="VBox/Tabs/Histoire/ScrollContainer"]
+[node name="EntryList" type="VBoxContainer" parent="MenuPanel/Margin/VBox/Tabs/Histoire/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
-[node name="Pasdetolismo" type="MarginContainer" parent="VBox/Tabs"]
+[node name="Pasdetolismo" type="MarginContainer" parent="MenuPanel/Margin/VBox/Tabs"]
+visible = false
 layout_mode = 2
-theme_override_constants/margin_left = 24
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 24
-theme_override_constants/margin_bottom = 16
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBox/Tabs/Pasdetolismo"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MenuPanel/Margin/VBox/Tabs/Pasdetolismo"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="EntryList" type="VBoxContainer" parent="VBox/Tabs/Pasdetolismo/ScrollContainer"]
+[node name="EntryList" type="VBoxContainer" parent="MenuPanel/Margin/VBox/Tabs/Pasdetolismo/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
-[node name="BtnRetour" type="Button" parent="VBox"]
+[node name="BtnRetour" type="Button" parent="MenuPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 62)
 layout_mode = 2
-custom_minimum_size = Vector2(0, 48)
 text = "Retour au menu"
-theme_override_font_sizes/font_size = 18
+
+[node name="BorderOverlay" type="NinePatchRect" parent="MenuPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("5_border_overlay")
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 16

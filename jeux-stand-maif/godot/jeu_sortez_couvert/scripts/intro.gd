@@ -13,7 +13,6 @@ const INTRO_LINES: Array = [
 
 @onready var _conseiller_area: Control = $MarginContainer/VBoxContainer/ConseillerArea
 @onready var _dialogue_area: Control = $MarginContainer/VBoxContainer/DialogueArea
-@onready var _background: Sprite2D = $Background
 
 var _conseiller: Node
 var _dialogue_box: Node
@@ -22,7 +21,9 @@ var _intro_lines: Array = []
 
 func _ready() -> void:
 	super._ready() # necessaire pour le pause_layout
-	StorySceneLayout.cover_viewport(_background)
+	# Le background est maintenant un TextureRect avec stretch_mode = keep_aspect_covered,
+	# pas besoin de scaling manuel.
+
 	StorySceneLayout.apply(self)
 
 	_intro_lines = INTRO_LINES.duplicate(true)
@@ -32,6 +33,8 @@ func _ready() -> void:
 	_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 	_dialogue_area.add_child(_dialogue_box)
 	_dialogue_box.advance.connect(_on_advance)
+	# Titre persistant dans la bulle (ex-SubtitleLabel qui était en haut de l'écran)
+	_dialogue_box.set_title("Apprenez à vous protéger avec les assurances MAIF")
 
 	if Globals.story_engine.player_name.strip_edges() != "":
 		_intro_lines[0]["text"] = "Bienvenue chez MAIF, " + Globals.story_engine.player_name + " ! Je suis Assurix le Barbu, votre conseiller, ici pour vous guider."

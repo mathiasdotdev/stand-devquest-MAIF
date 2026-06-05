@@ -2,18 +2,28 @@ extends PanelContainer
 
 signal advance
 
-const CHARS_PER_SEC := 35.0
+const CHARS_PER_SEC := 45.0
 
+@onready var title_label: Label = $MarginContainer/VBoxContainer/TitleLabel
 @onready var text_label: RichTextLabel = $MarginContainer/VBoxContainer/TextLabel
-@onready var continue_label: Label = $MarginContainer/VBoxContainer/ContinueLabel
+@onready var btn_continue: Button = $MarginContainer/VBoxContainer/Footer/BtnContinue
 
 var _complete: bool = false
 var _tween: Tween = null
-var _blink_tween: Tween = null
+
+func _ready() -> void:
+	btn_continue.pressed.connect(_on_advance_pressed)
+	_update_btn_state()
+
+# Définit le titre persistant en haut de la bulle (par ex. "Apprenez à vous protéger avec les assurances MAIF").
+# Vide ou absent → titre masqué.
+func set_title(t: String) -> void:
+	title_label.text = t
+	title_label.visible = not t.strip_edges().is_empty()
 
 func show_text(text: String) -> void:
 	_complete = false
-	continue_label.visible = false
+	_update_btn_state()
 	text_label.text = text
 	text_label.visible_ratio = 0.0
 
@@ -26,12 +36,20 @@ func show_text(text: String) -> void:
 
 func _on_typewriter_done() -> void:
 	_complete = true
-	continue_label.visible = true
-	if _blink_tween:
-		_blink_tween.kill()
-	_blink_tween = create_tween().set_loops()
-	_blink_tween.tween_property(continue_label, "modulate:a", 0.0, 0.4)
-	_blink_tween.tween_property(continue_label, "modulate:a", 1.0, 0.4)
+	_update_btn_state()
+
+# Le bouton reste TOUJOURS dans le layout pour éviter le reflow.
+# Quand le texte n'est pas terminé : transparent + désactivé (= invisible mais espace réservé).
+func _update_btn_state() -> void:
+	if _complete:
+		btn_continue.disabled = false
+		btn_continue.modulate = Color(1, 1, 1, 1)
+	else:
+		btn_continue.disabled = true
+		btn_continue.modulate = Color(1, 1, 1, 0)
+
+func _on_advance_pressed() -> void:
+	advance.emit()
 
 func _input(event: InputEvent) -> void:
 	if not visible:
@@ -50,9 +68,6 @@ func _input(event: InputEvent) -> void:
 		text_label.visible_ratio = 1.0
 		_on_typewriter_done()
 	else:
-		if _blink_tween:
-			_blink_tween.kill()
-		continue_label.visible = false
 		advance.emit()
 	if is_inside_tree():
 		get_viewport().set_input_as_handled()
