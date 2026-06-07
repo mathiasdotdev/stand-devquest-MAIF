@@ -1,11 +1,11 @@
-[gd_resource type="Theme" load_steps=15 format=3]
+[gd_resource type="Theme" load_steps=18 format=3]
 
 [ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/theme/panel_main.png" id="1_panel"]
 [ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/theme/button_border.png" id="2_button"]
 [ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/theme/divider.png" id="3_divider"]
-[ext_resource type="FontFile" path="res://jeu_sortez_couvert/ui/theme/fonts/EBGaramond/EBGaramond12-Regular.ttf" id="4_font_body"]
+[ext_resource type="FontFile" path="res://jeu_sortez_couvert/ui/theme/fonts/immortal.regular.ttf" id="4_font_body"]
 [ext_resource type="FontFile" path="res://jeu_sortez_couvert/ui/theme/fonts/Nordvik.ttf" id="5_font_title"]
-[ext_resource type="FontFile" path="res://jeu_sortez_couvert/ui/theme/fonts/EBGaramond/EBGaramond08-Regular.ttf" id="6_font_button"]
+[ext_resource type="FontFile" path="res://jeu_sortez_couvert/ui/theme/fonts/immortal.regular.ttf" id="6_font_button"]
 [ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/theme/checkbox_unchecked.png" id="7_cb_unchecked"]
 [ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/theme/checkbox_checked.png" id="8_cb_checked"]
 
@@ -71,8 +71,27 @@ modulate_color = Color(0.30, 0.40, 0.58, 1)
 
 [sub_resource type="StyleBoxEmpty" id="sb_empty"]
 
+[sub_resource type="FontVariation" id="font_body_lnum"]
+base_font = ExtResource("4_font_body")
+opentype_features = {
+1819239277: 1
+}
+
+[sub_resource type="FontVariation" id="font_body_bold_lnum"]
+base_font = ExtResource("4_font_body")
+variation_embolden = 0.4
+opentype_features = {
+1819239277: 1
+}
+
+[sub_resource type="FontVariation" id="font_button_lnum"]
+base_font = ExtResource("6_font_button")
+opentype_features = {
+1819239277: 1
+}
+
 [resource]
-default_font = ExtResource("4_font_body")
+default_font = SubResource("font_body_lnum")
 default_font_size = 18
 Button/colors/font_color = Color(1, 1, 1, 1)
 Button/colors/font_disabled_color = Color(0.5, 0.5, 0.55, 1)
@@ -82,7 +101,7 @@ Button/colors/font_pressed_color = Color(0.85, 0.92, 1, 1)
 Button/colors/font_outline_color = Color(0, 0, 0, 0.85)
 Button/constants/h_separation = 8
 Button/constants/outline_size = 3
-Button/fonts/font = ExtResource("6_font_button")
+Button/fonts/font = SubResource("font_button_lnum")
 Button/font_sizes/font_size = 36
 Button/styles/disabled = SubResource("sb_btn_normal")
 Button/styles/focus = SubResource("sb_btn_focus")
@@ -138,3 +157,5 @@ TabContainer/styles/tab_selected = SubResource("sb_btn_normal")
 TabContainer/styles/tab_unselected = SubResource("sb_btn_pressed")
 TabContainer/styles/tab_hovered = SubResource("sb_btn_hover")
 ScrollContainer/styles/panel = SubResource("sb_empty")
+RichTextLabel/fonts/normal_font = SubResource("font_body_lnum")
+RichTextLabel/fonts/bold_font = SubResource("font_body_bold_lnum")

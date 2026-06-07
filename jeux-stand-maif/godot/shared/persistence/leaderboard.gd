@@ -11,9 +11,11 @@ class_name LeaderboardStore
 # ---------------------------------------------------------------------------
 
 # En éditeur : sauvegarde dans le projet (pratique pour debug + versioning)
-# En build exporté : sauvegarde dans user:// (res:// est read-only une fois packé)
+# En build exporté : sauvegarde à côté du .exe (portable, USB-friendly, visible)
+# L'utilisateur peut overrider via set_custom_save_path() (configurable via modale F10).
 const PROJECT_SAVE_PATH := "res://shared/persistence/leaderboard.json"
 const USER_SAVE_PATH := "user://leaderboard.json"
+const PATH_CONFIG_FILE := "user://leaderboard_path.cfg"
 
 # Nombre d'entrées affichées par défaut dans l'UI / utilisé pour `is_top_ten`.
 const DISPLAY_TOP_N := 10
@@ -120,13 +122,47 @@ func _compare_entries(a: Dictionary, b: Dictionary) -> bool:
 
 # ---- I/O --------------------------------------------------------------------
 
-# Renvoie le path JSON à utiliser :
+# Renvoie le path JSON par défaut :
 # - res:// en éditeur (le fichier vit dans le projet, debuggable / versionnable)
-# - user:// en build exporté (res:// devient read-only une fois packé)
-func _save_path() -> String:
+# - à côté du .exe en build exporté (portable, USB-friendly, visible facilement)
+func get_default_save_path() -> String:
 	if OS.has_feature("editor"):
 		return PROJECT_SAVE_PATH
-	return USER_SAVE_PATH
+	return OS.get_executable_path().get_base_dir() + "/leaderboard.json"
+
+# Renvoie le path custom configuré par l'utilisateur via la modale F10
+# (string vide si aucun override n'est défini).
+func get_custom_save_path() -> String:
+	if not FileAccess.file_exists(PATH_CONFIG_FILE):
+		return ""
+	var cfg := ConfigFile.new()
+	if cfg.load(PATH_CONFIG_FILE) != OK:
+		return ""
+	return String(cfg.get_value("leaderboard", "path", ""))
+
+# Renvoie le path effectivement utilisé (custom > défaut).
+func get_current_save_path() -> String:
+	var custom: String = get_custom_save_path()
+	if not custom.is_empty():
+		return custom
+	return get_default_save_path()
+
+# Sauvegarde un path custom. Vide = reset au défaut.
+# Le leaderboard est ré-écrit immédiatement vers le nouveau path.
+func set_custom_save_path(path: String) -> void:
+	if path.is_empty():
+		# Reset au défaut : supprime le fichier de config
+		var d := DirAccess.open("user://")
+		if d and d.file_exists("leaderboard_path.cfg"):
+			d.remove("leaderboard_path.cfg")
+	else:
+		var cfg := ConfigFile.new()
+		cfg.set_value("leaderboard", "path", path)
+		cfg.save(PATH_CONFIG_FILE)
+	_save()
+
+func _save_path() -> String:
+	return get_current_save_path()
 
 func _save() -> void:
 	var path := _save_path()
@@ -142,11 +178,16 @@ func _load() -> void:
 	var path := _save_path()
 	if FileAccess.file_exists(path):
 		_load_json(path)
-	elif path == PROJECT_SAVE_PATH and FileAccess.file_exists(USER_SAVE_PATH):
-		# On était en build exporté, maintenant en éditeur : récupérer le json user
-		_load_json(USER_SAVE_PATH)
-		_save()
-		print("[Leaderboard] Import depuis user://leaderboard.json vers res://shared/persistence/leaderboard.json")
+		return
+	# Fallbacks de migration : on tente les anciens emplacements et on ré-écrit
+	# vers le path courant si on trouve quelque chose.
+	var fallbacks: Array = [USER_SAVE_PATH, PROJECT_SAVE_PATH]
+	for fallback: String in fallbacks:
+		if fallback != path and FileAccess.file_exists(fallback):
+			_load_json(fallback)
+			_save()
+			print("[Leaderboard] Migration : import depuis %s vers %s" % [fallback, path])
+			return
 
 func _load_json(path: String) -> void:
 	var file := FileAccess.open(path, FileAccess.READ)

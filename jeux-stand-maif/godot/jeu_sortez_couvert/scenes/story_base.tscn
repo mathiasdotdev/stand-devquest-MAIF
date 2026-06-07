@@ -51,9 +51,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -105.0
-offset_top = -88.0
+offset_top = -113.0
 offset_right = 105.0
-offset_bottom = 122.0
+offset_bottom = 97.0
 
 [node name="DialogueArea" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -64,6 +64,6 @@ anchor_bottom = 1.0
 offset_left = 48.0
 offset_top = -150.0
 offset_right = -48.0
-offset_bottom = -20.0
+offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 0

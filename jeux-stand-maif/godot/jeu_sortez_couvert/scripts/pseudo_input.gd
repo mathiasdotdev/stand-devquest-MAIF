@@ -40,6 +40,14 @@ func _on_start() -> void:
 	get_tree().change_scene_to_file("res://jeu_sortez_couvert/scenes/intro.tscn")
 
 func _on_text_changed(new_text: String) -> void:
+	# Auto-capitalisation de la première lettre du pseudo
+	if not new_text.is_empty():
+		var first: String = new_text.left(1)
+		if first != first.to_upper():
+			var caret: int = name_input.caret_column
+			name_input.text = first.to_upper() + new_text.substr(1)
+			name_input.caret_column = caret
+			new_text = name_input.text
 	var is_valid: bool = not new_text.strip_edges().is_empty()
 	btn_start.disabled = not is_valid
 	if is_valid:

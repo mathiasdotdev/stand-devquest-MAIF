@@ -1,54 +1,52 @@
-extends "res://jeu_sortez_couvert/scripts/pause_layout.gd"
+extends "res://jeu_sortez_couvert/scripts/story_scene.gd"
 
-@onready var _conseiller: Node = $MarginContainer/VBoxContainer/ConseillerArea/Conseiller
-@onready var _dialogue_box: Node = $MarginContainer/VBoxContainer/DialogueArea/DialogueBox
-@onready var _chapitre_num_label: Label = $MarginContainer/VBoxContainer/ChapitreNumLabel
-@onready var _score_label: Label = $MarginContainer/VBoxContainer/TopHBox/ScoreLabel
-@onready var _titre_label: Label = $MarginContainer/VBoxContainer/TopHBox/TitreLabel
-@onready var _contexte_label: Label = $MarginContainer/VBoxContainer/ContexteLabel
+const NEXT_CHAPITRE_SCENE := "res://jeu_sortez_couvert/scenes/chapitre_intro.tscn"
+const ANALYSIS_SCENE := "res://jeu_sortez_couvert/scenes/analysis.tscn"
+const MAX_SCORE_PER_CHAPITRE: int = 3
 
-var _lines: Array = []
-var _line_idx: int = 0
+@onready var _chapitre_num_label: Label = $ChapitreNumLabel
+@onready var _score_label: Label = $ScoreLabel
 
 func _ready() -> void:
 	super._ready()
-	StorySceneLayout.apply(self, "intro")
 
 	var answer: Dictionary = Globals.story_engine.answers.back()
-	var chapitre: Dictionary = Globals.chapitres.get_chapitre(Globals.story_engine.current_chapitre)
-	var disasters: Array = answer.get("disaster_hits", [])
-	var total_count: int = max(disasters.size(), 1)
-	var uncovered_count: int = 0
-	for hit: Dictionary in disasters:
-		if not bool(hit.get("was_covered", false)):
-			uncovered_count += 1
-	var covered_count: int = total_count - uncovered_count
-	var net_score: int = covered_count - uncovered_count
+	var chapitre_id: int = int(answer.get("chapitre_id", 0))
+	var score_earned: int = int(answer.get("score_earned", 0))
 
-	_chapitre_num_label.text = "Chapitre " + str(Globals.story_engine.current_chapitre + 1) + " / " + str(Globals.chapitres.count())
-	_score_label.text = "Score : " + str(net_score) + " / " + str(total_count)
-	_titre_label.text = chapitre["emoji"] + "  " + chapitre["titre"]
-	_contexte_label.text = str(chapitre.get("contexte", ""))
+	_chapitre_num_label.text = "Chapitre %d / %d" % [chapitre_id + 1, Globals.chapitres.count()]
+	_score_label.text = "Score : %d / %d" % [score_earned, MAX_SCORE_PER_CHAPITRE]
+	_score_label.add_theme_color_override("font_color", _color_for_score(score_earned))
 
-	if uncovered_count == 0:
-		_score_label.add_theme_color_override("font_color", Color(0.25, 0.9, 0.45, 1.0))
-	elif uncovered_count < int(ceil(float(total_count) / 2.0)):
-		_score_label.add_theme_color_override("font_color", Color(1.0, 0.67, 0.2, 1.0))
-	else:
-		_score_label.add_theme_color_override("font_color", Color(1.0, 0.35, 0.35, 1.0))
-	_score_label.set_horizontal_alignment(HORIZONTAL_ALIGNMENT_RIGHT)
-	_dialogue_box.advance.connect(_on_advance)
+	var lines: Array = _build_lines(answer)
+	# Pas de titre dans la bulle pour chapitre_result : info chapitre en haut à gauche,
+	# on garde tout l'espace de la bulle pour l'explication.
+	setup_story("", lines)
 
-	_build_lines(answer)
-	_show_line(0)
-
-	if int(answer.get("score_earned", 0)) >= 2:
+	# Sons de feedback
+	if score_earned >= 2:
 		Sfx.play("win")
-	elif uncovered_count >= int(ceil(float(max(total_count, 1)) / 2.0)):
+	elif _is_mostly_uncovered(answer):
 		Sfx.play("fail")
 
-func _build_lines(answer: Dictionary) -> void:
-	_lines = []
+func _color_for_score(score: int) -> Color:
+	if score >= 2:
+		return Color(0.4, 0.95, 0.5)   # vert
+	if score >= 1:
+		return Color(1.0, 0.78, 0.35)  # orange
+	return Color(1.0, 0.45, 0.45)      # rouge
+
+func _is_mostly_uncovered(answer: Dictionary) -> bool:
+	var disasters: Array = answer.get("disaster_hits", [])
+	var total: int = max(disasters.size(), 1)
+	var uncovered: int = 0
+	for hit: Dictionary in disasters:
+		if not bool(hit.get("was_covered", false)):
+			uncovered += 1
+	return uncovered >= int(ceil(float(total) / 2.0))
+
+func _build_lines(answer: Dictionary) -> Array:
+	var result: Array = []
 	var score: int = int(answer.get("score_earned", 0))
 	var disasters: Array = answer.get("disaster_hits", [])
 	var total_count: int = disasters.size()
@@ -59,24 +57,24 @@ func _build_lines(answer: Dictionary) -> void:
 	var uncovered_count: int = total_count - covered_count
 
 	if score >= 3:
-		_lines.append({
+		result.append({
 			"expression": "hyper-good",
-			"text": "Incroyable ! Tout est couvert. Vous avez joué comme un véritable chef de clan.",
+			"text": "Incroyable ! Tout est couvert au juste prix. Vous avez joué comme un véritable chef de clan.",
 		})
 	elif score >= 2:
-		_lines.append({
+		result.append({
 			"expression": "ok",
 			"text": "Bien joué ! La majorité des risques est couverte.",
 		})
 	elif uncovered_count >= int(ceil(float(max(total_count, 1)) / 2.0)):
-		_lines.append({
+		result.append({
 			"expression": "wrong",
-			"text": "Aie... trop de risques ne sont pas couverts. Il faut renforcer la protection.",
+			"text": "Aïe... trop de risques ne sont pas couverts. Il faut renforcer la protection.",
 		})
 	else:
-		_lines.append({
+		result.append({
 			"expression": "wrong",
-			"text": "C'est encore fragile. On corrige ça ensemble.",
+			"text": "C'est encore fragile (trop de contrats inutiles ou pas assez de couverture). On corrige ça ensemble.",
 		})
 
 	var chosen_contracts: Array = answer.get("chosen_contracts", [])
@@ -100,33 +98,22 @@ func _build_lines(answer: Dictionary) -> void:
 					var c: Dictionary = Globals.contracts.get_by_type(ct)
 					player_contracts.append(c.get("icon", "") + " " + c.get("label", ct))
 			var contract_str: String = ", ".join(player_contracts) if player_contracts.size() > 0 else "?"
-			_lines.append({
+			result.append({
 				"expression": "explain",
 				"text": "✅ Couvert par " + contract_str + " : " + narrative,
 			})
 		else:
 			var contract_str: String = ", ".join(contract_labels) if contract_labels.size() > 0 else "?"
-			_lines.append({
+			result.append({
 				"expression": "explain",
-				"text": "❌ Non couvert (contrat : " + contract_str + ") : " + narrative,
+				"text": "❌ Non couvert (contrat utile : " + contract_str + ") : " + narrative,
 			})
 
-func _show_line(idx: int) -> void:
-	if idx < 0 or idx >= _lines.size():
-		return
-	var line: Dictionary = _lines[idx]
-	_dialogue_box.show_text(str(line.get("text", "...")))
-	if _conseiller:
-		_conseiller.set_expression(str(line.get("expression", "explain")))
+	return result
 
-func _on_advance() -> void:
-	_line_idx += 1
-	if _line_idx < _lines.size():
-		_show_line(_line_idx)
-		return
-
+func _on_story_complete() -> void:
 	var has_next: bool = Globals.story_engine.next_chapitre()
 	if has_next:
-		get_tree().change_scene_to_file("res://jeu_sortez_couvert/scenes/chapitre_intro.tscn")
+		get_tree().change_scene_to_file(NEXT_CHAPITRE_SCENE)
 	else:
-		get_tree().change_scene_to_file("res://jeu_sortez_couvert/scenes/analysis.tscn")
+		get_tree().change_scene_to_file(ANALYSIS_SCENE)

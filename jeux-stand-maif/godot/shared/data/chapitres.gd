@@ -8,6 +8,7 @@ const CHAPITRES: Array = [
 		"titre": "Premier vehicule",
 		"emoji": "🚗",
 		"contexte": "Vous venez d'obtenir votre permis et d'acheter votre premiere voiture. La liberte, enfin ! Mais la route peut reserver des surprises...",
+		"resume": "Premier vehicule = nouvelle liberte, mais aussi nouveaux risques routiers. Un accident ou un vol peuvent vite couter tres cher.",
 		"gold_budget": 180,
 		"intro": [
 			{"text": "Bonjour ! Je suis votre conseiller MAIF. Bienvenue dans votre parcours assurantiel !", "expression": "souriant"},
@@ -39,6 +40,7 @@ const CHAPITRES: Array = [
 		"titre": "Nouvel appartement",
 		"emoji": "🏠",
 		"contexte": "Vous emmenagez dans votre premier appartement. Cartons, meubles IKEA et... risques en tous genres pour votre nouveau chez-vous.",
+		"resume": "Premier appartement, premieres responsabilites. Degats des eaux, incendie, cambriolage : les sinistres domestiques sont frequents et un locataire peut etre responsable des degats causes aux voisins.",
 		"gold_budget": 200,
 		"intro": [
 			{"text": "Felicitations pour votre nouvel appartement ! C'est votre chez-vous desormais.", "expression": "souriant"},
@@ -76,6 +78,7 @@ const CHAPITRES: Array = [
 		"titre": "Hiver difficile",
 		"emoji": "🌧️",
 		"contexte": "Cet hiver est particulierement rude. Tempetes, inondations et routes verglacees mettent votre quotidien a l'epreuve.",
+		"resume": "Cet hiver s'annonce rude : tempetes, inondations, verglas. Les catastrophes naturelles se multiplient et le verglas triple les risques d'accident de la route.",
 		"gold_budget": 160,
 		"intro": [
 			{"text": "Cet hiver s'annonce difficile. Les meteorologues prevoir des tempetes repetees.", "expression": "inquiet"},
@@ -113,6 +116,7 @@ const CHAPITRES: Array = [
 		"titre": "Vie active",
 		"emoji": "💼",
 		"contexte": "Vous etes lance dans votre carriere. Sport regulier, longues journees, deplacements frequents... le rythme s'accelere.",
+		"resume": "Travail, sport, sorties : votre rythme s'accelere. Avec un emploi du temps charge, les accidents du quotidien deviennent plus frequents — blessure sportive, vol, accrochage en voiture.",
 		"gold_budget": 220,
 		"intro": [
 			{"text": "Votre vie bat a plein regime ! Travail, sport, sorties... bravo pour cette energie.", "expression": "souriant"},
@@ -150,6 +154,7 @@ const CHAPITRES: Array = [
 		"titre": "Ete a risque",
 		"emoji": "🔥",
 		"contexte": "Grande chaleur, maison laissee vide pour les vacances, feux de foret dans la region... cet ete met vos biens a l'epreuve.",
+		"resume": "Vacances et chaleur amenent leurs propres dangers : maison vide ideale pour les cambrioleurs, canicule qui multiplie les risques d'incendie. Comment se couvrir avant de partir ?",
 		"gold_budget": 190,
 		"intro": [
 			{"text": "L'ete est la ! Mais avec la chaleur arrivent aussi les risques...", "expression": "normal"},
@@ -187,6 +192,7 @@ const CHAPITRES: Array = [
 		"titre": "L'annee noire",
 		"emoji": "🌊",
 		"contexte": "La loi des series frappe. Cette annee cumule les coups durs. C'est le grand test de votre couverture assurantielle.",
+		"resume": "La loi des series frappe : plusieurs sinistres graves peuvent survenir en peu de temps. C'est le test ultime de votre couverture assurantielle. Choisissez bien.",
 		"gold_budget": 250,
 		"intro": [
 			{"text": "Je dois etre franc avec vous : cette annee s'annonce difficile.", "expression": "inquiet"},

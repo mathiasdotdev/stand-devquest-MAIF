@@ -2,16 +2,13 @@ extends Control
 
 const MODE_IDS := ["story", "racing"]
 const MODE_LABELS := ["Histoire", "Pasdetolismo"]
-const FANTASY_THEME := preload("res://jeu_sortez_couvert/ui/theme/fantasy_theme.tres")
+const ADMIN_MODAL_SCENE: PackedScene = preload("res://jeu_sortez_couvert/ui/admin_modal.tscn")
 
 # Nombre d'entrées affichées dans l'UI (le data store en garde l'historique complet en JSON)
 const DISPLAY_LIMIT := 10
 
-# Feature flipping pour masquer l’onglet Pasdetolismo
+# Feature flipping pour masquer l'onglet Pasdetolismo
 const PASDETOLISMO_ENABLED := false
-
-# Taille fixe de la modale admin (constante entre ouvertures)
-const ADMIN_DIALOG_SIZE := Vector2i(640, 240)
 
 # Police plus lisible pour les data (noms de joueurs, dates, scores numériques)
 # où la police décorative du thème devient illisible.
@@ -22,9 +19,7 @@ var _data_font: SystemFont
 @onready var racing_list: VBoxContainer = $MenuPanel/Margin/VBox/Tabs/Pasdetolismo/ScrollContainer/EntryList
 @onready var btn_retour: Button = $MenuPanel/Margin/VBox/BtnRetour
 
-var _admin_dialog: AcceptDialog
-var _inline_delete_check: CheckBox
-var _btn_clear_all: Button
+var _admin_modal: CanvasLayer
 var _admin_inline_delete: bool = false
 
 func _ready() -> void:
@@ -32,7 +27,7 @@ func _ready() -> void:
 	_data_font.font_names = PackedStringArray(["Segoe UI", "Arial", "Helvetica", "sans-serif"])
 	_refresh_tabs()
 	btn_retour.pressed.connect(_on_retour)
-	_create_admin_dialog()
+	_setup_admin_modal()
 	if not PASDETOLISMO_ENABLED:
 		tabs.get_tab_bar().set_tab_hidden(1, true)
 
@@ -220,71 +215,45 @@ func _row_border_color(idx: int) -> Color:
 func _on_retour() -> void:
 	get_tree().change_scene_to_file("res://main_menu/main_menu.tscn")
 
-func _create_admin_dialog() -> void:
-	_admin_dialog = AcceptDialog.new()
-	_admin_dialog.theme = FANTASY_THEME
-	_admin_dialog.title = ""
-	_admin_dialog.dialog_text = ""
-	# Taille FIXE — pas de min/max différents pour éviter le reflow
-	_admin_dialog.min_size = ADMIN_DIALOG_SIZE
-	_admin_dialog.max_size = ADMIN_DIALOG_SIZE
-	_admin_dialog.unresizable = true
-	# Pas de barre de titre / bouton X (on a le bouton Fermer + Escape)
-	_admin_dialog.borderless = true
-	add_child(_admin_dialog)
+# ---- Modale admin (F10) -----------------------------------------------------
 
-	var content := VBoxContainer.new()
-	content.add_theme_constant_override("separation", 12)
-	_admin_dialog.add_child(content)
-
-	# Titre custom à l'intérieur de la modale (la barre de titre native est masquée)
-	var title_lbl := Label.new()
-	title_lbl.text = "Paramètres classement"
-	title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title_lbl.add_theme_font_size_override("font_size", 30)
-	title_lbl.add_theme_color_override("font_color", Color(1, 0.92, 0.55, 1))
-	title_lbl.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
-	title_lbl.add_theme_constant_override("outline_size", 3)
-	content.add_child(title_lbl)
-
-	# Spacer pour conserver la hauteur de la modale après suppression de la ligne d'aide
-	var top_spacer := Control.new()
-	top_spacer.custom_minimum_size = Vector2(0, 16)
-	content.add_child(top_spacer)
-
-	_inline_delete_check = CheckBox.new()
-	_inline_delete_check.text = "Activer la suppression directe dans la liste"
-	content.add_child(_inline_delete_check)
-
-	_btn_clear_all = _admin_dialog.add_button("Tout supprimer", true, "clear_all")
-	_admin_dialog.get_ok_button().text = "Fermer"
-
-	_inline_delete_check.toggled.connect(_on_toggle_inline_delete)
-	_admin_dialog.custom_action.connect(_on_admin_custom_action)
-
+func _setup_admin_modal() -> void:
+	_admin_modal = ADMIN_MODAL_SCENE.instantiate()
+	add_child(_admin_modal)
+	_admin_modal.clear_all_requested.connect(_on_admin_clear_all)
+	_admin_modal.inline_delete_toggled.connect(_on_admin_inline_delete_toggled)
+	_admin_modal.path_changed.connect(_on_admin_path_changed)
 	_update_admin_controls()
 
 func _toggle_admin_dialog() -> void:
-	_inline_delete_check.button_pressed = _admin_inline_delete
+	if _admin_modal.is_open():
+		_admin_modal.hide_modal()
+		return
+	_admin_modal.set_inline_delete(_admin_inline_delete)
 	_update_admin_controls()
 	_refresh_tabs()
-	_admin_dialog.popup_centered(ADMIN_DIALOG_SIZE)
+	_admin_modal.show_modal()
 
 func _selected_mode() -> String:
 	return "story" # Mode par défaut, car il n'y a plus de sélecteur
 
 func _update_admin_controls() -> void:
-	_btn_clear_all.disabled = Globals.leaderboard.get_entries("story").is_empty() and Globals.leaderboard.get_entries("racing").is_empty()
+	if _admin_modal == null:
+		return
+	var empty: bool = Globals.leaderboard.get_entries("story").is_empty() \
+		and Globals.leaderboard.get_entries("racing").is_empty()
+	_admin_modal.set_clear_all_disabled(empty)
 
-func _on_toggle_inline_delete(enabled: bool) -> void:
+func _on_admin_inline_delete_toggled(enabled: bool) -> void:
 	_admin_inline_delete = enabled
 	_refresh_tabs()
 
-func _on_admin_custom_action(action: StringName) -> void:
-	match String(action):
-		"clear_all":
-			Globals.leaderboard.clear_all()
-		_:
-			return
+func _on_admin_clear_all() -> void:
+	Globals.leaderboard.clear_all()
+	_refresh_tabs()
+	_update_admin_controls()
+
+func _on_admin_path_changed() -> void:
+	# Le path a changé : on rafraîchit l'affichage (le data store a déjà ré-écrit)
 	_refresh_tabs()
 	_update_admin_controls()

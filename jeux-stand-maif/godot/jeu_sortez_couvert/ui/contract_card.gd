@@ -5,7 +5,7 @@ signal toggled(type: String)
 const BUTTON_TEX: Texture2D = preload("res://jeu_sortez_couvert/ui/theme/button_border.png")
 
 const COLOR_NORMAL := Color(0.18, 0.24, 0.35, 1)
-const COLOR_HOVER := Color(0.92, 0.74, 0.32, 1)
+const COLOR_HOVER := Color(0.34, 0.48, 0.68, 1)
 const COLOR_SELECTED := Color(0.92, 0.74, 0.32, 1)
 
 var contract_type: String = ""
@@ -51,11 +51,19 @@ func _apply_style() -> void:
 	style.content_margin_top = 10
 	style.content_margin_right = 12
 	style.content_margin_bottom = 10
-	# Hover = même rendu que selected (le clic confirme l'état déjà visualisé)
-	var highlight: bool = _selected or _hovered
-	style.modulate_color = COLOR_SELECTED if highlight else COLOR_NORMAL
+	# 3 états distincts pour bien sentir le clic :
+	# - Normal : bleu nuit
+	# - Hover : bleu plus clair (signale l'interactivité)
+	# - Sélectionné : doré (confirme le choix)
+	if _selected:
+		style.modulate_color = COLOR_SELECTED
+	elif _hovered:
+		style.modulate_color = COLOR_HOVER
+	else:
+		style.modulate_color = COLOR_NORMAL
 	add_theme_stylebox_override("panel", style)
-	var text_color: Color = Color(0.08, 0.06, 0.02, 1) if highlight else Color(0.95, 0.95, 0.97, 1)
+	# Texte noir uniquement sur le fond doré (contraste), blanc sur les fonds bleus
+	var text_color: Color = Color(0.08, 0.06, 0.02, 1) if _selected else Color(0.95, 0.95, 0.97, 1)
 	icon_label.add_theme_color_override("font_color", text_color)
 	name_label.add_theme_color_override("font_color", text_color)
 

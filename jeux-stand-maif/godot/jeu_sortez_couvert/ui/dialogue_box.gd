@@ -15,7 +15,7 @@ func _ready() -> void:
 	btn_continue.pressed.connect(_on_advance_pressed)
 	_update_btn_state()
 
-# Définit le titre persistant en haut de la bulle (par ex. "Apprenez à vous protéger avec les assurances MAIF").
+# Définit le titre persistant en haut de la bulle (par ex. "Apprenez à vous protéger avec la MAIF").
 # Vide ou absent → titre masqué.
 func set_title(t: String) -> void:
 	title_label.text = t
