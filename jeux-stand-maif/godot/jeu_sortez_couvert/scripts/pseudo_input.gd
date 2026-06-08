@@ -54,6 +54,12 @@ func _on_text_changed(new_text: String) -> void:
 		name_input.remove_theme_color_override("font_color")
 
 func _on_email_changed(new_text: String) -> void:
+	var lowered: String = new_text.to_lower()
+	if lowered != new_text:
+		var caret: int = email_input.caret_column
+		email_input.text = lowered
+		email_input.caret_column = caret
+		new_text = lowered
 	if _is_email_valid(new_text.strip_edges()):
 		email_input.remove_theme_color_override("font_color")
 

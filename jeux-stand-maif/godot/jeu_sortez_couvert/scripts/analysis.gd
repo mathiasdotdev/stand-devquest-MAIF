@@ -132,8 +132,8 @@ func _build_prize_bbcode() -> String:
 	if best_entry.is_empty():
 		return "[color=%s]🎁 [b]Cadeau meilleur score :[/b] aucun score enregistré pour l'instant.[/color]" % COLOR_GOLD
 	var best_name: String = String(best_entry.get("name", "Anonyme"))
-	var best_score: int = int(best_entry.get("score", 0))
-	var best_hints: int = int(best_entry.get("hints_used", 0))
+	var best_score: int = LeaderboardStore.get_score_total(best_entry)
+	var best_hints: int = LeaderboardStore.get_hints_total(best_entry)
 	var best_effective: float = float(best_entry.get("effective_score", best_score))
 	var max_total: int = int(_analysis.get("max_score", Globals.chapitres.count() * 3))
 	return "[color=%s]🎁 [b]Cadeau meilleur score :[/b] %s mène avec %d/%d (%0.1f après pénalité), %s.[/color]" % [
@@ -190,13 +190,33 @@ func save_score_if_top_ten() -> void:
 	if Globals.leaderboard.is_top_ten("story", score, hints_used):
 		if Globals.story_engine.player_name.is_empty():
 			Globals.story_engine.player_name = "Anonyme"
-		Globals.leaderboard.add_entry("story", Globals.story_engine.player_name, score, Globals.story_engine.player_email, hints_used)
+		Globals.leaderboard.add_story_entry(
+			Globals.story_engine.player_name,
+			Globals.story_engine.player_email,
+			_build_chapter_breakdown(),
+		)
 
 func _total_hints_used() -> int:
 	var total_hints := 0
 	for a: Dictionary in _analysis.get("answers", []):
 		total_hints += int(a.get("hints_used", 0))
 	return total_hints
+
+# Construit le tableau de breakdown attendu par add_story_entry :
+# un dict par chapitre joué, dans l'ordre du pool.
+func _build_chapter_breakdown() -> Array:
+	var breakdown: Array = []
+	for a: Dictionary in _analysis.get("answers", []):
+		var chapitre_id: int = int(a.get("chapitre_id", 0))
+		var chap: Dictionary = Globals.chapitres.get_chapitre(chapitre_id)
+		breakdown.append({
+			"id": chapitre_id,
+			"title": String(chap.get("titre", "")),
+			"score_earned": int(a.get("score_earned", 0)),
+			"score_max": 3, # cf. story_engine.resolve_current_chapitre()
+			"hints_used": int(a.get("hints_used", 0)),
+		})
+	return breakdown
 
 func _on_menu() -> void:
 	get_tree().change_scene_to_file("res://main_menu/main_menu.tscn")

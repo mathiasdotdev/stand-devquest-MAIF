@@ -80,7 +80,7 @@ theme_override_font_sizes/font_size = 20
 
 [node name="InstructionsLabel" type="Label" parent="MarginContainer/VBoxContainer/ContextBubble/Margin/VBox" unique_id=1169182201]
 layout_mode = 2
-text = "Quels contrats choisissez-vous ? (sélectionnez 0 à 5)"
+text = "Quels contrats choisissez-vous ? (sélectionnez 0 à 6)"
 horizontal_alignment = 1
 autowrap_mode = 3
 theme_override_font_sizes/font_size = 18

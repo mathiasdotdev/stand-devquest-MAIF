@@ -4,7 +4,7 @@ extends TextureRect
 # Si le fichier est manquant, le node se masque silencieusement → la scène
 # ne plante pas, on peut intégrer le logo plus tard sans retoucher au code.
 
-const LOGO_PATH := "res://jeu_sortez_couvert/ui/assets/maif_logo.png"
+const LOGO_PATH := "res://jeu_sortez_couvert/ui/assets/logo_MAIF.png"
 
 func _ready() -> void:
 	if not ResourceLoader.exists(LOGO_PATH):

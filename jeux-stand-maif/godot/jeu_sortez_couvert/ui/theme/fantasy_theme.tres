@@ -1,7 +1,6 @@
 [gd_resource type="Theme" format=3 uid="uid://dhu5k5n4oxsww"]
 
 [ext_resource type="Texture2D" uid="uid://dif0fu8rnylwj" path="res://jeu_sortez_couvert/ui/theme/panel_main.png" id="1_panel"]
-[ext_resource type="Texture2D" uid="uid://c23f3xugnf3p6" path="res://jeu_sortez_couvert/ui/theme/button_border.png" id="2_button"]
 [ext_resource type="FontFile" uid="uid://s2bitpl6q1tm" path="res://jeu_sortez_couvert/ui/theme/fonts/immortal.regular.ttf" id="6_font_button"]
 [ext_resource type="Texture2D" uid="uid://b2ubqbqqmmoo1" path="res://jeu_sortez_couvert/ui/theme/checkbox_unchecked.png" id="7_cb_unchecked"]
 [ext_resource type="Texture2D" uid="uid://i0uboxckyf2w" path="res://jeu_sortez_couvert/ui/theme/checkbox_checked.png" id="8_cb_checked"]
@@ -29,7 +28,7 @@ content_margin_left = 24.0
 content_margin_top = 14.0
 content_margin_right = 24.0
 content_margin_bottom = 14.0
-texture = ExtResource("2_button")
+texture = ExtResource("1_panel")
 texture_margin_left = 16.0
 texture_margin_top = 16.0
 texture_margin_right = 16.0
@@ -41,7 +40,7 @@ content_margin_left = 24.0
 content_margin_top = 14.0
 content_margin_right = 24.0
 content_margin_bottom = 14.0
-texture = ExtResource("2_button")
+texture = ExtResource("1_panel")
 texture_margin_left = 16.0
 texture_margin_top = 16.0
 texture_margin_right = 16.0
@@ -53,31 +52,48 @@ content_margin_left = 24.0
 content_margin_top = 14.0
 content_margin_right = 24.0
 content_margin_bottom = 14.0
-texture = ExtResource("2_button")
+texture = ExtResource("1_panel")
 texture_margin_left = 16.0
 texture_margin_top = 16.0
 texture_margin_right = 16.0
 texture_margin_bottom = 16.0
 modulate_color = Color(0.92, 0.74, 0.32, 1)
 
-[sub_resource type="StyleBoxFlat" id="sb_btn_normal_outlined"]
-content_margin_left = 24.0
-content_margin_top = 14.0
-content_margin_right = 24.0
-content_margin_bottom = 14.0
-bg_color = Color(0.16, 0.22, 0.32, 1)
-
 [sub_resource type="StyleBoxTexture" id="sb_btn_pressed"]
 content_margin_left = 24.0
 content_margin_top = 14.0
 content_margin_right = 24.0
 content_margin_bottom = 14.0
-texture = ExtResource("2_button")
+texture = ExtResource("1_panel")
 texture_margin_left = 16.0
 texture_margin_top = 16.0
 texture_margin_right = 16.0
 texture_margin_bottom = 16.0
 modulate_color = Color(0.06, 0.09, 0.14, 1)
+
+[sub_resource type="StyleBoxTexture" id="sb_input_normal"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+texture = ExtResource("1_panel")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
+modulate_color = Color(0.55, 0.58, 0.62, 1)
+
+[sub_resource type="StyleBoxTexture" id="sb_input_focus"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+texture = ExtResource("1_panel")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
+modulate_color = Color(0.72, 0.74, 0.78, 1)
 
 [sub_resource type="StyleBoxEmpty" id="sb_empty"]
 
@@ -111,7 +127,7 @@ Button/fonts/font = SubResource("font_button_lnum")
 Button/styles/disabled = SubResource("sb_btn_normal")
 Button/styles/focus = SubResource("sb_btn_focus")
 Button/styles/hover = SubResource("sb_btn_hover")
-Button/styles/normal = SubResource("sb_btn_normal_outlined")
+Button/styles/normal = SubResource("sb_btn_normal")
 Button/styles/pressed = SubResource("sb_btn_pressed")
 CheckBox/colors/font_color = Color(0.95, 0.95, 0.97, 1)
 CheckBox/colors/font_hover_color = Color(1, 0.92, 0.55, 1)
@@ -135,13 +151,13 @@ Label/colors/font_color = Color(0.95, 0.95, 0.97, 1)
 Label/colors/font_outline_color = Color(0, 0, 0, 0.75)
 Label/constants/outline_size = 2
 Label/font_sizes/font_size = 22
-LineEdit/colors/caret_color = Color(1, 0.92, 0.55, 1)
-LineEdit/colors/font_color = Color(0.95, 0.95, 0.97, 1)
-LineEdit/colors/font_placeholder_color = Color(0.78, 0.86, 1, 0.85)
-LineEdit/colors/selection_color = Color(1, 0.92, 0.55, 0.4)
+LineEdit/colors/caret_color = Color(0.12, 0.14, 0.2, 1)
+LineEdit/colors/font_color = Color(0.08, 0.1, 0.14, 1)
+LineEdit/colors/font_placeholder_color = Color(0.3, 0.32, 0.38, 0.75)
+LineEdit/colors/selection_color = Color(0.92, 0.74, 0.32, 0.45)
 LineEdit/font_sizes/font_size = 24
-LineEdit/styles/focus = SubResource("sb_btn_focus")
-LineEdit/styles/normal = SubResource("sb_btn_normal")
+LineEdit/styles/focus = SubResource("sb_input_focus")
+LineEdit/styles/normal = SubResource("sb_input_normal")
 Panel/styles/panel = SubResource("sb_panel")
 PanelContainer/styles/panel = SubResource("sb_panel")
 PopupPanel/styles/panel = SubResource("sb_panel")

@@ -141,7 +141,7 @@ func _build_entry_row(mode: String, idx: int, entry: Dictionary) -> Control:
 		email_lbl.add_theme_font_size_override("font_size", 20)
 	row.add_child(email_lbl)
 
-	var ts: int = int(entry.get("timestamp", 0))
+	var ts: int = LeaderboardStore.get_timestamp(entry)
 	if ts > 0:
 		var dt: Dictionary = Time.get_datetime_dict_from_unix_time(ts)
 		var date_lbl := Label.new()
@@ -153,12 +153,12 @@ func _build_entry_row(mode: String, idx: int, entry: Dictionary) -> Control:
 
 	var score_lbl := Label.new()
 	if mode == "story":
-		var raw_score: int = int(entry.get("score", 0))
-		var hints: int = int(entry.get("hints_used", 0))
+		var raw_score: int = LeaderboardStore.get_score_total(entry)
+		var hints: int = LeaderboardStore.get_hints_total(entry)
 		var effective: float = float(entry.get("effective_score", raw_score))
 		var max_total: int = Globals.story_engine.pool_size * 3
 		score_lbl.text = "%d / %d (%0.1f)" % [raw_score, max_total, effective]
-		score_lbl.tooltip_text = "Indices: %d | Pénalité: -%0.1f" % [hints, float(hints) * 0.5]
+		score_lbl.tooltip_text = _story_tooltip(entry, hints)
 	else:
 		score_lbl.text = "%d pts" % int(entry.get("score", 0))
 	score_lbl.custom_minimum_size = Vector2(160, 0)
@@ -196,6 +196,23 @@ func _row_border_color(idx: int) -> Color:
 	elif idx == 2:
 		return Color(0.92, 0.62, 0.30, 0.45)
 	return Color(0.55, 0.62, 0.78, 0.25)
+
+func _story_tooltip(entry: Dictionary, total_hints: int) -> String:
+	var base: String = "Indices: %d | Pénalité: -%0.1f" % [total_hints, float(total_hints) * 0.5]
+	var chapters: Array = LeaderboardStore.get_chapter_breakdown(entry)
+	if chapters.is_empty():
+		return base
+	var lines: PackedStringArray = [base, ""]
+	for c: Dictionary in chapters:
+		var d: Dictionary = c["data"]
+		var title: String = String(d.get("title", ""))
+		var score_str: String = String(d.get("score", "?/?"))
+		var hint: int = int(d.get("hint_used", 0))
+		var line: String = "Ch.%d — %s : %s" % [int(c["index"]), title, score_str]
+		if hint > 0:
+			line += "  (%d indice%s)" % [hint, "s" if hint > 1 else ""]
+		lines.append(line)
+	return "\n".join(lines)
 
 func _on_retour() -> void:
 	get_tree().change_scene_to_file("res://main_menu/main_menu.tscn")

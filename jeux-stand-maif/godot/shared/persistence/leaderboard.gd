@@ -8,6 +8,12 @@ class_name LeaderboardStore
 # l'historique complet, accessible à des fins de stats/admin/export.
 # L'UI continue d'afficher seulement les `DISPLAY_TOP_N` meilleures via
 # `get_entries(mode, DISPLAY_TOP_N)`.
+#
+# Deux formats d'entrée cohabitent :
+# - Format "flat" (legacy + racing) : { name, email, score:int, hints_used, effective_score, timestamp }
+# - Format "chapitres" (story récent) : { name, email, effective_score,
+#       score: { total, timestamp, chapter_1: {id, title, score:"X/3", hint_used}, ... } }
+# Les helpers _get_score_total() / _get_hints_total() lisent les deux.
 # ---------------------------------------------------------------------------
 
 # En éditeur : sauvegarde dans le projet (pratique pour debug + versioning)
@@ -28,6 +34,7 @@ func _ready() -> void:
 
 # ---- API publique -----------------------------------------------------------
 
+# Mode "racing" (et autres modes simples) : score scalaire, format flat.
 func add_entry(mode: String, player_name: String, score: int, email: String = "", hints_used: int = 0) -> int:
 	if not _data.has(mode):
 		_data[mode] = []
@@ -41,13 +48,48 @@ func add_entry(mode: String, player_name: String, score: int, email: String = ""
 		"effective_score": _effective_score(score, safe_hints),
 		"timestamp": ts,
 	}
+	return _insert(mode, entry)
+
+# Mode "story" : enregistre le détail par chapitre.
+# `chapter_breakdown` : Array de { id:int, title:String, score_earned:int,
+#                                   score_max:int, hints_used:int }
+# L'ordre du tableau = ordre joué dans la partie (chapter_1 = premier chapitre).
+func add_story_entry(player_name: String, email: String, chapter_breakdown: Array) -> int:
+	var ts: int = int(Time.get_unix_time_from_system())
+	var score_obj: Dictionary = {}
+	var total: int = 0
+	var hints_total: int = 0
+	for i in chapter_breakdown.size():
+		var c: Dictionary = chapter_breakdown[i]
+		var earned: int = int(c.get("score_earned", 0))
+		var max_pts: int = int(c.get("score_max", 3))
+		var hints: int = max(0, int(c.get("hints_used", 0)))
+		total += earned
+		hints_total += hints
+		score_obj["chapter_%d" % (i + 1)] = {
+			"id": int(c.get("id", 0)),
+			"title": String(c.get("title", "")),
+			"hint_used": hints,
+			"score": "%d/%d" % [earned, max_pts],
+		}
+	score_obj["total"] = total
+	score_obj["timestamp"] = ts
+	var entry := {
+		"name": player_name,
+		"email": email,
+		"effective_score": _effective_score(total, hints_total),
+		"score": score_obj,
+	}
+	return _insert("story", entry)
+
+func _insert(mode: String, entry: Dictionary) -> int:
 	_data[mode].append(entry)
 	_data[mode].sort_custom(_compare_entries)
 	# PAS de resize : on garde tout l'historique
 	_save()
+	# Renvoie l'index post-tri (utile pour scroller dessus côté UI)
 	for i in _data[mode].size():
-		var e: Dictionary = _data[mode][i]
-		if int(e.get("timestamp", 0)) == int(entry["timestamp"]) and String(e.get("name", "")) == player_name and String(e.get("email", "")) == email:
+		if _data[mode][i] == entry:
 			return i
 	return -1
 
@@ -97,25 +139,79 @@ func clear_all() -> void:
 		_data[mode] = []
 	_save()
 
+# ---- Helpers de lecture (gèrent les deux formats) ---------------------------
+
+# Score brut (somme des points par chapitre, sans pénalité d'indice).
+static func get_score_total(entry: Dictionary) -> int:
+	var s: Variant = entry.get("score", 0)
+	if s is Dictionary:
+		return int(s.get("total", 0))
+	return int(s)
+
+# Nombre total d'indices utilisés sur toute la partie.
+static func get_hints_total(entry: Dictionary) -> int:
+	# Format flat : champ direct
+	if entry.has("hints_used"):
+		return max(0, int(entry.get("hints_used", 0)))
+	# Format chapitres : somme sur chaque chapitre
+	var s: Variant = entry.get("score", null)
+	if not (s is Dictionary):
+		return 0
+	var total: int = 0
+	for k in s.keys():
+		if not String(k).begins_with("chapter_"):
+			continue
+		var ch: Variant = s[k]
+		if ch is Dictionary:
+			total += max(0, int(ch.get("hint_used", 0)))
+	return total
+
+# Timestamp unix (cherche aussi dans score.timestamp pour le format chapitres).
+static func get_timestamp(entry: Dictionary) -> int:
+	if entry.has("timestamp"):
+		return int(entry.get("timestamp", 0))
+	var s: Variant = entry.get("score", null)
+	if s is Dictionary:
+		return int(s.get("timestamp", 0))
+	return 0
+
+# Renvoie les chapitres du format orienté-chapitres, triés par index (chapter_1 → N).
+# Tableau vide si l'entrée est au format flat (legacy/racing).
+static func get_chapter_breakdown(entry: Dictionary) -> Array:
+	var s: Variant = entry.get("score", null)
+	if not (s is Dictionary):
+		return []
+	var chapters: Array = []
+	for k in s.keys():
+		var key: String = String(k)
+		if not key.begins_with("chapter_"):
+			continue
+		var ch: Variant = s[k]
+		if ch is Dictionary:
+			var idx: int = int(key.substr(8))
+			chapters.append({"index": idx, "data": ch})
+	chapters.sort_custom(func(a, b): return int(a["index"]) < int(b["index"]))
+	return chapters
+
 # ---- Comparaison / scoring --------------------------------------------------
 
 func _effective_score(score: int, hints_used: int) -> float:
 	return float(score) - float(hints_used) * 0.5
 
 func _is_entry_better(a: Dictionary, b: Dictionary) -> bool:
-	var a_eff: float = float(a.get("effective_score", _effective_score(int(a.get("score", 0)), int(a.get("hints_used", 0)))))
-	var b_eff: float = float(b.get("effective_score", _effective_score(int(b.get("score", 0)), int(b.get("hints_used", 0)))))
+	var a_eff: float = float(a.get("effective_score", _effective_score(get_score_total(a), get_hints_total(a))))
+	var b_eff: float = float(b.get("effective_score", _effective_score(get_score_total(b), get_hints_total(b))))
 	if a_eff != b_eff:
 		return a_eff > b_eff
-	var a_score: int = int(a.get("score", 0))
-	var b_score: int = int(b.get("score", 0))
+	var a_score: int = get_score_total(a)
+	var b_score: int = get_score_total(b)
 	if a_score != b_score:
 		return a_score > b_score
-	var a_hints: int = int(a.get("hints_used", 0))
-	var b_hints: int = int(b.get("hints_used", 0))
+	var a_hints: int = get_hints_total(a)
+	var b_hints: int = get_hints_total(b)
 	if a_hints != b_hints:
 		return a_hints < b_hints
-	return int(a.get("timestamp", 0)) < int(b.get("timestamp", 0))
+	return get_timestamp(a) < get_timestamp(b)
 
 func _compare_entries(a: Dictionary, b: Dictionary) -> bool:
 	return _is_entry_better(a, b)
@@ -212,17 +308,11 @@ func _load_json(path: String) -> void:
 				_data[mode].append(_normalize_entry(raw_entry))
 		_data[mode].sort_custom(_compare_entries)
 
+# Normalise une entrée chargée du JSON.
+# On préserve le format d'origine (flat ou chapitres) pour la sérialisation,
+# on s'assure juste que `effective_score` est présent (recalculé si manquant).
 func _normalize_entry(raw: Dictionary) -> Dictionary:
-	var score: int = int(raw.get("score", 0))
-	var hints_used: int = max(0, int(raw.get("hints_used", 0)))
-	var effective: float = _effective_score(score, hints_used)
-	if raw.get("effective_score", null) != null:
-		effective = float(raw.get("effective_score"))
-	return {
-		"name": String(raw.get("name", "???")),
-		"email": String(raw.get("email", "")),
-		"score": score,
-		"hints_used": hints_used,
-		"effective_score": effective,
-		"timestamp": int(raw.get("timestamp", 0)),
-	}
+	var entry: Dictionary = raw.duplicate(true)
+	if not entry.has("effective_score"):
+		entry["effective_score"] = _effective_score(get_score_total(entry), get_hints_total(entry))
+	return entry

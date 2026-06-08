@@ -55,22 +55,21 @@ theme_override_font_sizes/normal_font_size = 21
 
 [node name="Footer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
-alignment = 2
+
+[node name="MaifLogo" parent="MarginContainer/VBoxContainer/Footer" instance=ExtResource("3_logo")]
+custom_minimum_size = Vector2(100, 38)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="BtnContinue" type="Button" parent="MarginContainer/VBoxContainer/Footer"]
 custom_minimum_size = Vector2(140, 42)
 layout_mode = 2
+size_flags_horizontal = 8
 theme_override_font_sizes/font_size = 22
 text = "Continuer"
-
-[node name="MaifLogo" parent="." instance=ExtResource("3_logo")]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 16.0
-offset_top = -36.0
-offset_right = 80.0
-offset_bottom = -8.0
-grow_vertical = 0
-mouse_filter = 2

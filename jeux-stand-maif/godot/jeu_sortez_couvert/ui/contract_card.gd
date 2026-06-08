@@ -2,7 +2,7 @@ extends PanelContainer
 
 signal toggled(type: String)
 
-const BUTTON_TEX: Texture2D = preload("res://jeu_sortez_couvert/ui/theme/button_border.png")
+const BUTTON_TEX: Texture2D = preload("res://jeu_sortez_couvert/ui/theme/panel_main.png")
 
 const COLOR_NORMAL := Color(0.18, 0.24, 0.35, 1)
 const COLOR_HOVER := Color(0.34, 0.48, 0.68, 1)
