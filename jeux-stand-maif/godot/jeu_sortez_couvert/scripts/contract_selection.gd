@@ -6,8 +6,7 @@ const INFO_MODAL_SCENE: PackedScene = preload("res://jeu_sortez_couvert/ui/info_
 @onready var _titre_label: Label = $MarginContainer/VBoxContainer/TitreLabel
 @onready var _context_label: Label = $MarginContainer/VBoxContainer/ContextBubble/Margin/VBox/ContextLabel
 @onready var _cards_container: HBoxContainer = $MarginContainer/VBoxContainer/CardsContainer
-@onready var _hint_btn1: Button = $MarginContainer/VBoxContainer/ButtonsRow/BtnIndice1
-@onready var _hint_btn2: Button = $MarginContainer/VBoxContainer/ButtonsRow/BtnIndice2
+@onready var _hint_btn: Button = $MarginContainer/VBoxContainer/ButtonsRow/BtnIndice
 @onready var _confirm_btn: Button = $MarginContainer/VBoxContainer/ButtonsRow/BtnConfirmer
 @onready var _hint_label: Label = $MarginContainer/VBoxContainer/ContextBubble/Margin/VBox/HintLabel
 
@@ -23,13 +22,12 @@ func _ready() -> void:
 
 	_chapitre = Globals.chapitres.get_chapitre(Globals.story_engine.current_chapitre)
 	_titre_label.text = (
-		_chapitre["emoji"] + "  Chapitre " + str(Globals.story_engine.current_chapitre + 1)
+		_chapitre["emoji"] + "  Chapitre " + str(Globals.story_engine.pool_index + 1)
 		+ " — " + _chapitre["titre"]
 	)
 	_context_label.text = String(_chapitre.get("resume", _chapitre.get("contexte", "")))
 
-	_hint_btn1.pressed.connect(_on_hint_pressed)
-	_hint_btn2.pressed.connect(_on_hint_pressed)
+	_hint_btn.pressed.connect(_on_hint_pressed)
 	_confirm_btn.pressed.connect(_on_confirm)
 
 	_hint_label.text = ""
@@ -57,8 +55,9 @@ func _on_hint_pressed() -> void:
 	_update_hint_buttons()
 
 func _update_hint_buttons() -> void:
-	_hint_btn1.disabled = Globals.story_engine.hints_used_this_chapitre >= 1
-	_hint_btn2.disabled = Globals.story_engine.hints_used_this_chapitre >= 2
+	var remaining: int = 2 - Globals.story_engine.hints_used_this_chapitre
+	_hint_btn.text = "Indices (%d/2) — −0.5 pt" % remaining
+	_hint_btn.disabled = remaining <= 0
 
 func _on_confirm() -> void:
 	if Globals.story_engine.selected_contracts.is_empty():

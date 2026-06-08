@@ -6,8 +6,8 @@ func _ready() -> void:
 	super._ready()
 	var chapitre: Dictionary = Globals.chapitres.get_chapitre(Globals.story_engine.current_chapitre)
 	var titre := "Chapitre %d / %d — %s  %s" % [
-		Globals.story_engine.current_chapitre + 1,
-		Globals.chapitres.count(),
+		Globals.story_engine.pool_index + 1,
+		Globals.story_engine.chapitre_pool.size(),
 		chapitre.get("emoji", ""),
 		chapitre.get("titre", ""),
 	]

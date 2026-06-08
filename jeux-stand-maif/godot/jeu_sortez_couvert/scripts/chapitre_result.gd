@@ -14,7 +14,7 @@ func _ready() -> void:
 	var chapitre_id: int = int(answer.get("chapitre_id", 0))
 	var score_earned: int = int(answer.get("score_earned", 0))
 
-	_chapitre_num_label.text = "Chapitre %d / %d" % [chapitre_id + 1, Globals.chapitres.count()]
+	_chapitre_num_label.text = "Chapitre %d / %d" % [Globals.story_engine.pool_index + 1, Globals.story_engine.chapitre_pool.size()]
 	_score_label.text = "Score : %d / %d" % [score_earned, MAX_SCORE_PER_CHAPITRE]
 	_score_label.add_theme_color_override("font_color", _color_for_score(score_earned))
 

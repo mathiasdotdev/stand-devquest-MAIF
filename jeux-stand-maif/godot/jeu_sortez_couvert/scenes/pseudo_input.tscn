@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/theme/divider.png" id="4_divider"]
 [ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/theme/panel_border_overlay.png" id="5_border_overlay"]
 [ext_resource type="FontFile" path="res://jeu_sortez_couvert/ui/theme/fonts/Nordvik.ttf" id="6_font_title"]
+[ext_resource type="PackedScene" path="res://jeu_sortez_couvert/ui/maif_logo.tscn" id="7_logo"]
 
 [node name="PseudoInput" type="Control"]
 layout_mode = 3
@@ -139,3 +140,17 @@ patch_margin_left = 16
 patch_margin_top = 16
 patch_margin_right = 16
 patch_margin_bottom = 16
+
+[node name="MaifLogo" parent="." instance=ExtResource("7_logo")]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -160.0
+offset_top = -76.0
+offset_right = -24.0
+offset_bottom = -24.0
+grow_horizontal = 0
+grow_vertical = 0

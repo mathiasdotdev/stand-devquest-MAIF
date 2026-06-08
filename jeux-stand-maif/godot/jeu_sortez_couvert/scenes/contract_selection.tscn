@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" path="res://jeu_sortez_couvert/ui/overlay.tscn" id="3_overlay"]
 [ext_resource type="Theme" path="res://jeu_sortez_couvert/ui/theme/fantasy_theme.tres" id="4_theme"]
 [ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/theme/panel_border_overlay.png" id="5_border"]
+[ext_resource type="PackedScene" path="res://jeu_sortez_couvert/ui/maif_logo.tscn" id="6_logo"]
 
 [node name="ContractSelection" type="Control" unique_id=550192341]
 layout_mode = 3
@@ -92,6 +93,20 @@ theme_override_colors/font_color = Color(1, 0.92, 0.55, 1)
 horizontal_alignment = 1
 autowrap_mode = 3
 
+[node name="MaifLogo" parent="." instance=ExtResource("6_logo")]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -140.0
+offset_top = -68.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+
 [node name="BorderOverlay" type="NinePatchRect" parent="MarginContainer/VBoxContainer/ContextBubble"]
 self_modulate = Color(1.5, 1.4, 1.15, 1)
 layout_mode = 1
@@ -116,17 +131,11 @@ layout_mode = 2
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="BtnIndice1" type="Button" parent="MarginContainer/VBoxContainer/ButtonsRow" unique_id=1491811821]
-custom_minimum_size = Vector2(180, 42)
+[node name="BtnIndice" type="Button" parent="MarginContainer/VBoxContainer/ButtonsRow" unique_id=1491811821]
+custom_minimum_size = Vector2(260, 42)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Indice 1 (−0.5 pt)"
-
-[node name="BtnIndice2" type="Button" parent="MarginContainer/VBoxContainer/ButtonsRow" unique_id=37410252]
-custom_minimum_size = Vector2(180, 42)
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Indice 2 (−0.5 pt)"
+text = "Indices (2/2) — −0.5 pt"
 
 [node name="RowSpacer" type="Control" parent="MarginContainer/VBoxContainer/ButtonsRow" unique_id=1039380320]
 custom_minimum_size = Vector2(60, 0)
