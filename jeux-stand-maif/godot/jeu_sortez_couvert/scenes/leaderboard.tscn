@@ -113,14 +113,3 @@ custom_minimum_size = Vector2(0, 62)
 layout_mode = 2
 text = "Retour au menu"
 
-[node name="BorderOverlay" type="NinePatchRect" parent="MenuPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-texture = ExtResource("5_border_overlay")
-patch_margin_left = 16
-patch_margin_top = 16
-patch_margin_right = 16
-patch_margin_bottom = 16

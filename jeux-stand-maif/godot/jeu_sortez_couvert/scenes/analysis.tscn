@@ -55,17 +55,20 @@ theme_override_colors/font_color = Color(1, 0.92, 0.55, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
 theme_override_constants/outline_size = 4
 
-[node name="ChapterNavRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="TopSpacer" type="Control" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="ChapterNavRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="BtnPrev" type="Button" parent="MarginContainer/VBoxContainer/ChapterNavRow"]
-custom_minimum_size = Vector2(64, 0)
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_vertical = 4
 text = "<"
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 28
 
 [node name="ChapterBubble" type="PanelContainer" parent="MarginContainer/VBoxContainer/ChapterNavRow"]
 layout_mode = 2
@@ -88,25 +91,13 @@ scroll_active = false
 text = "..."
 theme_override_font_sizes/normal_font_size = 18
 
-[node name="BorderOverlay" type="NinePatchRect" parent="MarginContainer/VBoxContainer/ChapterNavRow/ChapterBubble"]
-self_modulate = Color(1.5, 1.4, 1.15, 1)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-texture = ExtResource("4_border")
-patch_margin_left = 24
-patch_margin_top = 24
-patch_margin_right = 24
-patch_margin_bottom = 24
 
 [node name="BtnNextChap" type="Button" parent="MarginContainer/VBoxContainer/ChapterNavRow"]
-custom_minimum_size = Vector2(64, 0)
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_vertical = 4
 text = ">"
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 28
 
 [node name="DiscoverSection" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -124,14 +115,14 @@ theme_override_constants/separation = 4
 layout_mode = 2
 autowrap_mode = 3
 text = "Vous cherchez à en savoir plus sur les contrats que propose la MAIF ?"
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 22
 theme_override_colors/font_color = Color(1, 0.92, 0.55, 1)
 
 [node name="DiscoverHint" type="Label" parent="MarginContainer/VBoxContainer/DiscoverSection/DiscoverText"]
 layout_mode = 2
 autowrap_mode = 3
 text = "Scannez le QR code à droite, ou cliquez sur le bouton."
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 16
 theme_override_colors/font_color = Color(0.78, 0.86, 1, 1)
 
 [node name="QRCode" type="TextureRect" parent="MarginContainer/VBoxContainer/DiscoverSection"]
@@ -142,18 +133,26 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="BtnDiscover" type="Button" parent="MarginContainer/VBoxContainer/DiscoverSection"]
-custom_minimum_size = Vector2(240, 44)
+custom_minimum_size = Vector2(280, 56)
 layout_mode = 2
 size_flags_vertical = 4
 text = "🌐  Ouvrir le lien"
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 22
+
+[node name="BottomSpacer" type="Control" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
 
 [node name="BtnMenu" type="Button" parent="MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(420, 52)
+custom_minimum_size = Vector2(480, 60)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Menu principal"
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 26
+
+[node name="FinalSpacer" type="Control" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
 
 [node name="MaifLogo" parent="." instance=ExtResource("6_logo")]
 layout_mode = 1

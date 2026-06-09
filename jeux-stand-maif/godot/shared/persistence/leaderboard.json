@@ -1,210 +1,615 @@
 {
-	"racing": [
-		{
-			"effective_score": 412.0,
-			"email": "speedy@example.com",
-			"hints_used": 0,
-			"name": "Speedy",
-			"score": 412,
-			"timestamp": 1780012800
-		},
-		{
-			"effective_score": 376.0,
-			"email": "",
-			"hints_used": 0,
-			"name": "toto",
-			"score": 376,
-			"timestamp": 1778868264
-		},
-		{
-			"effective_score": 298.0,
-			"email": "racer22@example.com",
-			"hints_used": 0,
-			"name": "Racer22",
-			"score": 298,
-			"timestamp": 1779667200
-		}
-	],
-	"story": [
-		{
-			"name": "Alice Martin",
-			"email": "alice.martin@example.com",
-			"effective_score": 18.0,
-			"score": {
-				"total": 18,
-				"timestamp": 1780099200,
-				"chapter_1": {"id": 0, "title": "Premier véhicule", "hint_used": 0, "score": "3/3"},
-				"chapter_2": {"id": 1, "title": "Nouvel appartement", "hint_used": 0, "score": "3/3"},
-				"chapter_3": {"id": 6, "title": "Premier vélo neuf", "hint_used": 0, "score": "3/3"},
-				"chapter_4": {"id": 7, "title": "Voisin difficile", "hint_used": 0, "score": "3/3"},
-				"chapter_5": {"id": 8, "title": "Premier marathon", "hint_used": 0, "score": "3/3"},
-				"chapter_6": {"id": 9, "title": "Route de nuit", "hint_used": 0, "score": "3/3"}
-			}
-		},
-		{
-			"name": "Lucas Bernard",
-			"email": "lucas.bernard@example.com",
-			"effective_score": 16.5,
-			"score": {
-				"total": 17,
-				"timestamp": 1779926400,
-				"chapter_1": {"id": 1, "title": "Nouvel appartement", "hint_used": 0, "score": "3/3"},
-				"chapter_2": {"id": 2, "title": "Hiver difficile", "hint_used": 0, "score": "3/3"},
-				"chapter_3": {"id": 3, "title": "Vie active", "hint_used": 0, "score": "3/3"},
-				"chapter_4": {"id": 4, "title": "Été à risque", "hint_used": 1, "score": "2/3"},
-				"chapter_5": {"id": 10, "title": "Orage soudain", "hint_used": 0, "score": "3/3"},
-				"chapter_6": {"id": 11, "title": "Cambriolage et procès", "hint_used": 0, "score": "3/3"}
-			}
-		},
-		{
-			"name": "Emma Petit",
-			"email": "",
-			"effective_score": 16.0,
-			"score": {
-				"total": 16,
-				"timestamp": 1780185600,
-				"chapter_1": {"id": 0, "title": "Premier véhicule", "hint_used": 0, "score": "3/3"},
-				"chapter_2": {"id": 5, "title": "L'année noire", "hint_used": 0, "score": "3/3"},
-				"chapter_3": {"id": 6, "title": "Premier vélo neuf", "hint_used": 0, "score": "3/3"},
-				"chapter_4": {"id": 7, "title": "Voisin difficile", "hint_used": 0, "score": "3/3"},
-				"chapter_5": {"id": 12, "title": "Road-trip d'été", "hint_used": 0, "score": "3/3"},
-				"chapter_6": {"id": 14, "title": "Sortie vélo en groupe", "hint_used": 0, "score": "1/3"}
-			}
-		},
-		{
-			"name": "Hugo Dubois",
-			"email": "hugo.dubois@gmail.com",
-			"effective_score": 15.0,
-			"score": {
-				"total": 16,
-				"timestamp": 1779753600,
-				"chapter_1": {"id": 1, "title": "Nouvel appartement", "hint_used": 0, "score": "3/3"},
-				"chapter_2": {"id": 3, "title": "Vie active", "hint_used": 0, "score": "3/3"},
-				"chapter_3": {"id": 8, "title": "Premier marathon", "hint_used": 1, "score": "2/3"},
-				"chapter_4": {"id": 9, "title": "Route de nuit", "hint_used": 0, "score": "3/3"},
-				"chapter_5": {"id": 11, "title": "Cambriolage et procès", "hint_used": 1, "score": "2/3"},
-				"chapter_6": {"id": 13, "title": "Vie en colocation", "hint_used": 0, "score": "3/3"}
-			}
-		},
-		{
-			"name": "Jade Moreau",
-			"email": "jade.moreau@example.com",
-			"effective_score": 13.5,
-			"score": {
-				"total": 14,
-				"timestamp": 1780358400,
-				"chapter_1": {"id": 2, "title": "Hiver difficile", "hint_used": 0, "score": "3/3"},
-				"chapter_2": {"id": 4, "title": "Été à risque", "hint_used": 0, "score": "3/3"},
-				"chapter_3": {"id": 6, "title": "Premier vélo neuf", "hint_used": 0, "score": "3/3"},
-				"chapter_4": {"id": 8, "title": "Premier marathon", "hint_used": 1, "score": "2/3"},
-				"chapter_5": {"id": 10, "title": "Orage soudain", "hint_used": 0, "score": "2/3"},
-				"chapter_6": {"id": 12, "title": "Road-trip d'été", "hint_used": 0, "score": "1/3"}
-			}
-		},
-		{
-			"name": "Léa Laurent",
-			"email": "",
-			"effective_score": 11.5,
-			"score": {
-				"total": 13,
-				"timestamp": 1779840000,
-				"chapter_1": {"id": 0, "title": "Premier véhicule", "hint_used": 0, "score": "3/3"},
-				"chapter_2": {"id": 1, "title": "Nouvel appartement", "hint_used": 1, "score": "2/3"},
-				"chapter_3": {"id": 5, "title": "L'année noire", "hint_used": 1, "score": "2/3"},
-				"chapter_4": {"id": 7, "title": "Voisin difficile", "hint_used": 0, "score": "3/3"},
-				"chapter_5": {"id": 9, "title": "Route de nuit", "hint_used": 1, "score": "2/3"},
-				"chapter_6": {"id": 14, "title": "Sortie vélo en groupe", "hint_used": 0, "score": "1/3"}
-			}
-		},
-		{
-			"name": "Nathan Simon",
-			"email": "nathan.s@example.com",
-			"effective_score": 11.0,
-			"score": {
-				"total": 12,
-				"timestamp": 1780012800,
-				"chapter_1": {"id": 2, "title": "Hiver difficile", "hint_used": 0, "score": "3/3"},
-				"chapter_2": {"id": 3, "title": "Vie active", "hint_used": 1, "score": "2/3"},
-				"chapter_3": {"id": 6, "title": "Premier vélo neuf", "hint_used": 0, "score": "3/3"},
-				"chapter_4": {"id": 8, "title": "Premier marathon", "hint_used": 1, "score": "1/3"},
-				"chapter_5": {"id": 10, "title": "Orage soudain", "hint_used": 0, "score": "2/3"},
-				"chapter_6": {"id": 12, "title": "Road-trip d'été", "hint_used": 0, "score": "1/3"}
-			}
-		},
-		{
-			"name": "Camille Michel",
-			"email": "camille.michel@example.com",
-			"effective_score": 9.0,
-			"score": {
-				"total": 11,
-				"timestamp": 1779667200,
-				"chapter_1": {"id": 1, "title": "Nouvel appartement", "hint_used": 0, "score": "3/3"},
-				"chapter_2": {"id": 4, "title": "Été à risque", "hint_used": 1, "score": "1/3"},
-				"chapter_3": {"id": 7, "title": "Voisin difficile", "hint_used": 1, "score": "1/3"},
-				"chapter_4": {"id": 9, "title": "Route de nuit", "hint_used": 1, "score": "2/3"},
-				"chapter_5": {"id": 11, "title": "Cambriolage et procès", "hint_used": 1, "score": "2/3"},
-				"chapter_6": {"id": 13, "title": "Vie en colocation", "hint_used": 0, "score": "2/3"}
-			}
-		},
-		{
-			"name": "Sarah Roux",
-			"email": "",
-			"effective_score": 8.0,
-			"score": {
-				"total": 9,
-				"timestamp": 1779494400,
-				"chapter_1": {"id": 0, "title": "Premier véhicule", "hint_used": 1, "score": "2/3"},
-				"chapter_2": {"id": 3, "title": "Vie active", "hint_used": 0, "score": "1/3"},
-				"chapter_3": {"id": 5, "title": "L'année noire", "hint_used": 1, "score": "1/3"},
-				"chapter_4": {"id": 8, "title": "Premier marathon", "hint_used": 0, "score": "3/3"},
-				"chapter_5": {"id": 10, "title": "Orage soudain", "hint_used": 0, "score": "1/3"},
-				"chapter_6": {"id": 14, "title": "Sortie vélo en groupe", "hint_used": 0, "score": "1/3"}
-			}
-		},
-		{
-			"name": "Mathéo Fontaine",
-			"email": "matheo.f@example.com",
-			"effective_score": 5.5,
-			"score": {
-				"total": 8,
-				"timestamp": 1779321600,
-				"chapter_1": {"id": 2, "title": "Hiver difficile", "hint_used": 1, "score": "1/3"},
-				"chapter_2": {"id": 4, "title": "Été à risque", "hint_used": 1, "score": "1/3"},
-				"chapter_3": {"id": 6, "title": "Premier vélo neuf", "hint_used": 1, "score": "2/3"},
-				"chapter_4": {"id": 9, "title": "Route de nuit", "hint_used": 1, "score": "1/3"},
-				"chapter_5": {"id": 11, "title": "Cambriolage et procès", "hint_used": 1, "score": "2/3"},
-				"chapter_6": {"id": 13, "title": "Vie en colocation", "hint_used": 0, "score": "1/3"}
-			}
-		},
-		{
-			"name": "Antoine Garnier",
-			"email": "",
-			"effective_score": 3.0,
-			"score": {
-				"total": 6,
-				"timestamp": 1779580800,
-				"chapter_1": {"id": 0, "title": "Premier véhicule", "hint_used": 1, "score": "1/3"},
-				"chapter_2": {"id": 1, "title": "Nouvel appartement", "hint_used": 1, "score": "0/3"},
-				"chapter_3": {"id": 5, "title": "L'année noire", "hint_used": 1, "score": "2/3"},
-				"chapter_4": {"id": 7, "title": "Voisin difficile", "hint_used": 1, "score": "1/3"},
-				"chapter_5": {"id": 10, "title": "Orage soudain", "hint_used": 1, "score": "2/3"},
-				"chapter_6": {"id": 12, "title": "Road-trip d'été", "hint_used": 1, "score": "0/3"}
-			}
-		},
-		{
-			"name": "Marine Chevalier",
-			"email": "marine.c@example.com",
-			"effective_score": -1.0,
-			"score": {
-				"total": 3,
-				"timestamp": 1779148800,
-				"chapter_1": {"id": 3, "title": "Vie active", "hint_used": 2, "score": "0/3"},
-				"chapter_2": {"id": 6, "title": "Premier vélo neuf", "hint_used": 1, "score": "1/3"},
-				"chapter_3": {"id": 8, "title": "Premier marathon", "hint_used": 2, "score": "0/3"},
-				"chapter_4": {"id": 11, "title": "Cambriolage et procès", "hint_used": 1, "score": "1/3"},
-				"chapter_5": {"id": 13, "title": "Vie en colocation", "hint_used": 1, "score": "1/3"},
-				"chapter_6": {"id": 14, "title": "Sortie vélo en groupe", "hint_used": 1, "score": "0/3"}
-			}
-		}
-	]
+  "racing": [
+    {
+      "effective_score": 412.0,
+      "email": "speedy@example.com",
+      "hints_used": 0.0,
+      "name": "Speedy",
+      "score": 412.0,
+      "timestamp": 1780012800.0
+    },
+    {
+      "effective_score": 376.0,
+      "email": "",
+      "hints_used": 0.0,
+      "name": "toto",
+      "score": 376.0,
+      "timestamp": 1778868264.0
+    },
+    {
+      "effective_score": 298.0,
+      "email": "racer22@example.com",
+      "hints_used": 0.0,
+      "name": "Racer22",
+      "score": 298.0,
+      "timestamp": 1779667200.0
+    }
+  ],
+  "story": [
+    {
+      "effective_score": 18.0,
+      "email": "alice.martin@example.com",
+      "name": "Alice Martin",
+      "score": {
+        "chapter_1": {
+          "hint_used": 0.0,
+          "id": 0.0,
+          "score": "3/3",
+          "title": "Premier véhicule"
+        },
+        "chapter_2": {
+          "hint_used": 0.0,
+          "id": 1.0,
+          "score": "3/3",
+          "title": "Nouvel appartement"
+        },
+        "chapter_3": {
+          "hint_used": 0.0,
+          "id": 6.0,
+          "score": "3/3",
+          "title": "Premier vélo neuf"
+        },
+        "chapter_4": {
+          "hint_used": 0.0,
+          "id": 7.0,
+          "score": "3/3",
+          "title": "Voisin difficile"
+        },
+        "chapter_5": {
+          "hint_used": 0.0,
+          "id": 8.0,
+          "score": "3/3",
+          "title": "Premier marathon"
+        },
+        "chapter_6": {
+          "hint_used": 0.0,
+          "id": 9.0,
+          "score": "3/3",
+          "title": "Route de nuit"
+        },
+        "timestamp": 1780099200.0,
+        "total": 18.0
+      }
+    },
+    {
+      "effective_score": 16.5,
+      "email": "lucas.bernard@example.com",
+      "name": "Lucas Bernard",
+      "score": {
+        "chapter_1": {
+          "hint_used": 0.0,
+          "id": 1.0,
+          "score": "3/3",
+          "title": "Nouvel appartement"
+        },
+        "chapter_2": {
+          "hint_used": 0.0,
+          "id": 2.0,
+          "score": "3/3",
+          "title": "Hiver difficile"
+        },
+        "chapter_3": {
+          "hint_used": 0.0,
+          "id": 3.0,
+          "score": "3/3",
+          "title": "Vie active"
+        },
+        "chapter_4": {
+          "hint_used": 1.0,
+          "id": 4.0,
+          "score": "2/3",
+          "title": "Été à risque"
+        },
+        "chapter_5": {
+          "hint_used": 0.0,
+          "id": 10.0,
+          "score": "3/3",
+          "title": "Orage soudain"
+        },
+        "chapter_6": {
+          "hint_used": 0.0,
+          "id": 11.0,
+          "score": "3/3",
+          "title": "Cambriolage et procès"
+        },
+        "timestamp": 1779926400.0,
+        "total": 17.0
+      }
+    },
+    {
+      "effective_score": 16.0,
+      "email": "",
+      "name": "Emma Petit",
+      "score": {
+        "chapter_1": {
+          "hint_used": 0.0,
+          "id": 0.0,
+          "score": "3/3",
+          "title": "Premier véhicule"
+        },
+        "chapter_2": {
+          "hint_used": 0.0,
+          "id": 5.0,
+          "score": "3/3",
+          "title": "L'année noire"
+        },
+        "chapter_3": {
+          "hint_used": 0.0,
+          "id": 6.0,
+          "score": "3/3",
+          "title": "Premier vélo neuf"
+        },
+        "chapter_4": {
+          "hint_used": 0.0,
+          "id": 7.0,
+          "score": "3/3",
+          "title": "Voisin difficile"
+        },
+        "chapter_5": {
+          "hint_used": 0.0,
+          "id": 12.0,
+          "score": "3/3",
+          "title": "Road-trip d'été"
+        },
+        "chapter_6": {
+          "hint_used": 0.0,
+          "id": 14.0,
+          "score": "1/3",
+          "title": "Sortie vélo en groupe"
+        },
+        "timestamp": 1780185600.0,
+        "total": 16.0
+      }
+    },
+    {
+      "effective_score": 15.0,
+      "email": "hugo.dubois@gmail.com",
+      "name": "Hugo Dubois",
+      "score": {
+        "chapter_1": {
+          "hint_used": 0.0,
+          "id": 1.0,
+          "score": "3/3",
+          "title": "Nouvel appartement"
+        },
+        "chapter_2": {
+          "hint_used": 0.0,
+          "id": 3.0,
+          "score": "3/3",
+          "title": "Vie active"
+        },
+        "chapter_3": {
+          "hint_used": 1.0,
+          "id": 8.0,
+          "score": "2/3",
+          "title": "Premier marathon"
+        },
+        "chapter_4": {
+          "hint_used": 0.0,
+          "id": 9.0,
+          "score": "3/3",
+          "title": "Route de nuit"
+        },
+        "chapter_5": {
+          "hint_used": 1.0,
+          "id": 11.0,
+          "score": "2/3",
+          "title": "Cambriolage et procès"
+        },
+        "chapter_6": {
+          "hint_used": 0.0,
+          "id": 13.0,
+          "score": "3/3",
+          "title": "Vie en colocation"
+        },
+        "timestamp": 1779753600.0,
+        "total": 16.0
+      }
+    },
+    {
+      "effective_score": 15.0,
+      "email": "toto@gmail.com",
+      "name": "Titi",
+      "score": {
+        "chapter_1": {
+          "hint_used": 0.0,
+          "id": 2.0,
+          "score": "2/3",
+          "title": "Hiver difficile"
+        },
+        "chapter_2": {
+          "hint_used": 0.0,
+          "id": 9.0,
+          "score": "3/3",
+          "title": "Route de nuit"
+        },
+        "chapter_3": {
+          "hint_used": 0.0,
+          "id": 5.0,
+          "score": "3/3",
+          "title": "L'année noire"
+        },
+        "chapter_4": {
+          "hint_used": 0.0,
+          "id": 3.0,
+          "score": "3/3",
+          "title": "Vie active"
+        },
+        "chapter_5": {
+          "hint_used": 0.0,
+          "id": 8.0,
+          "score": "2/3",
+          "title": "Premier marathon"
+        },
+        "chapter_6": {
+          "hint_used": 0.0,
+          "id": 14.0,
+          "score": "2/3",
+          "title": "Sortie vélo en groupe"
+        },
+        "timestamp": 1780964886.0,
+        "total": 15.0
+      }
+    },
+    {
+      "effective_score": 13.5,
+      "email": "jade.moreau@example.com",
+      "name": "Jade Moreau",
+      "score": {
+        "chapter_1": {
+          "hint_used": 0.0,
+          "id": 2.0,
+          "score": "3/3",
+          "title": "Hiver difficile"
+        },
+        "chapter_2": {
+          "hint_used": 0.0,
+          "id": 4.0,
+          "score": "3/3",
+          "title": "Été à risque"
+        },
+        "chapter_3": {
+          "hint_used": 0.0,
+          "id": 6.0,
+          "score": "3/3",
+          "title": "Premier vélo neuf"
+        },
+        "chapter_4": {
+          "hint_used": 1.0,
+          "id": 8.0,
+          "score": "2/3",
+          "title": "Premier marathon"
+        },
+        "chapter_5": {
+          "hint_used": 0.0,
+          "id": 10.0,
+          "score": "2/3",
+          "title": "Orage soudain"
+        },
+        "chapter_6": {
+          "hint_used": 0.0,
+          "id": 12.0,
+          "score": "1/3",
+          "title": "Road-trip d'été"
+        },
+        "timestamp": 1780358400.0,
+        "total": 14.0
+      }
+    },
+    {
+      "effective_score": 11.5,
+      "email": "",
+      "name": "Léa Laurent",
+      "score": {
+        "chapter_1": {
+          "hint_used": 0.0,
+          "id": 0.0,
+          "score": "3/3",
+          "title": "Premier véhicule"
+        },
+        "chapter_2": {
+          "hint_used": 1.0,
+          "id": 1.0,
+          "score": "2/3",
+          "title": "Nouvel appartement"
+        },
+        "chapter_3": {
+          "hint_used": 1.0,
+          "id": 5.0,
+          "score": "2/3",
+          "title": "L'année noire"
+        },
+        "chapter_4": {
+          "hint_used": 0.0,
+          "id": 7.0,
+          "score": "3/3",
+          "title": "Voisin difficile"
+        },
+        "chapter_5": {
+          "hint_used": 1.0,
+          "id": 9.0,
+          "score": "2/3",
+          "title": "Route de nuit"
+        },
+        "chapter_6": {
+          "hint_used": 0.0,
+          "id": 14.0,
+          "score": "1/3",
+          "title": "Sortie vélo en groupe"
+        },
+        "timestamp": 1779840000.0,
+        "total": 13.0
+      }
+    },
+    {
+      "effective_score": 11.0,
+      "email": "nathan.s@example.com",
+      "name": "Nathan Simon",
+      "score": {
+        "chapter_1": {
+          "hint_used": 0.0,
+          "id": 2.0,
+          "score": "3/3",
+          "title": "Hiver difficile"
+        },
+        "chapter_2": {
+          "hint_used": 1.0,
+          "id": 3.0,
+          "score": "2/3",
+          "title": "Vie active"
+        },
+        "chapter_3": {
+          "hint_used": 0.0,
+          "id": 6.0,
+          "score": "3/3",
+          "title": "Premier vélo neuf"
+        },
+        "chapter_4": {
+          "hint_used": 1.0,
+          "id": 8.0,
+          "score": "1/3",
+          "title": "Premier marathon"
+        },
+        "chapter_5": {
+          "hint_used": 0.0,
+          "id": 10.0,
+          "score": "2/3",
+          "title": "Orage soudain"
+        },
+        "chapter_6": {
+          "hint_used": 0.0,
+          "id": 12.0,
+          "score": "1/3",
+          "title": "Road-trip d'été"
+        },
+        "timestamp": 1780012800.0,
+        "total": 12.0
+      }
+    },
+    {
+      "effective_score": 9.0,
+      "email": "camille.michel@example.com",
+      "name": "Camille Michel",
+      "score": {
+        "chapter_1": {
+          "hint_used": 0.0,
+          "id": 1.0,
+          "score": "3/3",
+          "title": "Nouvel appartement"
+        },
+        "chapter_2": {
+          "hint_used": 1.0,
+          "id": 4.0,
+          "score": "1/3",
+          "title": "Été à risque"
+        },
+        "chapter_3": {
+          "hint_used": 1.0,
+          "id": 7.0,
+          "score": "1/3",
+          "title": "Voisin difficile"
+        },
+        "chapter_4": {
+          "hint_used": 1.0,
+          "id": 9.0,
+          "score": "2/3",
+          "title": "Route de nuit"
+        },
+        "chapter_5": {
+          "hint_used": 1.0,
+          "id": 11.0,
+          "score": "2/3",
+          "title": "Cambriolage et procès"
+        },
+        "chapter_6": {
+          "hint_used": 0.0,
+          "id": 13.0,
+          "score": "2/3",
+          "title": "Vie en colocation"
+        },
+        "timestamp": 1779667200.0,
+        "total": 11.0
+      }
+    },
+    {
+      "effective_score": 8.0,
+      "email": "",
+      "name": "Sarah Roux",
+      "score": {
+        "chapter_1": {
+          "hint_used": 1.0,
+          "id": 0.0,
+          "score": "2/3",
+          "title": "Premier véhicule"
+        },
+        "chapter_2": {
+          "hint_used": 0.0,
+          "id": 3.0,
+          "score": "1/3",
+          "title": "Vie active"
+        },
+        "chapter_3": {
+          "hint_used": 1.0,
+          "id": 5.0,
+          "score": "1/3",
+          "title": "L'année noire"
+        },
+        "chapter_4": {
+          "hint_used": 0.0,
+          "id": 8.0,
+          "score": "3/3",
+          "title": "Premier marathon"
+        },
+        "chapter_5": {
+          "hint_used": 0.0,
+          "id": 10.0,
+          "score": "1/3",
+          "title": "Orage soudain"
+        },
+        "chapter_6": {
+          "hint_used": 0.0,
+          "id": 14.0,
+          "score": "1/3",
+          "title": "Sortie vélo en groupe"
+        },
+        "timestamp": 1779494400.0,
+        "total": 9.0
+      }
+    },
+    {
+      "effective_score": 5.5,
+      "email": "matheo.f@example.com",
+      "name": "Mathéo Fontaine",
+      "score": {
+        "chapter_1": {
+          "hint_used": 1.0,
+          "id": 2.0,
+          "score": "1/3",
+          "title": "Hiver difficile"
+        },
+        "chapter_2": {
+          "hint_used": 1.0,
+          "id": 4.0,
+          "score": "1/3",
+          "title": "Été à risque"
+        },
+        "chapter_3": {
+          "hint_used": 1.0,
+          "id": 6.0,
+          "score": "2/3",
+          "title": "Premier vélo neuf"
+        },
+        "chapter_4": {
+          "hint_used": 1.0,
+          "id": 9.0,
+          "score": "1/3",
+          "title": "Route de nuit"
+        },
+        "chapter_5": {
+          "hint_used": 1.0,
+          "id": 11.0,
+          "score": "2/3",
+          "title": "Cambriolage et procès"
+        },
+        "chapter_6": {
+          "hint_used": 0.0,
+          "id": 13.0,
+          "score": "1/3",
+          "title": "Vie en colocation"
+        },
+        "timestamp": 1779321600.0,
+        "total": 8.0
+      }
+    },
+    {
+      "effective_score": 3.0,
+      "email": "",
+      "name": "Antoine Garnier",
+      "score": {
+        "chapter_1": {
+          "hint_used": 1.0,
+          "id": 0.0,
+          "score": "1/3",
+          "title": "Premier véhicule"
+        },
+        "chapter_2": {
+          "hint_used": 1.0,
+          "id": 1.0,
+          "score": "0/3",
+          "title": "Nouvel appartement"
+        },
+        "chapter_3": {
+          "hint_used": 1.0,
+          "id": 5.0,
+          "score": "2/3",
+          "title": "L'année noire"
+        },
+        "chapter_4": {
+          "hint_used": 1.0,
+          "id": 7.0,
+          "score": "1/3",
+          "title": "Voisin difficile"
+        },
+        "chapter_5": {
+          "hint_used": 1.0,
+          "id": 10.0,
+          "score": "2/3",
+          "title": "Orage soudain"
+        },
+        "chapter_6": {
+          "hint_used": 1.0,
+          "id": 12.0,
+          "score": "0/3",
+          "title": "Road-trip d'été"
+        },
+        "timestamp": 1779580800.0,
+        "total": 6.0
+      }
+    },
+    {
+      "effective_score": -1.0,
+      "email": "marine.c@example.com",
+      "name": "Marine Chevalier",
+      "score": {
+        "chapter_1": {
+          "hint_used": 2.0,
+          "id": 3.0,
+          "score": "0/3",
+          "title": "Vie active"
+        },
+        "chapter_2": {
+          "hint_used": 1.0,
+          "id": 6.0,
+          "score": "1/3",
+          "title": "Premier vélo neuf"
+        },
+        "chapter_3": {
+          "hint_used": 2.0,
+          "id": 8.0,
+          "score": "0/3",
+          "title": "Premier marathon"
+        },
+        "chapter_4": {
+          "hint_used": 1.0,
+          "id": 11.0,
+          "score": "1/3",
+          "title": "Cambriolage et procès"
+        },
+        "chapter_5": {
+          "hint_used": 1.0,
+          "id": 13.0,
+          "score": "1/3",
+          "title": "Vie en colocation"
+        },
+        "chapter_6": {
+          "hint_used": 1.0,
+          "id": 14.0,
+          "score": "0/3",
+          "title": "Sortie vélo en groupe"
+        },
+        "timestamp": 1779148800.0,
+        "total": 3.0
+      }
+    }
+  ]
 }

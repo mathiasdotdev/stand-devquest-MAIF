@@ -53,10 +53,6 @@ theme_override_constants/margin_bottom = 24
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="SpacerTop" type="Control" parent="CenterContainer/MenuPanel/Margin/VBox"]
-custom_minimum_size = Vector2(0, 12)
-layout_mode = 2
-
 [node name="Title" type="Label" parent="CenterContainer/MenuPanel/Margin/VBox"]
 layout_mode = 2
 text = "Quel est ton pseudo ?"
@@ -75,10 +71,6 @@ texture = ExtResource("4_divider")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Spacer1" type="Control" parent="CenterContainer/MenuPanel/Margin/VBox"]
-custom_minimum_size = Vector2(0, 4)
-layout_mode = 2
-
 [node name="NameInput" type="LineEdit" parent="CenterContainer/MenuPanel/Margin/VBox"]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
@@ -93,8 +85,16 @@ horizontal_alignment = 1
 theme_override_font_sizes/font_size = 20
 theme_override_colors/font_color = Color(0.78, 0.86, 1, 1)
 
+[node name="NameError" type="Label" parent="CenterContainer/MenuPanel/Margin/VBox"]
+visible = false
+layout_mode = 2
+text = "Le pseudo est requis"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
+
 [node name="Spacer2" type="Control" parent="CenterContainer/MenuPanel/Margin/VBox"]
-custom_minimum_size = Vector2(0, 8)
+custom_minimum_size = Vector2(0, 4)
 layout_mode = 2
 
 [node name="EmailInput" type="LineEdit" parent="CenterContainer/MenuPanel/Margin/VBox"]
@@ -110,8 +110,16 @@ horizontal_alignment = 1
 theme_override_font_sizes/font_size = 20
 theme_override_colors/font_color = Color(0.78, 0.86, 1, 1)
 
+[node name="EmailError" type="Label" parent="CenterContainer/MenuPanel/Margin/VBox"]
+visible = false
+layout_mode = 2
+text = "Format d'email invalide (ex: nom@exemple.fr)"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
+
 [node name="Spacer3" type="Control" parent="CenterContainer/MenuPanel/Margin/VBox"]
-custom_minimum_size = Vector2(0, 12)
+custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 
 [node name="Footer" type="HBoxContainer" parent="CenterContainer/MenuPanel/Margin/VBox"]
@@ -129,17 +137,6 @@ custom_minimum_size = Vector2(280, 66)
 layout_mode = 2
 text = "Commencer"
 
-[node name="BorderOverlay" type="NinePatchRect" parent="CenterContainer/MenuPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-texture = ExtResource("5_border_overlay")
-patch_margin_left = 16
-patch_margin_top = 16
-patch_margin_right = 16
-patch_margin_bottom = 16
 
 [node name="MaifLogo" parent="." instance=ExtResource("7_logo")]
 layout_mode = 1

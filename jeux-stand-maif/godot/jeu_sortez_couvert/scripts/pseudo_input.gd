@@ -1,11 +1,17 @@
 extends Control
 
 @onready var name_input: LineEdit = $CenterContainer/MenuPanel/Margin/VBox/NameInput
+@onready var name_error: Label = $CenterContainer/MenuPanel/Margin/VBox/NameError
 @onready var email_input: LineEdit = $CenterContainer/MenuPanel/Margin/VBox/EmailInput
+@onready var email_error: Label = $CenterContainer/MenuPanel/Margin/VBox/EmailError
 @onready var btn_start: Button = $CenterContainer/MenuPanel/Margin/VBox/Footer/BtnStart
 @onready var btn_back: Button = $CenterContainer/MenuPanel/Margin/VBox/Footer/BtnBack
 
+var _email_regex: RegEx = RegEx.new()
+
 func _ready() -> void:
+	_email_regex.compile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
+
 	var story_engine: Node = get_node("/root/StoryEngine")
 	if story_engine.player_name != "":
 		name_input.text = story_engine.player_name
@@ -27,11 +33,11 @@ func _on_start() -> void:
 	var player_name: String = name_input.text.strip_edges()
 	var player_email: String = email_input.text.strip_edges()
 	if player_name.is_empty():
-		# Donne un feedback rapide si le pseudo est vide.
-		name_input.add_theme_color_override("font_color", Color(1, 0.4, 0.4, 1))
+		name_error.show()
+		name_input.grab_focus()
 		return
 	if not _is_email_valid(player_email):
-		email_input.add_theme_color_override("font_color", Color(1, 0.4, 0.4, 1))
+		email_error.show()
 		email_input.grab_focus()
 		return
 	Globals.story_engine.reset()
@@ -51,7 +57,7 @@ func _on_text_changed(new_text: String) -> void:
 	var is_valid: bool = not new_text.strip_edges().is_empty()
 	btn_start.disabled = not is_valid
 	if is_valid:
-		name_input.remove_theme_color_override("font_color")
+		name_error.hide()
 
 func _on_email_changed(new_text: String) -> void:
 	var lowered: String = new_text.to_lower()
@@ -61,12 +67,12 @@ func _on_email_changed(new_text: String) -> void:
 		email_input.caret_column = caret
 		new_text = lowered
 	if _is_email_valid(new_text.strip_edges()):
-		email_input.remove_theme_color_override("font_color")
+		email_error.hide()
 
 func _is_email_valid(email: String) -> bool:
 	if email.is_empty():
 		return true
-	return email.contains("@") and email.contains(".")
+	return _email_regex.search(email) != null
 
 func _on_back() -> void:
 	get_tree().change_scene_to_file("res://main_menu/main_menu.tscn")
