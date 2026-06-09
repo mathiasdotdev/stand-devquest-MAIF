@@ -135,7 +135,7 @@ func _build_entry_row(mode: String, idx: int, entry: Dictionary) -> Control:
 		email_lbl.add_theme_color_override("font_color", Color(0.5, 0.55, 0.65, 1))
 		email_lbl.add_theme_font_size_override("font_size", 22)
 	else:
-		email_lbl.text = "✉"
+		email_lbl.text = "✉️"
 		email_lbl.tooltip_text = "Email : " + email_str
 		email_lbl.add_theme_color_override("font_color", Color(0.4, 0.95, 0.5, 1))
 		email_lbl.add_theme_font_size_override("font_size", 20)
