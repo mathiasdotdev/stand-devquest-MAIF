@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/knightcore.ogg-1b2248d26301833d60c0fd3df80855
 
 [params]
 
-loop=false
+loop=true
 loop_offset=0
 bpm=0
 beat_count=0

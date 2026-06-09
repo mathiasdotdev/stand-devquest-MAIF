@@ -15,10 +15,10 @@ const SFX_DIR := "res://jeu_sortez_couvert/ui/assets/kenney_interface-sounds/Aud
 const SOUND_FILES := {
 	"click":   "click_005.ogg",
 	"back":    "click_001.ogg",
+	"selection": "click_003.ogg",
 	"hint":    "question_002.ogg",
 	"win":     "confirmation_004.ogg",
 	"fail":    "error_003.ogg",
-	"selection": "select_002.ogg",
 	"switch":  "switch_004.ogg"
 }
 

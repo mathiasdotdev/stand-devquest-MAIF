@@ -9,11 +9,11 @@ class_name LeaderboardStore
 # L'UI continue d'afficher seulement les `DISPLAY_TOP_N` meilleures via
 # `get_entries(mode, DISPLAY_TOP_N)`.
 #
-# Deux formats d'entrée cohabitent :
-# - Format "flat" (legacy + racing) : { name, email, score:int, hints_used, effective_score, timestamp }
-# - Format "chapitres" (story récent) : { name, email, effective_score,
+# Deux formats selon le mode :
+# - "racing" → flat : { name, email, score:int, hints_used, effective_score, timestamp }
+# - "story"  → orienté chapitres : { name, email, effective_score,
 #       score: { total, timestamp, chapter_1: {id, title, score:"X/3", hint_used}, ... } }
-# Les helpers _get_score_total() / _get_hints_total() lisent les deux.
+# Les helpers get_score_total() / get_hints_total() / get_timestamp() lisent les deux.
 # ---------------------------------------------------------------------------
 
 # En éditeur : sauvegarde dans le projet (pratique pour debug + versioning)
@@ -141,19 +141,17 @@ func clear_all() -> void:
 
 # ---- Helpers de lecture (gèrent les deux formats) ---------------------------
 
-# Score brut (somme des points par chapitre, sans pénalité d'indice).
+# Score brut. Racing : `score` est un int. Story : `score.total`.
 static func get_score_total(entry: Dictionary) -> int:
 	var s: Variant = entry.get("score", 0)
 	if s is Dictionary:
 		return int(s.get("total", 0))
 	return int(s)
 
-# Nombre total d'indices utilisés sur toute la partie.
+# Nombre total d'indices. Racing : 0 (champ `hints_used`). Story : somme par chapitre.
 static func get_hints_total(entry: Dictionary) -> int:
-	# Format flat : champ direct
 	if entry.has("hints_used"):
 		return max(0, int(entry.get("hints_used", 0)))
-	# Format chapitres : somme sur chaque chapitre
 	var s: Variant = entry.get("score", null)
 	if not (s is Dictionary):
 		return 0
@@ -166,7 +164,7 @@ static func get_hints_total(entry: Dictionary) -> int:
 			total += max(0, int(ch.get("hint_used", 0)))
 	return total
 
-# Timestamp unix (cherche aussi dans score.timestamp pour le format chapitres).
+# Timestamp unix. Racing : top-level. Story : dans `score.timestamp`.
 static func get_timestamp(entry: Dictionary) -> int:
 	if entry.has("timestamp"):
 		return int(entry.get("timestamp", 0))
