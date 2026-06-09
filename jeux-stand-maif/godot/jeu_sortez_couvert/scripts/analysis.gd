@@ -36,8 +36,8 @@ func _ready() -> void:
 	_btn_discover.pressed.connect(_on_discover)
 	_setup_qr_code()
 
-	# On garde uniquement les top scores (avec pénalité d'indices pour le classement).
-	save_score_if_top_ten()
+	# Toutes les parties sont enregistrées. Le top N est filtré uniquement à l'affichage.
+	save_score()
 	_build_top_section()
 	_build_global_section()
 	_show_chapter_view(0)
@@ -184,23 +184,14 @@ func _on_next_chap() -> void:
 
 # ---- Leaderboard ------------------------------------------------------------
 
-func save_score_if_top_ten() -> void:
-	var score: int = _analysis["total_score"]
-	var hints_used: int = _total_hints_used()
-	if Globals.leaderboard.is_top_ten("story", score, hints_used):
-		if Globals.story_engine.player_name.is_empty():
-			Globals.story_engine.player_name = "Anonyme"
-		Globals.leaderboard.add_story_entry(
-			Globals.story_engine.player_name,
-			Globals.story_engine.player_email,
-			_build_chapter_breakdown(),
-		)
-
-func _total_hints_used() -> int:
-	var total_hints := 0
-	for a: Dictionary in _analysis.get("answers", []):
-		total_hints += int(a.get("hints_used", 0))
-	return total_hints
+func save_score() -> void:
+	if Globals.story_engine.player_name.is_empty():
+		Globals.story_engine.player_name = "Anonyme"
+	Globals.leaderboard.add_story_entry(
+		Globals.story_engine.player_name,
+		Globals.story_engine.player_email,
+		_build_chapter_breakdown(),
+	)
 
 # Construit le tableau de breakdown attendu par add_story_entry :
 # un dict par chapitre joué, dans l'ordre du pool.
