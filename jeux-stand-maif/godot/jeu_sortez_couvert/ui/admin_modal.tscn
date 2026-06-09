@@ -1,0 +1,196 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://jeu_sortez_couvert/ui/admin_modal.gd" id="1_script"]
+[ext_resource type="Theme" path="res://jeu_sortez_couvert/ui/theme/fantasy_theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/theme/divider.png" id="3_divider"]
+[ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/theme/panel_border_overlay.png" id="4_border"]
+[ext_resource type="FontFile" path="res://jeu_sortez_couvert/ui/theme/fonts/Nordvik.ttf" id="5_font"]
+
+[node name="AdminModal" type="CanvasLayer"]
+process_mode = 3
+layer = 11
+script = ExtResource("1_script")
+
+[node name="Container" type="Control" parent="."]
+process_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+visible = false
+theme = ExtResource("2_theme")
+
+[node name="Dim" type="ColorRect" parent="Container"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.03, 0.05, 0.11, 0.45)
+
+[node name="CenterContainer" type="CenterContainer" parent="Container"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="MenuPanel" type="PanelContainer" parent="Container/CenterContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(820, 0)
+
+[node name="Margin" type="MarginContainer" parent="Container/CenterContainer/MenuPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 22
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 22
+
+[node name="VBox" type="VBoxContainer" parent="Container/CenterContainer/MenuPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+layout_mode = 2
+text = "Paramètres classement"
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("5_font")
+theme_override_font_sizes/font_size = 48
+theme_override_colors/font_color = Color(1, 0.92, 0.55, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 4
+
+[node name="Divider1" type="TextureRect" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("3_divider")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PathSectionLabel" type="Label" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+layout_mode = 2
+text = "Chemin de sauvegarde du JSON"
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.78, 0.86, 1, 1)
+
+[node name="CurrentPathLabel" type="Label" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+layout_mode = 2
+text = "Actuellement : ..."
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.7, 0.78, 0.92, 1)
+
+[node name="DefaultPathLabel" type="Label" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+layout_mode = 2
+text = "Défaut : ..."
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.55, 0.62, 0.78, 1)
+
+[node name="PathBtnRow" type="HBoxContainer" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="BtnChoose" type="Button" parent="Container/CenterContainer/MenuPanel/Margin/VBox/PathBtnRow"]
+custom_minimum_size = Vector2(280, 44)
+layout_mode = 2
+text = "📁  Choisir l'emplacement..."
+theme_override_font_sizes/font_size = 20
+
+[node name="BtnReset" type="Button" parent="Container/CenterContainer/MenuPanel/Margin/VBox/PathBtnRow"]
+custom_minimum_size = Vector2(220, 44)
+layout_mode = 2
+text = "Réinitialiser"
+theme_override_font_sizes/font_size = 20
+
+[node name="Divider2" type="TextureRect" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("3_divider")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="FilterSectionLabel" type="Label" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+layout_mode = 2
+text = "Filtres d'affichage"
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.78, 0.86, 1, 1)
+
+[node name="EmailOnlyCheck" type="CheckBox" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+layout_mode = 2
+text = "Avec email uniquement (pour contacter le gagnant)"
+
+[node name="ScoreFilterRow" type="HBoxContainer" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="ScoreLabel" type="Label" parent="Container/CenterContainer/MenuPanel/Margin/VBox/ScoreFilterRow"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "Score effectif minimum :"
+theme_override_font_sizes/font_size = 18
+
+[node name="MinScoreSpin" type="SpinBox" parent="Container/CenterContainer/MenuPanel/Margin/VBox/ScoreFilterRow"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+max_value = 18.0
+step = 0.5
+
+[node name="MinScoreHint" type="Label" parent="Container/CenterContainer/MenuPanel/Margin/VBox/ScoreFilterRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+text = "(0 = pas de filtre)"
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.55, 0.62, 0.78, 1)
+
+[node name="DisplayLimitRow" type="HBoxContainer" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="LimitLabel" type="Label" parent="Container/CenterContainer/MenuPanel/Margin/VBox/DisplayLimitRow"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "Nombre d'entrées affichées :"
+theme_override_font_sizes/font_size = 18
+
+[node name="DisplayLimitSpin" type="SpinBox" parent="Container/CenterContainer/MenuPanel/Margin/VBox/DisplayLimitRow"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+min_value = 1.0
+max_value = 200.0
+step = 1.0
+value = 10.0
+
+[node name="LimitHint" type="Label" parent="Container/CenterContainer/MenuPanel/Margin/VBox/DisplayLimitRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+text = "(défaut : 10)"
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.55, 0.62, 0.78, 1)
+
+[node name="Spacer" type="Control" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="CloseRow" type="HBoxContainer" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="BtnClose" type="Button" parent="Container/CenterContainer/MenuPanel/Margin/VBox/CloseRow"]
+custom_minimum_size = Vector2(220, 52)
+layout_mode = 2
+text = "Fermer"
+theme_override_font_sizes/font_size = 22
+
+[node name="BorderOverlay" type="NinePatchRect" parent="Container/CenterContainer/MenuPanel"]
+self_modulate = Color(1.5, 1.4, 1.15, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("4_border")
+patch_margin_left = 24
+patch_margin_top = 24
+patch_margin_right = 24
+patch_margin_bottom = 24

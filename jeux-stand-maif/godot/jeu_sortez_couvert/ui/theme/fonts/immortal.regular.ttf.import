@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://cn50eow48yflk"
-path="res://.godot/imported/EBGaramondSC08-Regular.ttf-92d3945470140a9d17974de422c6680b.fontdata"
+uid="uid://s2bitpl6q1tm"
+path="res://.godot/imported/immortal.regular.ttf-0a152fc1aaca4230859fdc85278e8528.fontdata"
 
 [deps]
 
-source_file="res://jeu_sortez_couvert/ui/theme/fonts/EBGaramond/EBGaramondSC08-Regular.ttf"
-dest_files=["res://.godot/imported/EBGaramondSC08-Regular.ttf-92d3945470140a9d17974de422c6680b.fontdata"]
+source_file="res://jeu_sortez_couvert/ui/theme/fonts/immortal.regular.ttf"
+dest_files=["res://.godot/imported/immortal.regular.ttf-0a152fc1aaca4230859fdc85278e8528.fontdata"]
 
 [params]
 

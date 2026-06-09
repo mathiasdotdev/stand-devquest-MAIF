@@ -2,16 +2,13 @@ extends Control
 
 const MODE_IDS := ["story", "racing"]
 const MODE_LABELS := ["Histoire", "Pasdetolismo"]
-const FANTASY_THEME := preload("res://jeu_sortez_couvert/ui/theme/fantasy_theme.tres")
+const ADMIN_MODAL_SCENE: PackedScene = preload("res://jeu_sortez_couvert/ui/admin_modal.tscn")
 
-# Nombre d'entrées affichées dans l'UI (le data store en garde l'historique complet en JSON)
-const DISPLAY_LIMIT := 10
+# Nombre d'entrées affichées dans l'UI par défaut (override possible via la modale F10)
+const DEFAULT_DISPLAY_LIMIT := 10
 
-# Feature flipping pour masquer l’onglet Pasdetolismo
+# Feature flipping pour masquer l'onglet Pasdetolismo
 const PASDETOLISMO_ENABLED := false
-
-# Taille fixe de la modale admin (constante entre ouvertures)
-const ADMIN_DIALOG_SIZE := Vector2i(640, 240)
 
 # Police plus lisible pour les data (noms de joueurs, dates, scores numériques)
 # où la police décorative du thème devient illisible.
@@ -22,22 +19,24 @@ var _data_font: SystemFont
 @onready var racing_list: VBoxContainer = $MenuPanel/Margin/VBox/Tabs/Pasdetolismo/ScrollContainer/EntryList
 @onready var btn_retour: Button = $MenuPanel/Margin/VBox/BtnRetour
 
-var _admin_dialog: AcceptDialog
-var _inline_delete_check: CheckBox
-var _btn_clear_all: Button
-var _admin_inline_delete: bool = false
+var _admin_modal: CanvasLayer
+# État des filtres (live depuis la modale F10)
+var _filter_email_only: bool = false
+var _filter_min_score: float = 0.0
+var _filter_display_limit: int = DEFAULT_DISPLAY_LIMIT
 
 func _ready() -> void:
 	_data_font = SystemFont.new()
 	_data_font.font_names = PackedStringArray(["Segoe UI", "Arial", "Helvetica", "sans-serif"])
-	_refresh_tabs()
 	btn_retour.pressed.connect(_on_retour)
-	_create_admin_dialog()
+	_setup_admin_modal()
+	_refresh_tabs()
 	if not PASDETOLISMO_ENABLED:
 		tabs.get_tab_bar().set_tab_hidden(1, true)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F10:
+		Sfx.play("switch")
 		_toggle_admin_dialog()
 		get_viewport().set_input_as_handled()
 
@@ -49,29 +48,42 @@ func _populate_tab(mode: String, container: VBoxContainer) -> void:
 	for child in container.get_children():
 		child.queue_free()
 
+	# On récupère TOUTES les entrées, puis on filtre, puis on limite à DISPLAY_LIMIT.
 	var leaderboard: Node = get_node("/root/Leaderboard")
-	# On limite à top N pour l'affichage — l'historique complet reste dans le JSON
-	var entries: Array = leaderboard.get_entries(mode, DISPLAY_LIMIT)
+	var entries: Array = _apply_filters(leaderboard.get_entries(mode))
 	if entries.is_empty():
 		var lbl := Label.new()
-		lbl.text = "Aucun score enregistré"
+		lbl.text = _empty_text()
 		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lbl.add_theme_font_override("font", _data_font)
 		lbl.add_theme_font_size_override("font_size", 20)
 		lbl.add_theme_color_override("font_color", Color(0.65, 0.7, 0.8, 1))
 		container.add_child(lbl)
 		return
-	for i in entries.size():
+	var display_count: int = min(entries.size(), _filter_display_limit)
+	for i in display_count:
 		container.add_child(_build_entry_row(mode, i, entries[i]))
 
-func _build_entry_row(mode: String, idx: int, entry: Dictionary) -> Control:
-	# Outer container : panel (gauche, expand_fill) + bouton Suppr (droite, hors panel)
-	# Le bouton Suppr est toujours dans la structure mais visible = _admin_inline_delete
-	# → la ligne se réduit légèrement quand admin_inline_delete est on,
-	#   mais le panneau garde une structure stable.
-	var outer := HBoxContainer.new()
-	outer.add_theme_constant_override("separation", 8)
+# Retourne les entrées filtrées par email_only / min_score effectif.
+# Le tri (meilleur en tête) est déjà fait par le data store.
+func _apply_filters(entries: Array) -> Array:
+	if not _filter_email_only and _filter_min_score <= 0.0:
+		return entries
+	var filtered: Array = []
+	for e: Dictionary in entries:
+		if _filter_email_only and String(e.get("email", "")).strip_edges().is_empty():
+			continue
+		if _filter_min_score > 0.0 and float(e.get("effective_score", 0.0)) < _filter_min_score:
+			continue
+		filtered.append(e)
+	return filtered
 
+func _empty_text() -> String:
+	if _filter_email_only or _filter_min_score > 0.0:
+		return "Aucun score ne correspond aux filtres"
+	return "Aucun score enregistré"
+
+func _build_entry_row(mode: String, idx: int, entry: Dictionary) -> Control:
 	var panel := PanelContainer.new()
 	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var sb := StyleBoxFlat.new()
@@ -90,7 +102,6 @@ func _build_entry_row(mode: String, idx: int, entry: Dictionary) -> Control:
 	sb.content_margin_top = 10
 	sb.content_margin_bottom = 10
 	panel.add_theme_stylebox_override("panel", sb)
-	outer.add_child(panel)
 
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 16)
@@ -112,7 +123,25 @@ func _build_entry_row(mode: String, idx: int, entry: Dictionary) -> Control:
 	name_lbl.add_theme_color_override("font_color", Color(0.96, 0.96, 0.98, 1))
 	row.add_child(name_lbl)
 
-	var ts: int = int(entry.get("timestamp", 0))
+	# Indicateur email : ✉️ si renseigné, "—" sinon (en gris)
+	var email_str: String = String(entry.get("email", "")).strip_edges()
+	var email_lbl := Label.new()
+	email_lbl.custom_minimum_size = Vector2(32, 0)
+	email_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	email_lbl.add_theme_font_override("font", _data_font)
+	if email_str.is_empty():
+		email_lbl.text = "—"
+		email_lbl.tooltip_text = "Pas d'email — gain non récupérable"
+		email_lbl.add_theme_color_override("font_color", Color(0.5, 0.55, 0.65, 1))
+		email_lbl.add_theme_font_size_override("font_size", 22)
+	else:
+		email_lbl.text = "✉"
+		email_lbl.tooltip_text = "Email : " + email_str
+		email_lbl.add_theme_color_override("font_color", Color(0.4, 0.95, 0.5, 1))
+		email_lbl.add_theme_font_size_override("font_size", 20)
+	row.add_child(email_lbl)
+
+	var ts: int = LeaderboardStore.get_timestamp(entry)
 	if ts > 0:
 		var dt: Dictionary = Time.get_datetime_dict_from_unix_time(ts)
 		var date_lbl := Label.new()
@@ -124,11 +153,12 @@ func _build_entry_row(mode: String, idx: int, entry: Dictionary) -> Control:
 
 	var score_lbl := Label.new()
 	if mode == "story":
-		var raw_score: int = int(entry.get("score", 0))
-		var hints: int = int(entry.get("hints_used", 0))
+		var raw_score: int = LeaderboardStore.get_score_total(entry)
+		var hints: int = LeaderboardStore.get_hints_total(entry)
 		var effective: float = float(entry.get("effective_score", raw_score))
-		score_lbl.text = "%d / 18 (%0.1f)" % [raw_score, effective]
-		score_lbl.tooltip_text = "Indices: %d | Pénalité: -%0.1f" % [hints, float(hints) * 0.5]
+		var max_total: int = Globals.story_engine.pool_size * 3
+		score_lbl.text = "%d / %d (%0.1f)" % [raw_score, max_total, effective]
+		score_lbl.tooltip_text = _story_tooltip(entry, hints)
 	else:
 		score_lbl.text = "%d pts" % int(entry.get("score", 0))
 	score_lbl.custom_minimum_size = Vector2(160, 0)
@@ -138,56 +168,7 @@ func _build_entry_row(mode: String, idx: int, entry: Dictionary) -> Control:
 	score_lbl.add_theme_color_override("font_color", Color(1, 0.92, 0.55, 1))
 	row.add_child(score_lbl)
 
-	# Bouton Suppr hors panneau, à droite (visible uniquement si admin_inline_delete)
-	# Styles compactés pour matcher la hauteur du panneau de ligne
-	if _admin_inline_delete:
-		var delete_btn := Button.new()
-		delete_btn.text = "✕"
-		delete_btn.tooltip_text = "Supprimer l'entrée #%d" % (idx + 1)
-		delete_btn.custom_minimum_size = Vector2(56, 0)
-		delete_btn.add_theme_font_override("font", _data_font)
-		delete_btn.add_theme_font_size_override("font_size", 22)
-		# Override des styleboxes pour réduire le padding à celui du panneau de ligne
-		# (le thème par défaut a content_margin 14 → fait dépasser le bouton)
-		delete_btn.add_theme_stylebox_override("normal", _delete_btn_stylebox(false, false))
-		delete_btn.add_theme_stylebox_override("hover", _delete_btn_stylebox(true, false))
-		delete_btn.add_theme_stylebox_override("pressed", _delete_btn_stylebox(false, true))
-		delete_btn.add_theme_stylebox_override("focus", _delete_btn_stylebox(true, false))
-		delete_btn.add_theme_color_override("font_color", Color(0.96, 0.96, 0.98, 1))
-		delete_btn.add_theme_color_override("font_hover_color", Color(1, 0.5, 0.5, 1))
-		delete_btn.pressed.connect(func() -> void:
-			Globals.leaderboard.remove_entry(mode, idx)
-			_refresh_tabs()
-			_update_admin_controls()
-		)
-		outer.add_child(delete_btn)
-
-	return outer
-
-func _delete_btn_stylebox(hover: bool, pressed: bool) -> StyleBoxFlat:
-	var sb := StyleBoxFlat.new()
-	if hover:
-		sb.bg_color = Color(0.55, 0.18, 0.18, 0.85)
-		sb.border_color = Color(1.0, 0.55, 0.55, 0.85)
-	elif pressed:
-		sb.bg_color = Color(0.30, 0.10, 0.10, 0.9)
-		sb.border_color = Color(0.85, 0.45, 0.45, 0.85)
-	else:
-		sb.bg_color = Color(0.20, 0.12, 0.14, 0.85)
-		sb.border_color = Color(0.55, 0.30, 0.35, 0.55)
-	sb.border_width_left = 1
-	sb.border_width_top = 1
-	sb.border_width_right = 1
-	sb.border_width_bottom = 1
-	sb.corner_radius_top_left = 6
-	sb.corner_radius_top_right = 6
-	sb.corner_radius_bottom_left = 6
-	sb.corner_radius_bottom_right = 6
-	sb.content_margin_left = 12
-	sb.content_margin_right = 12
-	sb.content_margin_top = 10
-	sb.content_margin_bottom = 10
-	return sb
+	return panel
 
 func _rank_color(idx: int) -> Color:
 	if idx == 0:
@@ -216,76 +197,45 @@ func _row_border_color(idx: int) -> Color:
 		return Color(0.92, 0.62, 0.30, 0.45)
 	return Color(0.55, 0.62, 0.78, 0.25)
 
+func _story_tooltip(entry: Dictionary, total_hints: int) -> String:
+	var base: String = "Indices: %d | Pénalité: -%0.1f" % [total_hints, float(total_hints) * 0.5]
+	var chapters: Array = LeaderboardStore.get_chapter_breakdown(entry)
+	if chapters.is_empty():
+		return base
+	var lines: PackedStringArray = [base, ""]
+	for c: Dictionary in chapters:
+		var d: Dictionary = c["data"]
+		var title: String = String(d.get("title", ""))
+		var score_str: String = String(d.get("score", "?/?"))
+		var hint: int = int(d.get("hint_used", 0))
+		var line: String = "Ch.%d — %s : %s" % [int(c["index"]), title, score_str]
+		if hint > 0:
+			line += "  (%d indice%s)" % [hint, "s" if hint > 1 else ""]
+		lines.append(line)
+	return "\n".join(lines)
+
 func _on_retour() -> void:
 	get_tree().change_scene_to_file("res://main_menu/main_menu.tscn")
 
-func _create_admin_dialog() -> void:
-	_admin_dialog = AcceptDialog.new()
-	_admin_dialog.theme = FANTASY_THEME
-	_admin_dialog.title = ""
-	_admin_dialog.dialog_text = ""
-	# Taille FIXE — pas de min/max différents pour éviter le reflow
-	_admin_dialog.min_size = ADMIN_DIALOG_SIZE
-	_admin_dialog.max_size = ADMIN_DIALOG_SIZE
-	_admin_dialog.unresizable = true
-	# Pas de barre de titre / bouton X (on a le bouton Fermer + Escape)
-	_admin_dialog.borderless = true
-	add_child(_admin_dialog)
+# ---- Modale admin (F10) -----------------------------------------------------
 
-	var content := VBoxContainer.new()
-	content.add_theme_constant_override("separation", 12)
-	_admin_dialog.add_child(content)
-
-	# Titre custom à l'intérieur de la modale (la barre de titre native est masquée)
-	var title_lbl := Label.new()
-	title_lbl.text = "Paramètres classement"
-	title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title_lbl.add_theme_font_size_override("font_size", 30)
-	title_lbl.add_theme_color_override("font_color", Color(1, 0.92, 0.55, 1))
-	title_lbl.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
-	title_lbl.add_theme_constant_override("outline_size", 3)
-	content.add_child(title_lbl)
-
-	# Spacer pour conserver la hauteur de la modale après suppression de la ligne d'aide
-	var top_spacer := Control.new()
-	top_spacer.custom_minimum_size = Vector2(0, 16)
-	content.add_child(top_spacer)
-
-	_inline_delete_check = CheckBox.new()
-	_inline_delete_check.text = "Activer la suppression directe dans la liste"
-	content.add_child(_inline_delete_check)
-
-	_btn_clear_all = _admin_dialog.add_button("Tout supprimer", true, "clear_all")
-	_admin_dialog.get_ok_button().text = "Fermer"
-
-	_inline_delete_check.toggled.connect(_on_toggle_inline_delete)
-	_admin_dialog.custom_action.connect(_on_admin_custom_action)
-
-	_update_admin_controls()
+func _setup_admin_modal() -> void:
+	_admin_modal = ADMIN_MODAL_SCENE.instantiate()
+	add_child(_admin_modal)
+	_admin_modal.path_changed.connect(_on_admin_path_changed)
+	_admin_modal.filter_changed.connect(_on_admin_filter_changed)
 
 func _toggle_admin_dialog() -> void:
-	_inline_delete_check.button_pressed = _admin_inline_delete
-	_update_admin_controls()
-	_refresh_tabs()
-	_admin_dialog.popup_centered(ADMIN_DIALOG_SIZE)
+	if _admin_modal.is_open():
+		_admin_modal.hide_modal()
+		return
+	_admin_modal.show_modal()
 
-func _selected_mode() -> String:
-	return "story" # Mode par défaut, car il n'y a plus de sélecteur
-
-func _update_admin_controls() -> void:
-	var leaderboard: Node = _leaderboard()
-	_btn_clear_all.disabled = leaderboard.get_entries("story").is_empty() and leaderboard.get_entries("racing").is_empty()
-
-func _on_toggle_inline_delete(enabled: bool) -> void:
-	_admin_inline_delete = enabled
+func _on_admin_path_changed() -> void:
 	_refresh_tabs()
 
-func _on_admin_custom_action(action: StringName) -> void:
-	var leaderboard: Node = _leaderboard()
-	match String(action):
-		"clear_all":
-			Globals.leaderboard.clear_all()
-		_:
-			return
+func _on_admin_filter_changed() -> void:
+	_filter_email_only = _admin_modal.get_email_only_filter()
+	_filter_min_score = _admin_modal.get_min_score_filter()
+	_filter_display_limit = _admin_modal.get_display_limit()
 	_refresh_tabs()
-	_update_admin_controls()

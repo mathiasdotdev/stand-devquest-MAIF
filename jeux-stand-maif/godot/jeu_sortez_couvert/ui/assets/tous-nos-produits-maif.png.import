@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c23f3xugnf3p6"
-path="res://.godot/imported/button_border.png-bdedffba9e4c9c11e55a1b56c4faab8e.ctex"
+uid="uid://cu2t3283xmkpm"
+path="res://.godot/imported/tous-nos-produits-maif.png-c45fde2fd4546c1c55f68ae4fd1b0d48.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://jeu_sortez_couvert/ui/theme/button_border.png"
-dest_files=["res://.godot/imported/button_border.png-bdedffba9e4c9c11e55a1b56c4faab8e.ctex"]
+source_file="res://jeu_sortez_couvert/ui/assets/tous-nos-produits-maif.png"
+dest_files=["res://.godot/imported/tous-nos-produits-maif.png-c45fde2fd4546c1c55f68ae4fd1b0d48.ctex"]
 
 [params]
 

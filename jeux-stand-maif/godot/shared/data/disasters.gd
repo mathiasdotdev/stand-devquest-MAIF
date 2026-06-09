@@ -6,17 +6,17 @@ const DISASTERS: Dictionary = {
 		"type": "accident_voiture",
 		"label": "Accident de voiture",
 		"icon": "💥",
-		"description": "Accrochage ! Les reparations s'accumulent.",
+		"description": "Accrochage ! Les réparations s'accumulent.",
 		"base_damage": 80,
-		"covering_contracts": ["auto"]
+		"covering_contracts": ["auto"],
 	},
 	"degats_des_eaux": {
 		"type": "degats_des_eaux",
-		"label": "Degats des eaux",
+		"label": "Dégâts des eaux",
 		"icon": "💧",
-		"description": "Fuite en appartement. Les degats se propagent.",
+		"description": "Fuite en appartement. Les dégâts se propagent.",
 		"base_damage": 60,
-		"covering_contracts": ["habitation"]
+		"covering_contracts": ["habitation"],
 	},
 	"incendie": {
 		"type": "incendie",
@@ -24,47 +24,63 @@ const DISASTERS: Dictionary = {
 		"icon": "🔥",
 		"description": "Le feu ravage tout sur son passage !",
 		"base_damage": 100,
-		"covering_contracts": ["habitation"]
+		"covering_contracts": ["habitation"],
 	},
 	"blessure": {
 		"type": "blessure",
 		"label": "Blessure",
 		"icon": "🤕",
-		"description": "Accident corporel. Frais medicaux eleves.",
+		"description": "Accident corporel. Frais médicaux élevés.",
 		"base_damage": 55,
-		"covering_contracts": ["sante"]
+		"covering_contracts": ["accidents_vie"],
 	},
 	"cambriolage": {
 		"type": "cambriolage",
 		"label": "Cambriolage",
 		"icon": "🦹",
-		"description": "Des voleurs ont fracture la porte.",
+		"description": "Des voleurs ont fracturé la porte.",
 		"base_damage": 70,
-		"covering_contracts": ["habitation", "vol"]
+		"covering_contracts": ["habitation"],
 	},
 	"vol_vehicule": {
 		"type": "vol_vehicule",
-		"label": "Vol de vehicule",
+		"label": "Vol de véhicule",
 		"icon": "🚨",
-		"description": "Le vehicule a disparu dans la nuit.",
+		"description": "Le véhicule a disparu dans la nuit.",
 		"base_damage": 90,
-		"covering_contracts": ["auto", "vol"]
+		"covering_contracts": ["auto"],
 	},
 	"inondation": {
 		"type": "inondation",
 		"label": "Inondation",
 		"icon": "🌊",
-		"description": "La montee des eaux envahit tout.",
+		"description": "La montée des eaux envahit tout.",
 		"base_damage": 75,
-		"covering_contracts": ["catastrophe"]
+		"covering_contracts": ["catastrophe"],
 	},
 	"tempete": {
 		"type": "tempete",
-		"label": "Tempete",
+		"label": "Tempête",
 		"icon": "⛈️",
-		"description": "La toiture emportee par le vent.",
+		"description": "La toiture emportée par le vent.",
 		"base_damage": 65,
-		"covering_contracts": ["catastrophe"]
+		"covering_contracts": ["catastrophe"],
+	},
+	"litige": {
+		"type": "litige",
+		"label": "Litige",
+		"icon": "⚖️",
+		"description": "Conflit du quotidien : voisinage, artisan ou achat.",
+		"base_damage": 50,
+		"covering_contracts": ["protection_juridique"],
+	},
+	"vol_velo": {
+		"type": "vol_velo",
+		"label": "Vol de vélo",
+		"icon": "🚲",
+		"description": "Le vélo a disparu de la rue.",
+		"base_damage": 45,
+		"covering_contracts": ["velo"],
 	},
 }
 

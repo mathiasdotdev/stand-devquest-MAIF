@@ -1,72 +1,89 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene format=3 uid="uid://b3gm8rh4npcqr"]
 
-[ext_resource type="Script" path="res://main_menu/main_menu.gd" id="1_mm"]
-[ext_resource type="Theme" path="res://jeu_sortez_couvert/ui/theme/fantasy_theme.tres" id="2_theme"]
-[ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/assets/decor.png" id="3_decor"]
-[ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/theme/divider.png" id="4_divider"]
-[ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/theme/panel_border_overlay.png" id="5_border_overlay"]
-[ext_resource type="FontFile" path="res://jeu_sortez_couvert/ui/theme/fonts/Nordvik.ttf" id="6_font_title"]
+[ext_resource type="Script" uid="uid://dt48ddwupuuku" path="res://main_menu/main_menu.gd" id="1_mm"]
+[ext_resource type="Theme" uid="uid://dhu5k5n4oxsww" path="res://jeu_sortez_couvert/ui/theme/fantasy_theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://koo5uuuuycsq" path="res://jeu_sortez_couvert/ui/assets/decor.png" id="3_decor"]
+[ext_resource type="Texture2D" uid="uid://cakcquf6kg1cs" path="res://jeu_sortez_couvert/ui/theme/divider.png" id="4_divider"]
+[ext_resource type="Texture2D" uid="uid://3v13mlqpulaj" path="res://jeu_sortez_couvert/ui/theme/panel_border_overlay.png" id="5_border_overlay"]
+[ext_resource type="FontFile" uid="uid://cfhfaxdbednp1" path="res://jeu_sortez_couvert/ui/theme/fonts/Nordvik.ttf" id="6_font_title"]
+[ext_resource type="PackedScene" path="res://jeu_sortez_couvert/ui/maif_logo.tscn" id="7_logo"]
 
-[node name="MainMenu" type="Control"]
+[node name="MainMenu" type="Control" unique_id=1085388189]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_mm")
 
-[node name="Background" type="TextureRect" parent="."]
+[node name="Background" type="TextureRect" parent="." unique_id=467263709]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("3_decor")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="DarkOverlay" type="ColorRect" parent="."]
+[node name="DarkOverlay" type="ColorRect" parent="." unique_id=413931725]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 color = Color(0.03, 0.05, 0.11, 0.65)
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1556165855]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="MenuPanel" type="PanelContainer" parent="CenterContainer"]
-layout_mode = 2
+[node name="MenuPanel" type="PanelContainer" parent="CenterContainer" unique_id=36459525]
 custom_minimum_size = Vector2(720, 0)
+layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="CenterContainer/MenuPanel"]
+[node name="BorderOverlay" type="NinePatchRect" parent="CenterContainer/MenuPanel" unique_id=1972165477]
+layout_mode = 2
+texture = ExtResource("5_border_overlay")
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 16
+
+[node name="Margin" type="MarginContainer" parent="CenterContainer/MenuPanel" unique_id=129806908]
 layout_mode = 2
 theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 24
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MenuPanel/Margin"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MenuPanel/Margin" unique_id=446666594]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="SpacerTop" type="Control" parent="CenterContainer/MenuPanel/Margin/VBoxContainer"]
+[node name="SpacerTop" type="Control" parent="CenterContainer/MenuPanel/Margin/VBoxContainer" unique_id=522625024]
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 
-[node name="Title" type="Label" parent="CenterContainer/MenuPanel/Margin/VBoxContainer"]
+[node name="Title" type="Label" parent="CenterContainer/MenuPanel/Margin/VBoxContainer" unique_id=1788279957]
 layout_mode = 2
-text = "Sortez Couvert"
-horizontal_alignment = 1
-theme_override_fonts/font = ExtResource("6_font_title")
-theme_override_font_sizes/font_size = 72
 theme_override_colors/font_color = Color(1, 0.92, 0.55, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
 theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("6_font_title")
+theme_override_font_sizes/font_size = 72
+text = "Sortez Couvert"
+horizontal_alignment = 1
 
-[node name="Divider" type="TextureRect" parent="CenterContainer/MenuPanel/Margin/VBoxContainer"]
+[node name="Divider" type="TextureRect" parent="CenterContainer/MenuPanel/Margin/VBoxContainer" unique_id=1523339275]
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -74,42 +91,44 @@ texture = ExtResource("4_divider")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Spacer1" type="Control" parent="CenterContainer/MenuPanel/Margin/VBoxContainer"]
+[node name="Spacer1" type="Control" parent="CenterContainer/MenuPanel/Margin/VBoxContainer" unique_id=1012160187]
 custom_minimum_size = Vector2(0, 4)
 layout_mode = 2
 
-[node name="BtnSortezCouvert" type="Button" parent="CenterContainer/MenuPanel/Margin/VBoxContainer"]
+[node name="BtnSortezCouvert" type="Button" parent="CenterContainer/MenuPanel/Margin/VBoxContainer" unique_id=1696179485]
 custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
 text = "Jouer"
 
-[node name="BtnPasdetolismo" type="Button" parent="CenterContainer/MenuPanel/Margin/VBoxContainer"]
+[node name="BtnPasdetolismo" type="Button" parent="CenterContainer/MenuPanel/Margin/VBoxContainer" unique_id=1838868022]
 custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
 text = "Grand Pasdetolismo"
 
-[node name="BtnClassement" type="Button" parent="CenterContainer/MenuPanel/Margin/VBoxContainer"]
+[node name="BtnClassement" type="Button" parent="CenterContainer/MenuPanel/Margin/VBoxContainer" unique_id=267355111]
 custom_minimum_size = Vector2(0, 66)
 layout_mode = 2
 text = "Classement"
 
-[node name="Spacer2" type="Control" parent="CenterContainer/MenuPanel/Margin/VBoxContainer"]
+[node name="Spacer2" type="Control" parent="CenterContainer/MenuPanel/Margin/VBoxContainer" unique_id=1957194162]
 custom_minimum_size = Vector2(0, 4)
 layout_mode = 2
 
-[node name="BtnQuitter" type="Button" parent="CenterContainer/MenuPanel/Margin/VBoxContainer"]
+[node name="BtnQuitter" type="Button" parent="CenterContainer/MenuPanel/Margin/VBoxContainer" unique_id=1461793424]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 text = "Quitter"
 
-[node name="BorderOverlay" type="NinePatchRect" parent="CenterContainer/MenuPanel"]
+[node name="MaifLogo" parent="." unique_id=1922749484 instance=ExtResource("7_logo")]
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-mouse_filter = 2
-texture = ExtResource("5_border_overlay")
-patch_margin_left = 16
-patch_margin_top = 16
-patch_margin_right = 16
-patch_margin_bottom = 16
+offset_left = -160.0
+offset_top = -76.0
+offset_right = -24.0
+offset_bottom = -24.0
+grow_horizontal = 0
+grow_vertical = 0

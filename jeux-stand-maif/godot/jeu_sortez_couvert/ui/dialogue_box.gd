@@ -2,7 +2,7 @@ extends PanelContainer
 
 signal advance
 
-const CHARS_PER_SEC := 45.0
+const CHARS_PER_SEC := 60.0
 
 @onready var title_label: Label = $MarginContainer/VBoxContainer/TitleLabel
 @onready var text_label: RichTextLabel = $MarginContainer/VBoxContainer/TextLabel
@@ -15,7 +15,7 @@ func _ready() -> void:
 	btn_continue.pressed.connect(_on_advance_pressed)
 	_update_btn_state()
 
-# Définit le titre persistant en haut de la bulle (par ex. "Apprenez à vous protéger avec les assurances MAIF").
+# Définit le titre persistant en haut de la bulle (par ex. "Apprenez à vous protéger avec la MAIF").
 # Vide ou absent → titre masqué.
 func set_title(t: String) -> void:
 	title_label.text = t
@@ -68,6 +68,7 @@ func _input(event: InputEvent) -> void:
 		text_label.visible_ratio = 1.0
 		_on_typewriter_done()
 	else:
+		Sfx.play("selection")
 		advance.emit()
 	if is_inside_tree():
 		get_viewport().set_input_as_handled()

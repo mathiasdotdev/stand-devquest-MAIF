@@ -7,9 +7,23 @@ class_name StoryEngineCore
 @onready var _disasters: DisastersDB = get_node("/root/Disasters")
 @onready var _contracts: ContractsDB = get_node("/root/Contracts")
 
+# Nombre de chapitres tirés aléatoirement par partie. Configurable via la modale
+# F10 du main_menu — sauvegardé dans user://pool_size.cfg.
+# Tirer dans le pool total disponible (ChapitresDB.count()) — typiquement 15.
+# Ça évite que les visiteurs côte à côte aient la même séquence et se copient.
+const POOL_SIZE_DEFAULT: int = 6
+const POOL_SIZE_CONFIG: String = "user://pool_size.cfg"
+
 # ─── State ────────────────────────────────────────────────────────────────────
 
+# Taille du pool effective (modifiable, persistée).
+var pool_size: int = POOL_SIZE_DEFAULT
+# ID actuel dans la DB (peut être n'importe quelle valeur du pool).
 var current_chapitre: int = 0
+# Position dans le pool de la partie (0..pool_size-1).
+var pool_index: int = 0
+# Les `pool_size` IDs de chapitres tirés au démarrage de la partie.
+var chapitre_pool: Array[int] = []
 var total_score: int = 0
 var answers: Array = []
 var hints_used_this_chapitre: int = 0
@@ -21,12 +35,44 @@ var player_email: String = ""
 # ─── Reset ────────────────────────────────────────────────────────────────────
 
 func reset() -> void:
-	current_chapitre = 0
+	_shuffle_pool()
+	pool_index = 0
+	current_chapitre = chapitre_pool[0] if not chapitre_pool.is_empty() else 0
 	total_score = 0
 	answers = []
 	hints_used_this_chapitre = 0
 	selected_contracts = []
 	is_complete = false
+
+# Tire `pool_size` chapitres au hasard dans la DB (sans répétition).
+func _shuffle_pool() -> void:
+	var all_ids: Array = []
+	for i in _chapitres.count():
+		all_ids.append(i)
+	all_ids.shuffle()
+	var size: int = clampi(pool_size, 1, _chapitres.count())
+	chapitre_pool = []
+	for i in size:
+		chapitre_pool.append(int(all_ids[i]))
+
+# ─── Persistence pool_size ────────────────────────────────────────────────────
+
+func load_pool_size() -> void:
+	if not FileAccess.file_exists(POOL_SIZE_CONFIG):
+		return
+	var cfg := ConfigFile.new()
+	if cfg.load(POOL_SIZE_CONFIG) != OK:
+		return
+	pool_size = int(cfg.get_value("story", "pool_size", POOL_SIZE_DEFAULT))
+
+func set_pool_size(n: int) -> void:
+	pool_size = clampi(n, 1, 99)
+	var cfg := ConfigFile.new()
+	cfg.set_value("story", "pool_size", pool_size)
+	cfg.save(POOL_SIZE_CONFIG)
+
+func _ready() -> void:
+	load_pool_size()
 
 # ─── Quiz actions ─────────────────────────────────────────────────────────────
 
@@ -133,11 +179,11 @@ func resolve_current_chapitre() -> Dictionary:
 	return answer
 
 func next_chapitre() -> bool:
-	var next_id: int = current_chapitre + 1
-	if next_id >= _chapitres.count():
+	pool_index += 1
+	if pool_index >= chapitre_pool.size():
 		is_complete = true
 		return false
-	current_chapitre = next_id
+	current_chapitre = chapitre_pool[pool_index]
 	hints_used_this_chapitre = 0
 	selected_contracts = []
 	return true
@@ -147,7 +193,9 @@ func next_chapitre() -> bool:
 ## Port direct de StoryEngine.ts:getAnalysis()
 ## Seuils : ≥85% Expert MAIF, ≥65% Bon élève, ≥40% À améliorer, <40% Débutant
 func get_analysis() -> Dictionary:
-	var max_score: int = _chapitres.count() * 3
+	# Le max est sur le pool de la partie, pas sur la DB entière.
+	var pool_count: int = chapitre_pool.size() if not chapitre_pool.is_empty() else pool_size
+	var max_score: int = pool_count * 3
 	var pct: float = float(total_score) / float(max_score)
 
 	var label: String
@@ -160,37 +208,9 @@ func get_analysis() -> Dictionary:
 	else:
 		label = "Debutant"
 
-	var best_answer: Dictionary = {}
-	var worst_answer: Dictionary = {}
-	for a: Dictionary in answers:
-		if best_answer.is_empty() and a["is_correct"] and a["hints_used"] == 0 and a["wrong_count"] == 0:
-			best_answer = a
-		if worst_answer.is_empty() and not a["is_correct"]:
-			worst_answer = a
-
-	var best_choice: String
-	if not best_answer.is_empty():
-		var labels: Array = []
-		for ct: String in best_answer["chosen_contracts"]:
-			var c: Dictionary = _contracts.get_by_type(ct)
-			labels.append(c.get("label", ct))
-		best_choice = "Ch. " + str(best_answer["chapitre_id"] + 1) + " — " + ", ".join(labels)
-	else:
-		best_choice = "Vous avez toujours eu besoin d'indices !"
-
-	var worst_choice: String
-	if not worst_answer.is_empty():
-		var ct: String = worst_answer["correct_contracts"][0]
-		var c: Dictionary = _contracts.get_by_type(ct)
-		worst_choice = "Ch. " + str(worst_answer["chapitre_id"] + 1) + " — le bon contrat etait " + c.get("label", ct)
-	else:
-		worst_choice = "Aucune erreur ! Gestion parfaite."
-
 	return {
 		"total_score": total_score,
 		"max_score": max_score,
 		"label": label,
 		"answers": answers,
-		"best_choice": best_choice,
-		"worst_choice": worst_choice,
 	}

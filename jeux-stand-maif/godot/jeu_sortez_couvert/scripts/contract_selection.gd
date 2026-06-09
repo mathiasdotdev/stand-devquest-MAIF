@@ -1,30 +1,33 @@
 extends "res://jeu_sortez_couvert/scripts/pause_layout.gd"
 
 const CONTRACT_CARD_SCENE: PackedScene = preload("res://jeu_sortez_couvert/ui/contract_card.tscn")
+const INFO_MODAL_SCENE: PackedScene = preload("res://jeu_sortez_couvert/ui/info_modal.tscn")
 
 @onready var _titre_label: Label = $MarginContainer/VBoxContainer/TitreLabel
+@onready var _context_label: Label = $MarginContainer/VBoxContainer/ContextBubble/Margin/VBox/ContextLabel
 @onready var _cards_container: HBoxContainer = $MarginContainer/VBoxContainer/CardsContainer
-@onready var _hint_btn1: Button = $MarginContainer/VBoxContainer/ButtonsRow/BtnIndice1
-@onready var _hint_btn2: Button = $MarginContainer/VBoxContainer/ButtonsRow/BtnIndice2
+@onready var _hint_btn: Button = $MarginContainer/VBoxContainer/ButtonsRow/BtnIndice
 @onready var _confirm_btn: Button = $MarginContainer/VBoxContainer/ButtonsRow/BtnConfirmer
-@onready var _hint_label: Label = $MarginContainer/VBoxContainer/HintLabel
-@onready var _background: Sprite2D = $Background
+@onready var _hint_label: Label = $MarginContainer/VBoxContainer/ContextBubble/Margin/VBox/HintLabel
 
 var _cards: Array = []
 var _chapitre: Dictionary
+var _empty_modal: CanvasLayer = null
 
 func _ready() -> void:
 	super._ready() # necessaire pour le pause_layout
-	StorySceneLayout.cover_viewport(_background)
+
+	_empty_modal = INFO_MODAL_SCENE.instantiate()
+	add_child(_empty_modal)
 
 	_chapitre = Globals.chapitres.get_chapitre(Globals.story_engine.current_chapitre)
 	_titre_label.text = (
-		_chapitre["emoji"] + "  Chapitre " + str(Globals.story_engine.current_chapitre + 1)
+		_chapitre["emoji"] + "  Chapitre " + str(Globals.story_engine.pool_index + 1)
 		+ " — " + _chapitre["titre"]
 	)
+	_context_label.text = String(_chapitre.get("resume", _chapitre.get("contexte", "")))
 
-	_hint_btn1.pressed.connect(_on_hint_pressed)
-	_hint_btn2.pressed.connect(_on_hint_pressed)
+	_hint_btn.pressed.connect(_on_hint_pressed)
 	_confirm_btn.pressed.connect(_on_confirm)
 
 	_hint_label.text = ""
@@ -52,9 +55,14 @@ func _on_hint_pressed() -> void:
 	_update_hint_buttons()
 
 func _update_hint_buttons() -> void:
-	_hint_btn1.disabled = Globals.story_engine.hints_used_this_chapitre >= 1
-	_hint_btn2.disabled = Globals.story_engine.hints_used_this_chapitre >= 2
+	var remaining: int = 2 - Globals.story_engine.hints_used_this_chapitre
+	_hint_btn.text = "Indices (%d/2) — −0.5 pt" % remaining
+	_hint_btn.disabled = remaining <= 0
 
 func _on_confirm() -> void:
+	if Globals.story_engine.selected_contracts.is_empty():
+		Sfx.play("back")
+		_empty_modal.show_modal("Aucun contrat", "Sélectionnez au moins un contrat avant de confirmer.")
+		return
 	Globals.story_engine.resolve_current_chapitre()
 	get_tree().change_scene_to_file("res://jeu_sortez_couvert/scenes/chapitre_result.tscn")

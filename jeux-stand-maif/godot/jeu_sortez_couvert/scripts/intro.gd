@@ -1,54 +1,28 @@
-extends "res://jeu_sortez_couvert/scripts/pause_layout.gd"
+extends "res://jeu_sortez_couvert/scripts/story_scene.gd"
 
-const CONSEILLER_SCENE: PackedScene = preload("res://jeu_sortez_couvert/ui/conseiller.tscn")
-const DIALOGUE_BOX_SCENE: PackedScene = preload("res://jeu_sortez_couvert/ui/dialogue_box.tscn")
+const NEXT_SCENE := "res://jeu_sortez_couvert/scenes/chapitre_intro.tscn"
 
 const INTRO_LINES: Array = [
 	{"text": "Bienvenue chez MAIF ! Je suis Assurix le Barbu, votre conseiller, ici pour vous guider.", "expression": "souriant"},
-	{"text": "Au cours de 6 chapitres, vous allez vivre des situations de la vraie vie.", "expression": "normal"},
-	{"text": "Chaque chapitre vous présente des risques du quotidien.", "expression": "normal"},
-	{"text": "Votre mission : choisir les contrats d'assurance les plus adaptés avant que le sinistre survienne !", "expression": "souriant"},
+	{"text": "Au cours de %d chapitres, vous allez vivre des situations de la vraie vie, avec leurs sinistres possibles.", "expression": "normal"},
+	{"text": "Votre mission : choisir le ou les contrats qui couvrent le mieux ces risques, au moindre coût.", "expression": "normal"},
+	{"text": "Règle d'or : [color=#5dd66b]+1 point[/color] par bon contrat choisi. Mais [color=#ff7373]-1 point[/color] par contrat inutile sélectionné !", "expression": "normal"},
+	{"text": "Si vous avez la moitié ou plus de mauvaises réponses, le chapitre tombe à [color=#ff9b42]0 point[/color] — pas de score négatif, rassurez-vous.", "expression": "souriant"},
+	{"text": "Un doute ? Vous pouvez demander un indice... mais ça coûte [color=#ff9b42]-0.5 point[/color] par indice utilisé. À utiliser avec parcimonie !", "expression": "inquiet"},
 	{"text": "Prêt à devenir un expert MAIF ? Allons-y !", "expression": "fier"},
 ]
 
-@onready var _conseiller_area: Control = $MarginContainer/VBoxContainer/ConseillerArea
-@onready var _dialogue_area: Control = $MarginContainer/VBoxContainer/DialogueArea
-
-var _conseiller: Node
-var _dialogue_box: Node
-var _line_idx: int = 0
-var _intro_lines: Array = []
-
 func _ready() -> void:
-	super._ready() # necessaire pour le pause_layout
-	# Le background est maintenant un TextureRect avec stretch_mode = keep_aspect_covered,
-	# pas besoin de scaling manuel.
-
-	StorySceneLayout.apply(self)
-
-	_intro_lines = INTRO_LINES.duplicate(true)
-	_conseiller = CONSEILLER_SCENE.instantiate()
-	_conseiller_area.add_child(_conseiller)
-
-	_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
-	_dialogue_area.add_child(_dialogue_box)
-	_dialogue_box.advance.connect(_on_advance)
-	# Titre persistant dans la bulle (ex-SubtitleLabel qui était en haut de l'écran)
-	_dialogue_box.set_title("Apprenez à vous protéger avec les assurances MAIF")
-
+	super._ready()
+	var lines: Array = INTRO_LINES.duplicate(true)
 	if Globals.story_engine.player_name.strip_edges() != "":
-		_intro_lines[0]["text"] = "Bienvenue chez MAIF, " + Globals.story_engine.player_name + " ! Je suis Assurix le Barbu, votre conseiller, ici pour vous guider."
+		lines[0]["text"] = (
+			"Bienvenue chez MAIF, " + Globals.story_engine.player_name
+			+ " ! Je suis Assurix le Barbu, votre conseiller, ici pour vous guider."
+		)
+	# Interpole le nombre de chapitres dynamiquement (taille du pool tiré).
+	lines[1]["text"] = lines[1]["text"] % Globals.story_engine.pool_size
+	setup_story("Apprenez à vous protéger avec la MAIF", lines)
 
-	_show_line(0)
-
-func _show_line(idx: int) -> void:
-	if idx >= _intro_lines.size():
-		get_tree().change_scene_to_file("res://jeu_sortez_couvert/scenes/chapitre_intro.tscn")
-		return
-	var line: Dictionary = _intro_lines[idx]
-	_dialogue_box.show_text(line["text"])
-	_conseiller.set_expression(line["expression"])
-
-func _on_advance() -> void:
-	_line_idx += 1
-	_show_line(_line_idx)
+func _on_story_complete() -> void:
+	get_tree().change_scene_to_file(NEXT_SCENE)

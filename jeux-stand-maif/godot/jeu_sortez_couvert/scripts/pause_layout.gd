@@ -2,6 +2,9 @@ extends Control
 
 # Script de base pour toutes les scènes du mode histoire
 # Gère l'affichage du menu pause et l'input global "Echap"
+# Centralise aussi l'action Quit du menu pause
+
+const MAIN_MENU_SCENE := "res://main_menu/main_menu.tscn"
 
 var pause_menu: CanvasLayer = null
 
@@ -14,12 +17,20 @@ func _ready() -> void:
 	else:
 		pause_menu = get_node("PauseMenu")
 
+	pause_menu.quit_requested.connect(_on_pause_quit)
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		if pause_menu:
 			var container: Node = pause_menu.get_node_or_null("Container")
 			if container and container.visible:
+				Sfx.play("back")
 				pause_menu.hide_pause()
 			else:
+				Sfx.play("click")
 				pause_menu.show_pause()
 			get_viewport().set_input_as_handled()
+
+func _on_pause_quit() -> void:
+	get_tree().paused = false
+	get_tree().change_scene_to_file(MAIN_MENU_SCENE)

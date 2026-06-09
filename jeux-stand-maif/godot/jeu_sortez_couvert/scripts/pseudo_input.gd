@@ -40,12 +40,26 @@ func _on_start() -> void:
 	get_tree().change_scene_to_file("res://jeu_sortez_couvert/scenes/intro.tscn")
 
 func _on_text_changed(new_text: String) -> void:
+	# Auto-capitalisation de la première lettre du pseudo
+	if not new_text.is_empty():
+		var first: String = new_text.left(1)
+		if first != first.to_upper():
+			var caret: int = name_input.caret_column
+			name_input.text = first.to_upper() + new_text.substr(1)
+			name_input.caret_column = caret
+			new_text = name_input.text
 	var is_valid: bool = not new_text.strip_edges().is_empty()
 	btn_start.disabled = not is_valid
 	if is_valid:
 		name_input.remove_theme_color_override("font_color")
 
 func _on_email_changed(new_text: String) -> void:
+	var lowered: String = new_text.to_lower()
+	if lowered != new_text:
+		var caret: int = email_input.caret_column
+		email_input.text = lowered
+		email_input.caret_column = caret
+		new_text = lowered
 	if _is_email_valid(new_text.strip_edges()):
 		email_input.remove_theme_color_override("font_color")
 
