@@ -3,6 +3,9 @@ extends Control
 const MODE_IDS := ["story", "racing"]
 const MODE_LABELS := ["Histoire", "Pasdetolismo"]
 const ADMIN_MODAL_SCENE: PackedScene = preload("res://jeu_sortez_couvert/ui/admin_modal.tscn")
+# Icône enveloppe (image, identique sur tous les OS) plutôt qu'un emoji ✉️ dont
+# le rendu dépend de la police système.
+const EMAIL_ICON: Texture2D = preload("res://jeu_sortez_couvert/ui/assets/email.png")
 
 # Nombre d'entrées affichées dans l'UI par défaut (override possible via la modale F10)
 const DEFAULT_DISPLAY_LIMIT := 10
@@ -123,23 +126,8 @@ func _build_entry_row(mode: String, idx: int, entry: Dictionary) -> Control:
 	name_lbl.add_theme_color_override("font_color", Color(0.96, 0.96, 0.98, 1))
 	row.add_child(name_lbl)
 
-	# Indicateur email : ✉️ si renseigné, "—" sinon (en gris)
-	var email_str: String = String(entry.get("email", "")).strip_edges()
-	var email_lbl := Label.new()
-	email_lbl.custom_minimum_size = Vector2(32, 0)
-	email_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	email_lbl.add_theme_font_override("font", _data_font)
-	if email_str.is_empty():
-		email_lbl.text = "—"
-		email_lbl.tooltip_text = "Pas d'email — gain non récupérable"
-		email_lbl.add_theme_color_override("font_color", Color(0.5, 0.55, 0.65, 1))
-		email_lbl.add_theme_font_size_override("font_size", 22)
-	else:
-		email_lbl.text = "✉️"
-		email_lbl.tooltip_text = "Email : " + email_str
-		email_lbl.add_theme_color_override("font_color", Color(0.4, 0.95, 0.5, 1))
-		email_lbl.add_theme_font_size_override("font_size", 20)
-	row.add_child(email_lbl)
+	# Indicateur email : icône enveloppe si renseigné, "—" gris sinon.
+	row.add_child(_build_email_indicator(String(entry.get("email", "")).strip_edges()))
 
 	var ts: int = LeaderboardStore.get_timestamp(entry)
 	if ts > 0:
@@ -169,6 +157,28 @@ func _build_entry_row(mode: String, idx: int, entry: Dictionary) -> Control:
 	row.add_child(score_lbl)
 
 	return panel
+
+# Colonne email : icône enveloppe (email.png) si un email est renseigné, sinon
+# un tiret gris. On utilise une image plutôt que l'emoji ✉️ pour un rendu
+# identique quel que soit l'OS / la police système.
+func _build_email_indicator(email_str: String) -> Control:
+	if email_str.is_empty():
+		var dash := Label.new()
+		dash.custom_minimum_size = Vector2(32, 0)
+		dash.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		dash.add_theme_font_override("font", _data_font)
+		dash.text = "—"
+		dash.tooltip_text = "Pas d'email — gain non récupérable"
+		dash.add_theme_color_override("font_color", Color(0.5, 0.55, 0.65, 1))
+		dash.add_theme_font_size_override("font_size", 22)
+		return dash
+	var icon := TextureRect.new()
+	icon.texture = EMAIL_ICON
+	icon.custom_minimum_size = Vector2(32, 24)
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.tooltip_text = "Email : " + email_str
+	return icon
 
 func _rank_color(idx: int) -> Color:
 	if idx == 0:

@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cn30y4orht0vf"
 path.s3tc="res://.godot/imported/fenceStraight_net.png-4458508c97925220c9f2d80e33bacc32.s3tc.ctex"
+path.etc2="res://.godot/imported/fenceStraight_net.png-4458508c97925220c9f2d80e33bacc32.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://jeu_grand_pasdetolismo/models/kenney/fenceStraight_net.png"
-dest_files=["res://.godot/imported/fenceStraight_net.png-4458508c97925220c9f2d80e33bacc32.s3tc.ctex"]
+dest_files=["res://.godot/imported/fenceStraight_net.png-4458508c97925220c9f2d80e33bacc32.s3tc.ctex", "res://.godot/imported/fenceStraight_net.png-4458508c97925220c9f2d80e33bacc32.etc2.ctex"]
 
 [params]
 

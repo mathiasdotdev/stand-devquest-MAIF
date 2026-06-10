@@ -1,10 +1,29 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://jeu_sortez_couvert/ui/pool_settings_modal.gd" id="1_script"]
 [ext_resource type="Theme" path="res://jeu_sortez_couvert/ui/theme/fantasy_theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/theme/divider.png" id="3_divider"]
 [ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/theme/panel_border_overlay.png" id="4_border"]
 [ext_resource type="FontFile" path="res://jeu_sortez_couvert/ui/theme/fonts/Nordvik.ttf" id="5_font"]
+
+[sub_resource type="StyleBoxFlat" id="vol_bar_bg"]
+bg_color = Color(0.1, 0.13, 0.22, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.25, 0.3, 0.45, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="vol_bar_fill"]
+bg_color = Color(0.95, 0.8, 0.35, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="PoolSettingsModal" type="CanvasLayer"]
 process_mode = 3
@@ -101,6 +120,112 @@ size_flags_vertical = 4
 text = "(disponibles : ...)"
 theme_override_font_sizes/font_size = 13
 theme_override_colors/font_color = Color(0.55, 0.62, 0.78, 1)
+
+[node name="Divider2" type="TextureRect" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("3_divider")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SoundSectionLabel" type="Label" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+layout_mode = 2
+text = "Son"
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.78, 0.86, 1, 1)
+
+[node name="MusicRow" type="HBoxContainer" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="MusicLabel" type="Label" parent="Container/CenterContainer/MenuPanel/Margin/VBox/MusicRow"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_vertical = 4
+text = "Musique"
+theme_override_font_sizes/font_size = 18
+
+[node name="BtnMusicMinus" type="Button" parent="Container/CenterContainer/MenuPanel/Margin/VBox/MusicRow"]
+custom_minimum_size = Vector2(48, 40)
+layout_mode = 2
+size_flags_vertical = 4
+text = "-"
+theme_override_font_sizes/font_size = 24
+
+[node name="MusicBar" type="ProgressBar" parent="Container/CenterContainer/MenuPanel/Margin/VBox/MusicRow"]
+custom_minimum_size = Vector2(240, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/background = SubResource("vol_bar_bg")
+theme_override_styles/fill = SubResource("vol_bar_fill")
+max_value = 1.0
+step = 0.01
+value = 0.25
+show_percentage = false
+
+[node name="BtnMusicPlus" type="Button" parent="Container/CenterContainer/MenuPanel/Margin/VBox/MusicRow"]
+custom_minimum_size = Vector2(48, 40)
+layout_mode = 2
+size_flags_vertical = 4
+text = "+"
+theme_override_font_sizes/font_size = 24
+
+[node name="MusicValue" type="Label" parent="Container/CenterContainer/MenuPanel/Margin/VBox/MusicRow"]
+custom_minimum_size = Vector2(54, 0)
+layout_mode = 2
+size_flags_vertical = 4
+text = "25 %"
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.78, 0.86, 1, 1)
+
+[node name="SfxRow" type="HBoxContainer" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="SfxLabel" type="Label" parent="Container/CenterContainer/MenuPanel/Margin/VBox/SfxRow"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_vertical = 4
+text = "Effets (SFX)"
+theme_override_font_sizes/font_size = 18
+
+[node name="BtnSfxMinus" type="Button" parent="Container/CenterContainer/MenuPanel/Margin/VBox/SfxRow"]
+custom_minimum_size = Vector2(48, 40)
+layout_mode = 2
+size_flags_vertical = 4
+text = "-"
+theme_override_font_sizes/font_size = 24
+
+[node name="SfxBar" type="ProgressBar" parent="Container/CenterContainer/MenuPanel/Margin/VBox/SfxRow"]
+custom_minimum_size = Vector2(240, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/background = SubResource("vol_bar_bg")
+theme_override_styles/fill = SubResource("vol_bar_fill")
+max_value = 1.0
+step = 0.01
+value = 1.0
+show_percentage = false
+
+[node name="BtnSfxPlus" type="Button" parent="Container/CenterContainer/MenuPanel/Margin/VBox/SfxRow"]
+custom_minimum_size = Vector2(48, 40)
+layout_mode = 2
+size_flags_vertical = 4
+text = "+"
+theme_override_font_sizes/font_size = 24
+
+[node name="SfxValue" type="Label" parent="Container/CenterContainer/MenuPanel/Margin/VBox/SfxRow"]
+custom_minimum_size = Vector2(54, 0)
+layout_mode = 2
+size_flags_vertical = 4
+text = "100 %"
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.78, 0.86, 1, 1)
 
 [node name="Spacer" type="Control" parent="Container/CenterContainer/MenuPanel/Margin/VBox"]
 custom_minimum_size = Vector2(0, 6)
