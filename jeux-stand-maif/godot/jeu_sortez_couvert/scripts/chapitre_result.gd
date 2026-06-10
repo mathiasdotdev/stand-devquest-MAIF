@@ -47,69 +47,153 @@ func _is_mostly_uncovered(answer: Dictionary) -> bool:
 
 func _build_lines(answer: Dictionary) -> Array:
 	var result: Array = []
-	var score: int = int(answer.get("score_earned", 0))
-	var disasters: Array = answer.get("disaster_hits", [])
-	var total_count: int = disasters.size()
-	var covered_count: int = 0
-	for hit: Dictionary in disasters:
-		if bool(hit.get("was_covered", false)):
-			covered_count += 1
-	var uncovered_count: int = total_count - covered_count
+	result.append(_build_verdict(answer))
+	result.append_array(_build_choice_review(answer))
+	result.append_array(_build_disaster_lines(answer))
+	return result
 
+# ── Verdict d'ouverture ───────────────────────────────────────────────────────
+func _build_verdict(answer: Dictionary) -> Dictionary:
+	var score: int = int(answer.get("score_earned", 0))
 	if score >= 3:
-		result.append({
+		return {
 			"expression": "hyper-good",
 			"text": "Incroyable ! Tout est couvert au juste prix. Vous avez joué comme un véritable chef de clan.",
-		})
-	elif score >= 2:
-		result.append({
+		}
+	if score >= 2:
+		return {
 			"expression": "ok",
-			"text": "Bien joué ! La majorité des risques est couverte.",
-		})
-	elif uncovered_count >= int(ceil(float(max(total_count, 1)) / 2.0)):
-		result.append({
+			"text": "Bien joué ! La majorité des risques est couverte. Reprenons vos choix ensemble.",
+		}
+	if score >= 1:
+		return {
+			"expression": "explain",
+			"text": "Vous avez couvert une partie des risques, mais ce n'est pas optimal. Voyons ce qui était utile... et ce qui ne l'était pas.",
+		}
+	if _is_mostly_uncovered(answer):
+		return {
 			"expression": "wrong",
-			"text": "Aïe... trop de risques ne sont pas couverts. Il faut renforcer la protection.",
-		})
-	else:
-		result.append({
-			"expression": "wrong",
-			"text": "C'est encore fragile (trop de contrats inutiles ou pas assez de couverture). On corrige ça ensemble.",
+			"text": "Aïe... trop de risques ne sont pas couverts. Reprenons vos choix pour comprendre pourquoi.",
+		}
+	return {
+		"expression": "wrong",
+		"text": "C'est encore fragile : trop de contrats inutiles ou pas assez de couverture. On corrige ça ensemble.",
+	}
+
+# ── Revue des choix : valider / invalider chaque contrat sélectionné ───────────
+# Distingue les bons choix, les contrats inutiles ici, et ceux qui manquaient.
+func _build_choice_review(answer: Dictionary) -> Array:
+	var lines: Array = []
+	var chosen: Array = answer.get("chosen_contracts", [])
+	var recommended: Array = answer.get("correct_contracts", [])
+	var rec_set: Dictionary = {}
+	for ct in recommended:
+		rec_set[ct] = true
+	var chosen_set: Dictionary = {}
+	for ct in chosen:
+		chosen_set[ct] = true
+
+	var good: Array = []
+	var useless: Array = []
+	for ct in chosen:
+		if rec_set.has(ct):
+			good.append(ct)
+		else:
+			useless.append(ct)
+
+	# Contrats pertinents bien choisis → regroupés en une ligne.
+	if not good.is_empty():
+		var tags: Array = []
+		for ct in good:
+			tags.append(_contract_tag(ct))
+		lines.append({
+			"expression": "ok",
+			"text": "[color=#5dd66b]✅ Bons choix : %s.[/color] Ces contrats correspondent bien aux risques de ce chapitre." % ", ".join(tags),
 		})
 
+	# Contrats inutiles ici → une ligne chacun, avec un exemple de leur vraie utilité.
+	for ct in useless:
+		lines.append({
+			"expression": "wrong",
+			"text": "[color=#ff7373]❌ %s : inutile ici.[/color] %s Cocher un contrat de trop fait baisser votre score." % [
+				_contract_tag(ct), _contract_usage_example(ct),
+			],
+		})
+
+	# Contrats recommandés non cochés → ce qui restait à couvrir, et pourquoi.
+	for ct in recommended:
+		if not chosen_set.has(ct):
+			lines.append({
+				"expression": "explain",
+				"text": "[color=#ff9b42]➕ Il manquait %s.[/color] %s" % [
+					_contract_tag(ct), _contract_usage_example(ct),
+				],
+			})
+
+	return lines
+
+# ── Détail par sinistre survenu : pourquoi c'est couvert ou non + l'exemple ────
+func _build_disaster_lines(answer: Dictionary) -> Array:
+	var lines: Array = []
 	var chosen_contracts: Array = answer.get("chosen_contracts", [])
+	var disasters: Array = answer.get("disaster_hits", [])
 	for hit: Dictionary in disasters:
 		var narrative: String = str(hit.get("narrative", ""))
-		var disaster_type: String = hit.get("type", "")
+		var disaster_type: String = str(hit.get("type", ""))
 		var was_covered: bool = bool(hit.get("was_covered", false))
 		var dis: Dictionary = Globals.disasters.get_disaster(disaster_type)
 		var covering_contracts: Array = dis.get("covering_contracts", [])
 		var covering_set: Dictionary = {}
 		for ct in covering_contracts:
 			covering_set[ct] = true
-		var contract_labels: Array = []
-		for ct in covering_contracts:
-			var c: Dictionary = Globals.contracts.get_by_type(ct)
-			contract_labels.append(c.get("icon", "") + " " + c.get("label", ct))
 		if was_covered:
-			var player_contracts: Array[Variant] = []
+			var player_contracts: Array = []
 			for ct in chosen_contracts:
 				if covering_set.has(ct):
-					var c: Dictionary = Globals.contracts.get_by_type(ct)
-					player_contracts.append(c.get("icon", "") + " " + c.get("label", ct))
-			var contract_str: String = ", ".join(player_contracts) if player_contracts.size() > 0 else "?"
-			result.append({
+					player_contracts.append(_contract_tag(ct))
+			var contract_str: String = ", ".join(player_contracts) if not player_contracts.is_empty() else "?"
+			lines.append({
 				"expression": "explain",
-				"text": "✅ Couvert par " + contract_str + " : " + narrative,
+				"text": "[b]✅ %s[/b]\n%s : les frais sont pris en charge." % [narrative, contract_str],
 			})
 		else:
-			var contract_str: String = ", ".join(contract_labels) if contract_labels.size() > 0 else "?"
-			result.append({
-				"expression": "explain",
-				"text": "❌ Non couvert (contrat utile : " + contract_str + ") : " + narrative,
+			var contract_labels: Array = []
+			for ct in covering_contracts:
+				contract_labels.append(_contract_tag(ct))
+			var contract_str: String = ", ".join(contract_labels) if not contract_labels.is_empty() else "?"
+			lines.append({
+				"expression": "wrong",
+				"text": "[b]❌ %s[/b]\nNon couvert : il fallait %s. Sans lui, tout reste à votre charge." % [narrative, contract_str],
 			})
+	return lines
 
-	return result
+# ── Helpers ───────────────────────────────────────────────────────────────────
+func _contract_tag(type: String) -> String:
+	var c: Dictionary = Globals.contracts.get_by_type(type)
+	return "%s %s" % [c.get("icon", ""), c.get("label", type)]
+
+# Phrase courte décrivant l'utilité réelle d'un contrat, via les sinistres qu'il couvre.
+func _contract_usage_example(type: String) -> String:
+	var c: Dictionary = Globals.contracts.get_by_type(type)
+	var covers: Array = c.get("covers", [])
+	var labels: Array = []
+	for d in covers:
+		var dis: Dictionary = Globals.disasters.get_disaster(d)
+		if dis.is_empty():
+			continue
+		labels.append("%s %s" % [dis.get("icon", ""), String(dis.get("label", d)).to_lower()])
+	if labels.is_empty():
+		return String(c.get("description", ""))
+	return "Il protège surtout contre %s." % _join_natural(labels)
+
+# Jointure naturelle : "a, b et c".
+func _join_natural(items: Array) -> String:
+	if items.is_empty():
+		return ""
+	if items.size() == 1:
+		return String(items[0])
+	var head: Array = items.slice(0, items.size() - 1)
+	return "%s et %s" % [", ".join(head), String(items[items.size() - 1])]
 
 func _on_story_complete() -> void:
 	var has_next: bool = Globals.story_engine.next_chapitre()
