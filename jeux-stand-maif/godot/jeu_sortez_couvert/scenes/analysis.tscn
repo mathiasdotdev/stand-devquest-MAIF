@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://jeu_sortez_couvert/scripts/analysis.gd" id="1_an"]
 [ext_resource type="Theme" path="res://jeu_sortez_couvert/ui/theme/fantasy_theme.tres" id="2_theme"]
@@ -6,6 +6,13 @@
 [ext_resource type="Texture2D" path="res://jeu_sortez_couvert/ui/theme/panel_border_overlay.png" id="4_border"]
 [ext_resource type="FontFile" path="res://jeu_sortez_couvert/ui/theme/fonts/Nordvik.ttf" id="5_font_title"]
 [ext_resource type="PackedScene" path="res://jeu_sortez_couvert/ui/maif_logo.tscn" id="6_logo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qr"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
 
 [node name="Analysis" type="Control"]
 layout_mode = 3
@@ -125,10 +132,21 @@ text = "Scannez le QR code à droite, ou cliquez sur le bouton."
 theme_override_font_sizes/font_size = 16
 theme_override_colors/font_color = Color(0.78, 0.86, 1, 1)
 
-[node name="QRCode" type="TextureRect" parent="MarginContainer/VBoxContainer/DiscoverSection"]
+[node name="QRCard" type="PanelContainer" parent="MarginContainer/VBoxContainer/DiscoverSection"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_qr")
+
+[node name="QRMargin" type="MarginContainer" parent="MarginContainer/VBoxContainer/DiscoverSection/QRCard"]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="QRCode" type="TextureRect" parent="MarginContainer/VBoxContainer/DiscoverSection/QRCard/QRMargin"]
 layout_mode = 2
 custom_minimum_size = Vector2(80, 80)
-size_flags_vertical = 4
 expand_mode = 1
 stretch_mode = 5
 

@@ -17,7 +17,7 @@ const COLOR_LABEL_DEBUTANT := "#ff6666"
 @onready var _btn_prev: Button = $MarginContainer/VBoxContainer/ChapterNavRow/BtnPrev
 @onready var _btn_next_chap: Button = $MarginContainer/VBoxContainer/ChapterNavRow/BtnNextChap
 @onready var _btn_discover: Button = $MarginContainer/VBoxContainer/DiscoverSection/BtnDiscover
-@onready var _qr_code: TextureRect = $MarginContainer/VBoxContainer/DiscoverSection/QRCode
+@onready var _qr_code: TextureRect = $MarginContainer/VBoxContainer/DiscoverSection/QRCard/QRMargin/QRCode
 @onready var _menu_btn: Button = $MarginContainer/VBoxContainer/BtnMenu
 
 var _analysis: Dictionary
@@ -218,11 +218,14 @@ func _on_discover() -> void:
 	OS.shell_open(MAIF_URL)
 
 func _setup_qr_code() -> void:
+	# La carte blanche arrondie (QRCard) englobe le QR : on masque la carte entière
+	# si la texture est absente, pour ne pas laisser un cadre blanc vide.
+	var card: Control = _qr_code.get_parent().get_parent()
 	if not ResourceLoader.exists(QR_TEXTURE_PATH):
-		_qr_code.visible = false
+		card.visible = false
 		return
 	var tex: Texture2D = load(QR_TEXTURE_PATH)
 	if tex == null:
-		_qr_code.visible = false
+		card.visible = false
 		return
 	_qr_code.texture = tex
