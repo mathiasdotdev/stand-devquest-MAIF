@@ -3,9 +3,6 @@ extends Control
 const MODE_IDS := ["story", "racing"]
 const MODE_LABELS := ["Histoire", "Pasdetolismo"]
 const ADMIN_MODAL_SCENE: PackedScene = preload("res://jeu_sortez_couvert/ui/admin_modal.tscn")
-# Icône enveloppe (image, identique sur tous les OS) plutôt qu'un emoji ✉️ dont
-# le rendu dépend de la police système.
-const EMAIL_ICON: Texture2D = preload("res://jeu_sortez_couvert/ui/assets/email.png")
 
 # Nombre d'entrées affichées dans l'UI par défaut (override possible via la modale F10)
 const DEFAULT_DISPLAY_LIMIT := 10
@@ -126,8 +123,19 @@ func _build_entry_row(mode: String, idx: int, entry: Dictionary) -> Control:
 	name_lbl.add_theme_color_override("font_color", Color(0.96, 0.96, 0.98, 1))
 	row.add_child(name_lbl)
 
-	# Indicateur email : icône enveloppe si renseigné, "—" gris sinon.
-	row.add_child(_build_email_indicator(String(entry.get("email", "")).strip_edges()))
+	# Temps passé sur la tentative (l'email n'est PLUS affiché ici : il reste
+	# uniquement dans le JSON pour le suivi / la récupération des gains).
+	var duration: int = LeaderboardStore.get_duration_seconds(entry)
+	if duration > 0:
+		var time_lbl := Label.new()
+		time_lbl.text = _format_duration(duration)
+		time_lbl.custom_minimum_size = Vector2(90, 0)
+		time_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		time_lbl.tooltip_text = "Temps passé"
+		time_lbl.add_theme_font_override("font", _data_font)
+		time_lbl.add_theme_font_size_override("font_size", 16)
+		time_lbl.add_theme_color_override("font_color", Color(0.7, 0.85, 0.78, 1))
+		row.add_child(time_lbl)
 
 	var ts: int = LeaderboardStore.get_timestamp(entry)
 	if ts > 0:
@@ -158,27 +166,15 @@ func _build_entry_row(mode: String, idx: int, entry: Dictionary) -> Control:
 
 	return panel
 
-# Colonne email : icône enveloppe (email.png) si un email est renseigné, sinon
-# un tiret gris. On utilise une image plutôt que l'emoji ✉️ pour un rendu
-# identique quel que soit l'OS / la police système.
-func _build_email_indicator(email_str: String) -> Control:
-	if email_str.is_empty():
-		var dash := Label.new()
-		dash.custom_minimum_size = Vector2(32, 0)
-		dash.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		dash.add_theme_font_override("font", _data_font)
-		dash.text = "—"
-		dash.tooltip_text = "Pas d'email — gain non récupérable"
-		dash.add_theme_color_override("font_color", Color(0.5, 0.55, 0.65, 1))
-		dash.add_theme_font_size_override("font_size", 22)
-		return dash
-	var icon := TextureRect.new()
-	icon.texture = EMAIL_ICON
-	icon.custom_minimum_size = Vector2(32, 24)
-	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	icon.tooltip_text = "Email : " + email_str
-	return icon
+# Formate une durée en secondes → "Xmin YYs" ou "Ys".
+func _format_duration(secs: int) -> String:
+	if secs <= 0:
+		return "—"
+	var minutes: int = secs / 60
+	var seconds: int = secs % 60
+	if minutes > 0:
+		return "%dmin %02ds" % [minutes, seconds]
+	return "%ds" % seconds
 
 func _rank_color(idx: int) -> Color:
 	if idx == 0:

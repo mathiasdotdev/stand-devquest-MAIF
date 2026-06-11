@@ -191,6 +191,7 @@ func save_score() -> void:
 		Globals.story_engine.player_name,
 		Globals.story_engine.player_email,
 		_build_chapter_breakdown(),
+		Globals.story_engine.get_elapsed_seconds(),
 	)
 
 # Construit le tableau de breakdown attendu par add_story_entry :
@@ -210,6 +211,9 @@ func _build_chapter_breakdown() -> Array:
 	return breakdown
 
 func _on_menu() -> void:
+	# Partie terminée : on efface l'identité du joueur pour ne pas pré-remplir
+	# nom/email du visiteur suivant dans l'écran pseudo_input.
+	Globals.story_engine.clear_player()
 	get_tree().change_scene_to_file("res://main_menu/main_menu.tscn")
 
 # ---- Section "Découvrir MAIF" -----------------------------------------------

@@ -35,7 +35,7 @@ func _ready() -> void:
 # ---- API publique -----------------------------------------------------------
 
 # Mode "racing" (et autres modes simples) : score scalaire, format flat.
-func add_entry(mode: String, player_name: String, score: int, email: String = "", hints_used: int = 0) -> int:
+func add_entry(mode: String, player_name: String, score: int, email: String = "", hints_used: int = 0, duration_seconds: int = 0) -> int:
 	if not _data.has(mode):
 		_data[mode] = []
 	var ts := Time.get_unix_time_from_system()
@@ -46,6 +46,7 @@ func add_entry(mode: String, player_name: String, score: int, email: String = ""
 		"score": score,
 		"hints_used": safe_hints,
 		"effective_score": _effective_score(score, safe_hints),
+		"duration_seconds": max(0, duration_seconds),
 		"timestamp": ts,
 	}
 	return _insert(mode, entry)
@@ -54,7 +55,7 @@ func add_entry(mode: String, player_name: String, score: int, email: String = ""
 # `chapter_breakdown` : Array de { id:int, title:String, score_earned:int,
 #                                   score_max:int, hints_used:int }
 # L'ordre du tableau = ordre joué dans la partie (chapter_1 = premier chapitre).
-func add_story_entry(player_name: String, email: String, chapter_breakdown: Array) -> int:
+func add_story_entry(player_name: String, email: String, chapter_breakdown: Array, duration_seconds: int = 0) -> int:
 	var ts: int = int(Time.get_unix_time_from_system())
 	var score_obj: Dictionary = {}
 	var total: int = 0
@@ -78,20 +79,44 @@ func add_story_entry(player_name: String, email: String, chapter_breakdown: Arra
 		"name": player_name,
 		"email": email,
 		"effective_score": _effective_score(total, hints_total),
+		"duration_seconds": max(0, duration_seconds),
 		"score": score_obj,
 	}
 	return _insert("story", entry)
 
 func _insert(mode: String, entry: Dictionary) -> int:
 	_data[mode].append(entry)
-	_data[mode].sort_custom(_compare_entries)
-	# PAS de resize : on garde tout l'historique
+	# On ne conserve que la MEILLEURE tentative (effective_score) par joueur.
+	_dedupe_best(mode)
 	_save()
 	# Renvoie l'index post-tri (utile pour scroller dessus côté UI)
 	for i in _data[mode].size():
 		if _data[mode][i] == entry:
 			return i
 	return -1
+
+# Identité d'un joueur pour la déduplication : email (insensible à la casse) si
+# renseigné, sinon le nom. Deux tentatives partageant cette clé sont considérées
+# comme le même joueur ; seule la meilleure (effective_score) est conservée.
+func _identity_key(entry: Dictionary) -> String:
+	var email: String = String(entry.get("email", "")).strip_edges().to_lower()
+	if not email.is_empty():
+		return "email:" + email
+	return "name:" + String(entry.get("name", "")).strip_edges().to_lower()
+
+# Filtre les entrées d'un mode pour ne garder que la meilleure tentative par
+# joueur (comparée via effective_score), puis re-trie (meilleur en tête).
+func _dedupe_best(mode: String) -> void:
+	if not _data.has(mode):
+		return
+	var best: Dictionary = {}
+	for e: Dictionary in _data[mode]:
+		var key: String = _identity_key(e)
+		if not best.has(key) or _is_entry_better(e, best[key]):
+			best[key] = e
+	var result: Array = best.values()
+	result.sort_custom(_compare_entries)
+	_data[mode] = result
 
 # `limit` : nombre max d'entrées à renvoyer (-1 = pas de limite, renvoie tout)
 func get_entries(mode: String, limit: int = -1) -> Array:
@@ -163,6 +188,15 @@ static func get_hints_total(entry: Dictionary) -> int:
 		if ch is Dictionary:
 			total += max(0, int(ch.get("hint_used", 0)))
 	return total
+
+# Temps passé sur la tentative (secondes). 0 si non mesuré (anciennes entrées).
+static func get_duration_seconds(entry: Dictionary) -> int:
+	if entry.has("duration_seconds"):
+		return max(0, int(entry.get("duration_seconds", 0)))
+	var s: Variant = entry.get("score", null)
+	if s is Dictionary:
+		return max(0, int(s.get("duration_seconds", 0)))
+	return 0
 
 # Timestamp unix. Racing : top-level. Story : dans `score.timestamp`.
 static func get_timestamp(entry: Dictionary) -> int:
@@ -304,7 +338,8 @@ func _load_json(path: String) -> void:
 		for raw_entry in arr:
 			if raw_entry is Dictionary:
 				_data[mode].append(_normalize_entry(raw_entry))
-		_data[mode].sort_custom(_compare_entries)
+		# Nettoie d'éventuels doublons hérités : une seule (meilleure) entrée par joueur.
+		_dedupe_best(mode)
 
 # Normalise une entrée chargée du JSON.
 # On préserve le format d'origine (flat ou chapitres) pour la sérialisation,
