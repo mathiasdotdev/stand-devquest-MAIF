@@ -1,6 +1,5 @@
 extends Control
 
-const MAIF_URL := "https://www.maif.fr/annexes/toutes-nos-solutions"
 const QR_TEXTURE_PATH := "res://jeu_sortez_couvert/ui/assets/tous-nos-produits-maif.png"
 
 const COLOR_GREEN := "#5dd66b"
@@ -16,7 +15,6 @@ const COLOR_LABEL_DEBUTANT := "#ff6666"
 @onready var _chapter_info: RichTextLabel = $MarginContainer/VBoxContainer/ChapterNavRow/ChapterBubble/Margin/ChapterInfo
 @onready var _btn_prev: Button = $MarginContainer/VBoxContainer/ChapterNavRow/BtnPrev
 @onready var _btn_next_chap: Button = $MarginContainer/VBoxContainer/ChapterNavRow/BtnNextChap
-@onready var _btn_discover: Button = $MarginContainer/VBoxContainer/DiscoverSection/BtnDiscover
 @onready var _qr_code: TextureRect = $MarginContainer/VBoxContainer/DiscoverSection/QRCard/QRMargin/QRCode
 @onready var _menu_btn: Button = $MarginContainer/VBoxContainer/BtnMenu
 
@@ -33,7 +31,6 @@ func _ready() -> void:
 	_btn_prev.pressed.connect(_on_prev)
 	_btn_next_chap.pressed.connect(_on_next_chap)
 	_menu_btn.pressed.connect(_on_menu)
-	_btn_discover.pressed.connect(_on_discover)
 	_setup_qr_code()
 
 	# Toutes les parties sont enregistrées. Le top N est filtré uniquement à l'affichage.
@@ -217,9 +214,6 @@ func _on_menu() -> void:
 	get_tree().change_scene_to_file("res://main_menu/main_menu.tscn")
 
 # ---- Section "Découvrir MAIF" -----------------------------------------------
-
-func _on_discover() -> void:
-	OS.shell_open(MAIF_URL)
 
 func _setup_qr_code() -> void:
 	# La carte blanche arrondie (QRCard) englobe le QR : on masque la carte entière
