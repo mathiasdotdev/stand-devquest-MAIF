@@ -95,26 +95,24 @@ func _insert(mode: String, entry: Dictionary) -> int:
 			return i
 	return -1
 
-# Identité d'un joueur pour la déduplication : email (insensible à la casse) si
-# renseigné, sinon le nom. Deux tentatives partageant cette clé sont considérées
-# comme le même joueur ; seule la meilleure (effective_score) est conservée.
-func _identity_key(entry: Dictionary) -> String:
-	var email: String = String(entry.get("email", "")).strip_edges().to_lower()
-	if not email.is_empty():
-		return "email:" + email
-	return "name:" + String(entry.get("name", "")).strip_edges().to_lower()
-
 # Filtre les entrées d'un mode pour ne garder que la meilleure tentative par
-# joueur (comparée via effective_score), puis re-trie (meilleur en tête).
+# joueur, l'identité étant l'EMAIL uniquement (insensible à la casse) : un même
+# surnom peut être réutilisé par plusieurs visiteurs, l'email est la seule clé
+# fiable. Les entrées sans email ne sont PAS dédupliquées (joueur non
+# identifiable) et sont toutes conservées. Re-trie ensuite (meilleur en tête).
 func _dedupe_best(mode: String) -> void:
 	if not _data.has(mode):
 		return
-	var best: Dictionary = {}
+	var best: Dictionary = {}  # email -> meilleure entrée
+	var anonymous: Array = []  # entrées sans email, conservées telles quelles
 	for e: Dictionary in _data[mode]:
-		var key: String = _identity_key(e)
-		if not best.has(key) or _is_entry_better(e, best[key]):
-			best[key] = e
+		var email: String = String(e.get("email", "")).strip_edges().to_lower()
+		if email.is_empty():
+			anonymous.append(e)
+		elif not best.has(email) or _is_entry_better(e, best[email]):
+			best[email] = e
 	var result: Array = best.values()
+	result.append_array(anonymous)
 	result.sort_custom(_compare_entries)
 	_data[mode] = result
 
@@ -124,6 +122,18 @@ func get_entries(mode: String, limit: int = -1) -> Array:
 	if limit > 0 and all.size() > limit:
 		return all.slice(0, limit)
 	return all
+
+# Vrai si un email a déjà une entrée dans ce mode (comparaison insensible à la
+# casse). Un email vide renvoie toujours false (joueur non identifiable, pas de
+# contrôle d'unicité possible). Sert à interdire une 2ᵉ tentative par email.
+func has_email(mode: String, email: String) -> bool:
+	var target: String = email.strip_edges().to_lower()
+	if target.is_empty():
+		return false
+	for e: Dictionary in _data.get(mode, []):
+		if String(e.get("email", "")).strip_edges().to_lower() == target:
+			return true
+	return false
 
 func get_best_entry(mode: String) -> Dictionary:
 	var entries: Array = get_entries(mode, 1)

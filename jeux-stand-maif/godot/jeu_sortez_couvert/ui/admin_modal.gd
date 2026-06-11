@@ -10,6 +10,8 @@ signal path_changed
 signal filter_changed
 
 @onready var _container: Control = $Container
+@onready var _center: CenterContainer = $Container/CenterContainer
+@onready var _menu_panel: Control = $Container/CenterContainer/MenuPanel
 @onready var _current_path_label: Label = $Container/CenterContainer/MenuPanel/Margin/VBox/CurrentPathLabel
 @onready var _default_path_label: Label = $Container/CenterContainer/MenuPanel/Margin/VBox/DefaultPathLabel
 @onready var _btn_choose: Button = $Container/CenterContainer/MenuPanel/Margin/VBox/PathBtnRow/BtnChoose
@@ -20,6 +22,7 @@ signal filter_changed
 @onready var _btn_close: Button = $Container/CenterContainer/MenuPanel/Margin/VBox/CloseRow/BtnClose
 
 var _file_dialog: FileDialog = null
+var _gate: PasswordGate = null
 
 func _ready() -> void:
 	_container.visible = false
@@ -30,17 +33,38 @@ func _ready() -> void:
 	_min_score_spin.value_changed.connect(_on_score_filter_changed)
 	_display_limit_spin.value_changed.connect(_on_score_filter_changed)
 	_create_file_dialog()
+	_setup_password_gate()
 
 func is_open() -> bool:
 	return _container.visible
 
+# Affiche d'abord la porte mot de passe ; les paramètres ne sont révélés
+# qu'après saisie correcte (cf. _on_gate_unlocked).
 func show_modal() -> void:
-	_refresh_path_display()
+	_menu_panel.visible = false
+	_gate.visible = true
+	_gate.reset()
 	_container.visible = true
 
 func hide_modal() -> void:
 	_container.visible = false
+	_gate.visible = false
+	_menu_panel.visible = false
 	closed.emit()
+
+# ---- Porte mot de passe -----------------------------------------------------
+
+func _setup_password_gate() -> void:
+	_gate = PasswordGate.new()
+	_gate.visible = false
+	_gate.unlocked.connect(_on_gate_unlocked)
+	_gate.cancelled.connect(hide_modal)
+	_center.add_child(_gate)
+
+func _on_gate_unlocked() -> void:
+	_gate.visible = false
+	_refresh_path_display()
+	_menu_panel.visible = true
 
 # ---- Filtres ----------------------------------------------------------------
 

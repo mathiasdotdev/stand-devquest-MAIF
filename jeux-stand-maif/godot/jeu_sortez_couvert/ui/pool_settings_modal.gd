@@ -10,6 +10,8 @@ signal closed
 const VOL_STEP := 0.1
 
 @onready var _container: Control = $Container
+@onready var _center: CenterContainer = $Container/CenterContainer
+@onready var _menu_panel: Control = $Container/CenterContainer/MenuPanel
 @onready var _pool_size_spin: SpinBox = $Container/CenterContainer/MenuPanel/Margin/VBox/PoolSizeRow/PoolSizeSpin
 @onready var _available_label: Label = $Container/CenterContainer/MenuPanel/Margin/VBox/PoolSizeRow/AvailableLabel
 @onready var _btn_close: Button = $Container/CenterContainer/MenuPanel/Margin/VBox/CloseRow/BtnClose
@@ -24,6 +26,8 @@ const VOL_STEP := 0.1
 @onready var _btn_sfx_minus: Button = $Container/CenterContainer/MenuPanel/Margin/VBox/SfxRow/BtnSfxMinus
 @onready var _btn_sfx_plus: Button = $Container/CenterContainer/MenuPanel/Margin/VBox/SfxRow/BtnSfxPlus
 
+var _gate: PasswordGate = null
+
 func _ready() -> void:
 	_container.visible = false
 	_btn_close.pressed.connect(hide_modal)
@@ -35,17 +39,38 @@ func _ready() -> void:
 	_btn_music_plus.pressed.connect(_on_music_step.bind(VOL_STEP))
 	_btn_sfx_minus.pressed.connect(_on_sfx_step.bind(-VOL_STEP))
 	_btn_sfx_plus.pressed.connect(_on_sfx_step.bind(VOL_STEP))
+	_setup_password_gate()
 
 func is_open() -> bool:
 	return _container.visible
 
+# Affiche d'abord la porte mot de passe ; les paramètres ne sont révélés
+# qu'après saisie correcte (cf. _on_gate_unlocked).
 func show_modal() -> void:
-	_refresh()
+	_menu_panel.visible = false
+	_gate.visible = true
+	_gate.reset()
 	_container.visible = true
 
 func hide_modal() -> void:
 	_container.visible = false
+	_gate.visible = false
+	_menu_panel.visible = false
 	closed.emit()
+
+# ---- Porte mot de passe -----------------------------------------------------
+
+func _setup_password_gate() -> void:
+	_gate = PasswordGate.new()
+	_gate.visible = false
+	_gate.unlocked.connect(_on_gate_unlocked)
+	_gate.cancelled.connect(hide_modal)
+	_center.add_child(_gate)
+
+func _on_gate_unlocked() -> void:
+	_gate.visible = false
+	_refresh()
+	_menu_panel.visible = true
 
 func _refresh() -> void:
 	_pool_size_spin.value = Globals.story_engine.pool_size
