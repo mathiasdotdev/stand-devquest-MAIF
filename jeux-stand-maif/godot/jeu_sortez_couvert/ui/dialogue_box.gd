@@ -1,11 +1,13 @@
 extends PanelContainer
 
 signal advance
+signal skip
 
 const CHARS_PER_SEC := 60.0
 
 @onready var title_label: Label = $MarginContainer/VBoxContainer/TitleLabel
 @onready var text_label: RichTextLabel = $MarginContainer/VBoxContainer/TextLabel
+@onready var btn_skip: Button = $MarginContainer/VBoxContainer/Footer/BtnSkip
 @onready var btn_continue: Button = $MarginContainer/VBoxContainer/Footer/BtnContinue
 
 var _complete: bool = false
@@ -13,7 +15,14 @@ var _tween: Tween = null
 
 func _ready() -> void:
 	btn_continue.pressed.connect(_on_advance_pressed)
+	btn_skip.pressed.connect(_on_skip_pressed)
 	_update_btn_state()
+
+# Affiche / masque le bouton "Passer" (skip). Utilisé par les scènes avec
+# plusieurs lignes d'explication (ex : chapitre_result) pour sauter directement
+# à la suite. Masqué par défaut.
+func set_skip_visible(v: bool) -> void:
+	btn_skip.visible = v
 
 # Définit le titre persistant en haut de la bulle (par ex. "Apprenez à vous protéger avec la MAIF").
 # Vide ou absent → titre masqué.
@@ -51,8 +60,18 @@ func _update_btn_state() -> void:
 func _on_advance_pressed() -> void:
 	advance.emit()
 
+func _on_skip_pressed() -> void:
+	skip.emit()
+
 func _input(event: InputEvent) -> void:
 	if not visible:
+		return
+	# Laisse le bouton "Passer" gérer lui-même son clic (sinon ce handler
+	# consommerait l'événement et le bouton ne se déclencherait jamais).
+	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed \
+			and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT \
+			and btn_skip.visible \
+			and btn_skip.get_global_rect().has_point((event as InputEventMouseButton).position):
 		return
 	var pressed: bool = (
 		(event is InputEventKey and (event as InputEventKey).pressed and not (event as InputEventKey).echo

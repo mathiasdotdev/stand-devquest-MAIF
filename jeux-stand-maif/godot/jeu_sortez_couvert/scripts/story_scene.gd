@@ -28,6 +28,13 @@ func _ready() -> void:
 		_dialogue_box = DIALOGUE_BOX_SCENE.instantiate()
 		dialogue_area.add_child(_dialogue_box)
 		_dialogue_box.advance.connect(_on_advance)
+		_dialogue_box.skip.connect(_on_skip)
+
+# Active le bouton "Passer" (skip) dans la bulle de dialogue. À appeler par les
+# scènes filles qui veulent permettre de sauter les explications.
+func enable_skip() -> void:
+	if _dialogue_box:
+		_dialogue_box.set_skip_visible(true)
 
 func setup_story(title: String, lines: Array) -> void:
 	if _dialogue_box:
@@ -49,6 +56,11 @@ func _show_line(idx: int) -> void:
 func _on_advance() -> void:
 	_line_idx += 1
 	_show_line(_line_idx)
+
+# Saute toutes les lignes restantes et passe directement à la suite.
+func _on_skip() -> void:
+	Sfx.play("selection")
+	_on_story_complete()
 
 # À override dans la scène fille : que faire après la dernière ligne ?
 func _on_story_complete() -> void:

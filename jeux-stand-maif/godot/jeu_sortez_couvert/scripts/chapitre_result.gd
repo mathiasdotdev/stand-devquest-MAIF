@@ -21,6 +21,8 @@ func _ready() -> void:
 	# Pas de titre dans la bulle pour chapitre_result : info chapitre en haut à gauche,
 	# on garde tout l'espace de la bulle pour l'explication.
 	setup_story("", lines)
+	# Bouton "Passer" pour sauter les explications et aller au chapitre suivant.
+	enable_skip()
 
 	# Sons de feedback
 	if score_earned >= 2:
