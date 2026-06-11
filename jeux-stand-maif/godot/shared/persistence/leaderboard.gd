@@ -245,6 +245,12 @@ func _is_entry_better(a: Dictionary, b: Dictionary) -> bool:
 	var b_eff: float = float(b.get("effective_score", _effective_score(get_score_total(b), get_hints_total(b))))
 	if a_eff != b_eff:
 		return a_eff > b_eff
+	# Égalité de score effectif → le meilleur temps (durée totale la plus courte)
+	# est mieux classé.
+	var a_dur: int = _comparable_duration(a)
+	var b_dur: int = _comparable_duration(b)
+	if a_dur != b_dur:
+		return a_dur < b_dur
 	var a_score: int = get_score_total(a)
 	var b_score: int = get_score_total(b)
 	if a_score != b_score:
@@ -254,6 +260,13 @@ func _is_entry_better(a: Dictionary, b: Dictionary) -> bool:
 	if a_hints != b_hints:
 		return a_hints < b_hints
 	return get_timestamp(a) < get_timestamp(b)
+
+# Durée comparable pour le départage : la plus courte gagne. Une durée non
+# mesurée (0, ex. anciennes entrées) est traitée comme le pire temps (classée
+# après celles qui ont un temps réel).
+func _comparable_duration(entry: Dictionary) -> int:
+	var d: int = get_duration_seconds(entry)
+	return d if d > 0 else 0x7FFFFFFF
 
 func _compare_entries(a: Dictionary, b: Dictionary) -> bool:
 	return _is_entry_better(a, b)

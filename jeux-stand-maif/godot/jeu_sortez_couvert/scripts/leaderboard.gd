@@ -125,9 +125,15 @@ func _build_entry_row(mode: String, idx: int, entry: Dictionary) -> Control:
 		var raw_score: int = LeaderboardStore.get_score_total(entry)
 		var hints: int = LeaderboardStore.get_hints_total(entry)
 		var effective: float = float(entry.get("effective_score", raw_score))
-		var max_total: int = Globals.story_engine.pool_size * 3
-		score_lbl.text = "%d / %d (%0.1f)" % [raw_score, max_total, effective]
-		score_lbl.tooltip_text = _story_tooltip(entry, hints)
+		# Note sur 20, basée sur le score effectif (= ce qui classe les joueurs),
+		# pour que la note affichée soit cohérente avec le classement.
+		# max_total = nb de chapitres joués × 3 (robuste si le pool a changé).
+		var chapters: Array = LeaderboardStore.get_chapter_breakdown(entry)
+		var nb_chapters: int = chapters.size() if not chapters.is_empty() else Globals.story_engine.pool_size
+		var max_total: int = max(1, nb_chapters * 3)
+		var note_sur_20: float = effective * 20.0 / float(max_total)
+		score_lbl.text = "%0.1f / 20" % note_sur_20
+		score_lbl.tooltip_text = "Score : %d / %d (effectif %0.1f)\n%s" % [raw_score, max_total, effective, _story_tooltip(entry, hints)]
 	else:
 		score_lbl.text = "%d pts" % int(entry.get("score", 0))
 	score_lbl.custom_minimum_size = Vector2(160, 0)
