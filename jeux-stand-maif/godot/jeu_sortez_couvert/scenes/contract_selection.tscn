@@ -80,11 +80,11 @@ theme_override_font_sizes/font_size = 20
 
 [node name="InstructionsLabel" type="Label" parent="MarginContainer/VBoxContainer/ContextBubble/Margin/VBox" unique_id=1169182201]
 layout_mode = 2
-text = "Quels contrats choisissez-vous ? (sélectionnez 0 à 6)"
+text = "Sélection à choix multiples — cochez le ou les contrats utiles"
 horizontal_alignment = 1
 autowrap_mode = 3
 theme_override_font_sizes/font_size = 18
-theme_override_colors/font_color = Color(0.78, 0.86, 1, 1)
+theme_override_colors/font_color = Color(0.36, 0.84, 0.42, 1)
 
 [node name="HintLabel" type="Label" parent="MarginContainer/VBoxContainer/ContextBubble/Margin/VBox" unique_id=784222021]
 layout_mode = 2

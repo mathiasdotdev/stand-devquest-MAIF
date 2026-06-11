@@ -7,6 +7,7 @@ const INTRO_LINES: Array = [
 	{"text": "Au cours de %d chapitres, vous allez vivre des situations de la vraie vie, avec leurs sinistres possibles.", "expression": "normal"},
 	{"text": "Votre mission : choisir le ou les contrats qui couvrent le mieux ces risques, au moindre coût.", "expression": "normal"},
 	{"text": "Règle d'or : [color=#5dd66b]+1 point[/color] par bon contrat choisi. Mais [color=#ff7373]-1 point[/color] par contrat inutile sélectionné !", "expression": "normal"},
+	{"text": "Et c'est à [color=#5dd66b]choix multiples[/color] : vous pouvez cocher plusieurs contrats à la fois — souvent il en faut même plusieurs pour tout couvrir.", "expression": "souriant"},
 	{"text": "Si vous avez la moitié ou plus de mauvaises réponses, le chapitre tombe à [color=#ff9b42]0 point[/color] — pas de score négatif, rassurez-vous.", "expression": "souriant"},
 	{"text": "Un doute ? Vous pouvez demander un indice... mais ça coûte [color=#ff9b42]-0.5 point[/color] par indice utilisé. À utiliser avec parcimonie !", "expression": "inquiet"},
 	{"text": "Prêt à devenir un expert MAIF ? Allons-y !", "expression": "fier"},
