@@ -33,7 +33,4 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _on_pause_quit() -> void:
 	get_tree().paused = false
-	# Partie quittée en cours : on efface l'identité du joueur pour ne pas
-	# pré-remplir nom/email du visiteur suivant dans l'écran pseudo_input.
-	Globals.story_engine.clear_player()
 	get_tree().change_scene_to_file(MAIN_MENU_SCENE)

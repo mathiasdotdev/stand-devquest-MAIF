@@ -16,11 +16,13 @@ func _ready() -> void:
 	_email_regex.compile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
 	_default_email_error = email_error.text
 
-	var story_engine: Node = get_node("/root/StoryEngine")
-	if story_engine.player_name != "":
-		name_input.text = story_engine.player_name
-	if story_engine.player_email != "":
-		email_input.text = story_engine.player_email
+	# On démarre TOUJOURS sur des champs vides : on efface l'identité du joueur
+	# précédent dès l'arrivée sur cette scène. Plus robuste que de nettoyer à
+	# chaque sortie de partie (couvre tous les chemins, y compris inattendus) et
+	# évite d'exposer le nom/email du visiteur précédent sur un stand public.
+	Globals.story_engine.clear_player()
+	name_input.text = ""
+	email_input.text = ""
 
 	name_input.text_submitted.connect(func(_t): _on_start())
 	name_input.text_changed.connect(_on_text_changed)

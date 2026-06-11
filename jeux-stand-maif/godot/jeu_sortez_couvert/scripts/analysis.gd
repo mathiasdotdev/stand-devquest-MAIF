@@ -208,9 +208,6 @@ func _build_chapter_breakdown() -> Array:
 	return breakdown
 
 func _on_menu() -> void:
-	# Partie terminée : on efface l'identité du joueur pour ne pas pré-remplir
-	# nom/email du visiteur suivant dans l'écran pseudo_input.
-	Globals.story_engine.clear_player()
 	get_tree().change_scene_to_file("res://main_menu/main_menu.tscn")
 
 # ---- Section "Découvrir MAIF" -----------------------------------------------
