@@ -4,9 +4,6 @@ const MODE_IDS := ["story", "racing"]
 const MODE_LABELS := ["Histoire", "Pasdetolismo"]
 const ADMIN_MODAL_SCENE: PackedScene = preload("res://jeu_sortez_couvert/ui/admin_modal.tscn")
 
-# Nombre d'entrées affichées dans l'UI par défaut (override possible via la modale F10)
-const DEFAULT_DISPLAY_LIMIT := 10
-
 # Feature flipping pour masquer l'onglet Pasdetolismo
 const PASDETOLISMO_ENABLED := false
 
@@ -20,10 +17,6 @@ var _data_font: SystemFont
 @onready var btn_retour: Button = $MenuPanel/Margin/VBox/BtnRetour
 
 var _admin_modal: CanvasLayer
-# État des filtres (live depuis la modale F10)
-var _filter_email_only: bool = false
-var _filter_min_score: float = 0.0
-var _filter_display_limit: int = DEFAULT_DISPLAY_LIMIT
 
 func _ready() -> void:
 	_data_font = SystemFont.new()
@@ -48,40 +41,20 @@ func _populate_tab(mode: String, container: VBoxContainer) -> void:
 	for child in container.get_children():
 		child.queue_free()
 
-	# On récupère TOUTES les entrées, puis on filtre, puis on limite à DISPLAY_LIMIT.
+	# On affiche TOUTES les entrées (scrollables) — pas de limite d'affichage.
 	var leaderboard: Node = get_node("/root/Leaderboard")
-	var entries: Array = _apply_filters(leaderboard.get_entries(mode))
+	var entries: Array = leaderboard.get_entries(mode)
 	if entries.is_empty():
 		var lbl := Label.new()
-		lbl.text = _empty_text()
+		lbl.text = "Aucun score enregistré"
 		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lbl.add_theme_font_override("font", _data_font)
 		lbl.add_theme_font_size_override("font_size", 20)
 		lbl.add_theme_color_override("font_color", Color(0.65, 0.7, 0.8, 1))
 		container.add_child(lbl)
 		return
-	var display_count: int = min(entries.size(), _filter_display_limit)
-	for i in display_count:
+	for i in entries.size():
 		container.add_child(_build_entry_row(mode, i, entries[i]))
-
-# Retourne les entrées filtrées par email_only / min_score effectif.
-# Le tri (meilleur en tête) est déjà fait par le data store.
-func _apply_filters(entries: Array) -> Array:
-	if not _filter_email_only and _filter_min_score <= 0.0:
-		return entries
-	var filtered: Array = []
-	for e: Dictionary in entries:
-		if _filter_email_only and String(e.get("email", "")).strip_edges().is_empty():
-			continue
-		if _filter_min_score > 0.0 and float(e.get("effective_score", 0.0)) < _filter_min_score:
-			continue
-		filtered.append(e)
-	return filtered
-
-func _empty_text() -> String:
-	if _filter_email_only or _filter_min_score > 0.0:
-		return "Aucun score ne correspond aux filtres"
-	return "Aucun score enregistré"
 
 func _build_entry_row(mode: String, idx: int, entry: Dictionary) -> Control:
 	var panel := PanelContainer.new()
@@ -170,6 +143,7 @@ func _build_entry_row(mode: String, idx: int, entry: Dictionary) -> Control:
 func _format_duration(secs: int) -> String:
 	if secs <= 0:
 		return "—"
+	@warning_ignore("integer_division")
 	var minutes: int = secs / 60
 	var seconds: int = secs % 60
 	if minutes > 0:
@@ -229,7 +203,6 @@ func _setup_admin_modal() -> void:
 	_admin_modal = ADMIN_MODAL_SCENE.instantiate()
 	add_child(_admin_modal)
 	_admin_modal.path_changed.connect(_on_admin_path_changed)
-	_admin_modal.filter_changed.connect(_on_admin_filter_changed)
 
 func _toggle_admin_dialog() -> void:
 	if _admin_modal.is_open():
@@ -238,10 +211,4 @@ func _toggle_admin_dialog() -> void:
 	_admin_modal.show_modal()
 
 func _on_admin_path_changed() -> void:
-	_refresh_tabs()
-
-func _on_admin_filter_changed() -> void:
-	_filter_email_only = _admin_modal.get_email_only_filter()
-	_filter_min_score = _admin_modal.get_min_score_filter()
-	_filter_display_limit = _admin_modal.get_display_limit()
 	_refresh_tabs()
