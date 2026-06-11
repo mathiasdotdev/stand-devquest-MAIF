@@ -2,12 +2,16 @@ extends CanvasLayer
 
 # Modale admin du classement (F10).
 # - Voir / changer le chemin de sauvegarde du JSON via file picker natif
+# L'accès est protégé par un mot de passe (porte affichée directement à
+# l'ouverture) : on touche ici aux données du classement.
 # Style fantasy, cohérent avec pause_menu / info_modal.
 
 signal closed
 signal path_changed
 
 @onready var _container: Control = $Container
+@onready var _center: CenterContainer = $Container/CenterContainer
+@onready var _menu_panel: Control = $Container/CenterContainer/MenuPanel
 @onready var _current_path_label: Label = $Container/CenterContainer/MenuPanel/Margin/VBox/CurrentPathLabel
 @onready var _default_path_label: Label = $Container/CenterContainer/MenuPanel/Margin/VBox/DefaultPathLabel
 @onready var _btn_choose: Button = $Container/CenterContainer/MenuPanel/Margin/VBox/PathBtnRow/BtnChoose
@@ -15,6 +19,7 @@ signal path_changed
 @onready var _btn_close: Button = $Container/CenterContainer/MenuPanel/Margin/VBox/CloseRow/BtnClose
 
 var _file_dialog: FileDialog = null
+var _gate: PasswordGate = null
 
 func _ready() -> void:
 	_container.visible = false
@@ -22,17 +27,38 @@ func _ready() -> void:
 	_btn_choose.pressed.connect(_on_choose_path)
 	_btn_reset.pressed.connect(_on_reset)
 	_create_file_dialog()
+	_setup_password_gate()
 
 func is_open() -> bool:
 	return _container.visible
 
+# À l'ouverture on affiche DIRECTEMENT la porte mot de passe ; les paramètres
+# (chemin du JSON) ne sont révélés qu'après saisie correcte.
 func show_modal() -> void:
-	_refresh_path_display()
+	_menu_panel.visible = false
+	_gate.visible = true
+	_gate.reset()
 	_container.visible = true
 
 func hide_modal() -> void:
 	_container.visible = false
+	_gate.visible = false
+	_menu_panel.visible = false
 	closed.emit()
+
+# ---- Porte mot de passe -----------------------------------------------------
+
+func _setup_password_gate() -> void:
+	_gate = PasswordGate.new()
+	_gate.visible = false
+	_gate.unlocked.connect(_on_gate_unlocked)
+	_gate.cancelled.connect(hide_modal)
+	_center.add_child(_gate)
+
+func _on_gate_unlocked() -> void:
+	_gate.visible = false
+	_refresh_path_display()
+	_menu_panel.visible = true
 
 # ---- File dialog ------------------------------------------------------------
 
