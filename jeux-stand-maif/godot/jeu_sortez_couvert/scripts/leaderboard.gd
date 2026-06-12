@@ -103,12 +103,6 @@ func _build_entry_row(idx: int, entry: Dictionary, show_email_icon: bool) -> Con
 	name_lbl.add_theme_color_override("font_color", Color(0.96, 0.96, 0.98, 1))
 	row.add_child(name_lbl)
 
-	# Onglet "Général" : indicateur email (icône si renseigné, "—" sinon).
-	# On n'affiche JAMAIS l'adresse — juste la présence ou non d'un email.
-	if show_email_icon:
-		var has_email: bool = not String(entry.get("email", "")).strip_edges().is_empty()
-		row.add_child(_build_email_indicator(has_email))
-
 	# Temps passé sur la tentative (l'adresse email n'est jamais affichée ici).
 	var duration: int = LeaderboardStore.get_duration_seconds(entry)
 	if duration > 0:
@@ -121,6 +115,12 @@ func _build_entry_row(idx: int, entry: Dictionary, show_email_icon: bool) -> Con
 		time_lbl.add_theme_font_size_override("font_size", 16)
 		time_lbl.add_theme_color_override("font_color", Color(0.7, 0.85, 0.78, 1))
 		row.add_child(time_lbl)
+
+	# Onglet "Général" : indicateur email (icône si renseigné, "—" sinon), placé
+	# à droite de la durée. On n'affiche JAMAIS l'adresse — juste sa présence.
+	if show_email_icon:
+		var has_email: bool = not String(entry.get("email", "")).strip_edges().is_empty()
+		row.add_child(_build_email_indicator(has_email))
 
 	var ts: int = LeaderboardStore.get_timestamp(entry)
 	if ts > 0:
