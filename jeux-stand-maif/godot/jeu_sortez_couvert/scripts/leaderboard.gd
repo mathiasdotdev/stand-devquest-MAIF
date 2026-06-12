@@ -11,6 +11,10 @@ const EMAIL_ICON: Texture2D = preload("res://jeu_sortez_couvert/ui/assets/email.
 var _data_font: SystemFont
 
 @onready var tabs: TabContainer = $MenuPanel/Margin/VBox/Tabs
+# Sélecteurs d'onglet : de vrais boutons (même style que le reste de l'UI),
+# plutôt que la barre d'onglets native du TabContainer.
+@onready var btn_tab_email: Button = $MenuPanel/Margin/VBox/TabButtons/BtnAvecEmail
+@onready var btn_tab_general: Button = $MenuPanel/Margin/VBox/TabButtons/BtnGeneral
 # Onglet par défaut : seulement les joueurs joignables (email renseigné) → le #1
 # est directement le gagnant à qui remettre le lot.
 @onready var email_list: VBoxContainer = $MenuPanel/Margin/VBox/Tabs/AvecEmail/ScrollContainer/EntryList
@@ -24,10 +28,18 @@ func _ready() -> void:
 	_data_font = SystemFont.new()
 	_data_font.font_names = PackedStringArray(["Segoe UI", "Arial", "Helvetica", "sans-serif"])
 	btn_retour.pressed.connect(_on_retour)
-	tabs.set_tab_title(0, "Avec email")
-	tabs.set_tab_title(1, "Général")
+	btn_tab_email.pressed.connect(func(): _select_tab(0))
+	btn_tab_general.pressed.connect(func(): _select_tab(1))
 	_setup_admin_modal()
 	_refresh_tabs()
+	_select_tab(0)
+
+# Bascule d'onglet via les boutons : change le contenu affiché et atténue le
+# bouton inactif pour signaler l'onglet courant.
+func _select_tab(idx: int) -> void:
+	tabs.current_tab = idx
+	btn_tab_email.modulate = Color(1, 1, 1, 1) if idx == 0 else Color(1, 1, 1, 0.45)
+	btn_tab_general.modulate = Color(1, 1, 1, 1) if idx == 1 else Color(1, 1, 1, 0.45)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F10:
