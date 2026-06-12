@@ -128,7 +128,7 @@ theme_override_colors/font_color = Color(1, 0.92, 0.55, 1)
 [node name="DiscoverHint" type="Label" parent="MarginContainer/VBoxContainer/DiscoverSection/DiscoverText"]
 layout_mode = 2
 autowrap_mode = 3
-text = "Scannez le QR code à droite, ou cliquez sur le bouton."
+text = "Scannez le QR code à droite avec votre téléphone."
 theme_override_font_sizes/font_size = 16
 theme_override_colors/font_color = Color(0.78, 0.86, 1, 1)
 
@@ -149,13 +149,6 @@ layout_mode = 2
 custom_minimum_size = Vector2(80, 80)
 expand_mode = 1
 stretch_mode = 5
-
-[node name="BtnDiscover" type="Button" parent="MarginContainer/VBoxContainer/DiscoverSection"]
-custom_minimum_size = Vector2(280, 56)
-layout_mode = 2
-size_flags_vertical = 4
-text = "🌐  Ouvrir le lien"
-theme_override_font_sizes/font_size = 22
 
 [node name="BottomSpacer" type="Control" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2

@@ -8,15 +8,21 @@ extends Control
 @onready var btn_back: Button = $CenterContainer/MenuPanel/Margin/VBox/Footer/BtnBack
 
 var _email_regex: RegEx = RegEx.new()
+# Message d'erreur email d'origine (format invalide), pour le restaurer après
+# avoir affiché le message "déjà participé".
+var _default_email_error: String = ""
 
 func _ready() -> void:
 	_email_regex.compile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
+	_default_email_error = email_error.text
 
-	var story_engine: Node = get_node("/root/StoryEngine")
-	if story_engine.player_name != "":
-		name_input.text = story_engine.player_name
-	if story_engine.player_email != "":
-		email_input.text = story_engine.player_email
+	# On démarre TOUJOURS sur des champs vides : on efface l'identité du joueur
+	# précédent dès l'arrivée sur cette scène. Plus robuste que de nettoyer à
+	# chaque sortie de partie (couvre tous les chemins, y compris inattendus) et
+	# évite d'exposer le nom/email du visiteur précédent sur un stand public.
+	Globals.story_engine.clear_player()
+	name_input.text = ""
+	email_input.text = ""
 
 	name_input.text_submitted.connect(func(_t): _on_start())
 	name_input.text_changed.connect(_on_text_changed)
@@ -37,6 +43,14 @@ func _on_start() -> void:
 		name_input.grab_focus()
 		return
 	if not _is_email_valid(player_email):
+		email_error.text = _default_email_error
+		email_error.show()
+		email_input.grab_focus()
+		return
+	# Unicité de l'email : une seule tentative par email (le surnom, lui, peut
+	# se répéter). Email vide = pas de contrôle possible (joueur anonyme).
+	if not player_email.is_empty() and Globals.leaderboard.has_email("story", player_email):
+		email_error.text = "Cet email a déjà participé — une seule tentative par email"
 		email_error.show()
 		email_input.grab_focus()
 		return
@@ -67,6 +81,7 @@ func _on_email_changed(new_text: String) -> void:
 		email_input.caret_column = caret
 		new_text = lowered
 	if _is_email_valid(new_text.strip_edges()):
+		email_error.text = _default_email_error
 		email_error.hide()
 
 func _is_email_valid(email: String) -> bool:

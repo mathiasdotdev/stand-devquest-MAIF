@@ -31,6 +31,9 @@ var selected_contracts: Array = []
 var is_complete: bool = false
 var player_name: String = ""
 var player_email: String = ""
+# Timestamp unix du début de la partie (set dans reset()). Sert à mesurer le
+# temps passé sur la tentative, enregistré dans le leaderboard.
+var started_at: int = 0
 
 # ─── Reset ────────────────────────────────────────────────────────────────────
 
@@ -43,6 +46,21 @@ func reset() -> void:
 	hints_used_this_chapitre = 0
 	selected_contracts = []
 	is_complete = false
+	started_at = int(Time.get_unix_time_from_system())
+
+# Temps écoulé (secondes) depuis le début de la partie. 0 si pas démarrée.
+func get_elapsed_seconds() -> int:
+	if started_at <= 0:
+		return 0
+	return max(0, int(Time.get_unix_time_from_system()) - started_at)
+
+# Réinitialise l'identité du joueur (appelé en fin de partie : terminée ou
+# quittée) pour ne pas pré-remplir le nom/email du visiteur suivant dans
+# l'écran pseudo_input.
+func clear_player() -> void:
+	player_name = ""
+	player_email = ""
+	started_at = 0
 
 # Tire `pool_size` chapitres au hasard dans la DB (sans répétition).
 func _shuffle_pool() -> void:
